@@ -10,6 +10,7 @@ package rvme;
  * @author McKillaGorilla
  */
 public enum PropertyType {
+    EXPORT_ICON,
     WORKSPACE_HEADING_LABEL,
     
     DETAILS_HEADING_LABEL,
