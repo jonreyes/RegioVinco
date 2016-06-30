@@ -8,21 +8,23 @@
 -->
 <properties>
     <property_list>
-        <property name="APP_TITLE"	    value="To Do List Maker"></property>
+        <property name="APP_TITLE"	    value="Regio Vinco Map Editor"></property>
 	<property name="APP_LOGO"	    value="ToDoListMakerLogo.png"></property>
 	<property name="APP_PATH_CSS"	    value="css/"></property>
-	<property name="APP_CSS"	    value="tdlm_style.css"></property>
+	<property name="APP_CSS"	    value="rvme_style.css"></property>
         
         <!-- PROGRAM ICON FILES -->
-        <property name="NEW_ICON"	    value="New.png"></property>
-        <property name="LOAD_ICON"	    value="Load.png"></property>
-        <property name="SAVE_ICON"	    value="Save.png"></property>
-        <property name="EXIT_ICON"          value="Exit.png"></property> 
+        <property name="NEW_ICON"	    value="Create New-64.png"></property>
+        <property name="LOAD_ICON"	    value="Open Folder-64.png"></property>
+        <property name="SAVE_ICON"	    value="Save-64.png"></property>
+        <property name="EXPORT_ICON"        value="Export-64.png"></property>
+        <property name="EXIT_ICON"          value="Exit Sign-64.png"></property> 
         
         <!-- TOOLTIPS FOR BUTTONS -->
-        <property name="NEW_TOOLTIP"		value="Create a New To Do List"></property>
-        <property name="LOAD_TOOLTIP"		value="Load an Existing To Do List"></property>
-        <property name="SAVE_TOOLTIP"		value="Save this To Do List"></property>
+        <property name="NEW_TOOLTIP"		value="Create a New Map"></property>
+        <property name="LOAD_TOOLTIP"		value="Load an Existing Map"></property>
+        <property name="SAVE_TOOLTIP"		value="Save this Map"></property>
+        <property name="EXPORT_TOOLTIP"         value="Export this Map"></property>
         <property name="EXIT_TOOLTIP"		value="Exit the Application"></property>
         
         <!-- ERROR MESSAGES -->
@@ -54,8 +56,8 @@
         <property name="SAVE_UNSAVED_WORK_MESSAGE"	value="Do you want to save your unsaved work first?"></property>
 	<property name="SAVE_WORK_TITLE"		value="Save your work"></property>
 	<property name="LOAD_WORK_TITLE"		value="Select work file to load"></property>
-	<property name="WORK_FILE_EXT"			value="tdl"></property>
-	<property name="WORK_FILE_EXT_DESC"		value="To Do List Maker Files"></property>
+	<property name="WORK_FILE_EXT"			value="rvm"></property>
+	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map Files"></property>
     </property_list>
     <property_options_list>
     </property_options_list>
