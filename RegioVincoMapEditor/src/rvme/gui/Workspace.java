@@ -165,6 +165,7 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid = new GridPane();
         editGrid.setAlignment(Pos.CENTER);
         editGrid.setHgap(10);
+        editGrid.setVgap(5);
         editGrid.add(nameLabel, 0, 0);
         editGrid.add(nameTextField, 0, 1);
         editGrid.add(bgcLabel, 1, 0);
