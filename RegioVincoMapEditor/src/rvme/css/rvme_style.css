@@ -1,6 +1,6 @@
 /* 
     This style sheet stylizes the controls inside our
-    Web Page Maker JavaFX application. Note that controls
+    To Do List Maker JavaFX application. Note that controls
     in the UI must have the same class as those below in 
     order to be rendered using those properties.
 
@@ -8,27 +8,28 @@
     Author:	?
     Version:	1.0
 */
+@import url(https://fonts.googleapis.com/css?family=Orbitron);
 
 .bordered_pane {
-    -fx-background-color: #aaaaff;
-    -fx-background-radius: 5.0;
-    -fx-padding: 15;
-    -fx-spacing: 10;
-    -fx-border-width: 2px;
-    -fx-border-color: #7777dd;
+    -fx-background-color: #68C2F2;    
+    -fx-border-color: #13A1ED;
+    -fx-border-width: 5px;
 }
 
 .heading_label {
-    -fx-font-size: 20pt;
+    -fx-font-size: 28pt;
     -fx-font-weight: bold;
+    -fx-font-family: 'Orbitron', cursive;
 }
 
 .subheading_label {
-    -fx-font-size: 14pt;
+    -fx-font-size: 19pt;
     -fx-font-weight: bold;
+    -fx-font-family: 'Orbitron', cursive;
 }
 
 .prompt_label {
     -fx-font-size: 10pt;
     -fx-font-weight: bold;
+    -fx-font-family: 'Orbitron', cursive;
 }

@@ -1,18 +1,18 @@
 package rvme.gui;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_IMAGE_ICON;
@@ -163,6 +163,8 @@ public class Workspace extends AppWorkspaceComponent {
         anthemBtn = initChildButton(ANTHEM_ICON.toString(), ANTHEM_TOOLTIP.toString(), false);
         
         editGrid = new GridPane();
+        editGrid.setAlignment(Pos.CENTER);
+        editGrid.setHgap(10);
         editGrid.add(nameLabel, 0, 0);
         editGrid.add(nameTextField, 0, 1);
         editGrid.add(bgcLabel, 1, 0);
@@ -179,7 +181,9 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(racBtn, 6, 1);
         editGrid.add(anthemLabel, 7, 0);
         editGrid.add(anthemBtn, 7, 1);
-        
+        for(Node node : editGrid.getChildren()){
+            GridPane.setHalignment(node, HPos.CENTER);
+        }
         editToolBar.getItems().add(editGrid);
     }
     
@@ -226,6 +230,16 @@ public class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
+        fileToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
+        editToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
+        nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        bgcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        bcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        btLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        zoomLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        addImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        racLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        anthemLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
     }
 
 }

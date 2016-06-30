@@ -28,7 +28,7 @@ public enum PropertyType {
     RAC_ICON,
     RAC_TOOLTIP,
     ANTHEM_ICON,
-ANTHEM_TOOLTIP,
+    ANTHEM_TOOLTIP,
     
     ADD_ICON, 
     ADD_ITEM_TOOLTIP, 
