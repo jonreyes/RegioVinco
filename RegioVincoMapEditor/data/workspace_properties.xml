@@ -23,6 +23,7 @@
         <property name="ADD_IMAGE_TOOLTIP"          value="Add an Image to the Map"></property>
 	<property name="RAC_TOOLTIP"          value="Randomly Reassign the Colors of Map"></property>
         <property name="ANTHEM_TOOLTIP"       value="Play the Map Region's Anthem"></property>
+        
 	<!-- HEADINGS AND PROMPTS -->
 	<property name="WORKSPACE_HEADING_LABEL"    value="To Do List"></property>
 	<property name="DETAILS_HEADING_LABEL"	    value="Details"></property>
@@ -34,13 +35,14 @@
         <property name="ADD_IMAGE_LABEL"            value="Add Image:"></property>
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
         <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
+        <property name="DATA_LABEL"                 value="Map Data"></property>
 	
         <!-- TABLE COLUMN HEADINGS -->
-        <property name="CATEGORY_COLUMN_HEADING"        value="Category"></property>
-        <property name="DESCRIPTION_COLUMN_HEADING"     value="Description"></property>
-        <property name="START_DATE_COLUMN_HEADING"      value="Start Date"></property>
-        <property name="END_DATE_COLUMN_HEADING"        value="End Date"></property>
-        <property name="COMPLETED_COLUMN_HEADING"       value="Completed"></property>
+        <property name="NAME_COLUMN_HEADING"                value="Name"></property>
+        <property name="CAPITAL_COLUMN_HEADING"             value="Capital"></property>
+        <property name="FLAG_COLUMN_HEADING"                value="Flag"></property>
+        <property name="LEADER_NAME_COLUMN_HEADING"         value="Leader Name"></property>
+        <property name="LEADER_IMAGE_COLUMN_HEADING"        value="Leader Image"></property>
         
                 	
 	<!-- ERROR MESSAGES AND TITLES FOR THEIR DIALOGS -->
