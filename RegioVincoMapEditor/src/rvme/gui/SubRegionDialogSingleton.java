@@ -17,7 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.CAPITAL_LABEL;
-import static rvme.PropertyType.DETAILS_HEADING_LABEL;
 import static rvme.PropertyType.FLAG_LABEL;
 import static rvme.PropertyType.LEADER_IMAGE_LABEL;
 import static rvme.PropertyType.LEADER_NAME_LABEL;
@@ -118,6 +117,7 @@ public class SubRegionDialogSingleton extends Stage{
         
         messageLabel = new Label(props.getProperty(SRDIALOG_TITLE));
         messagePane = new VBox();
+        messagePane.setAlignment(Pos.CENTER);
         messagePane.getChildren().add(messageLabel);
         messagePane.getChildren().add(srGrid);
         messageScene = new Scene(messagePane, SCALEW*gui.getWindow().getWidth(), SCALEH*gui.getWindow().getHeight());
