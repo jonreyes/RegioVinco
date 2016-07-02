@@ -36,7 +36,12 @@
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
         <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
         <property name="DATA_LABEL"                 value="Map Data"></property>
-	
+	<!--DIALOG LABELS-->
+        <property name="CAPITAL_LABEL"              value="Capital:"></property>
+        <property name="FLAG_LABEL"                 value="Flag:"></property>
+        <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>
+        <property name="LEADER_IMAGE_LABEL"         value="Leader Image:"></property>
+        <property name="SRDIALOG_TITLE"             value="Edit SubRegion Details"></property>
         <!-- TABLE COLUMN HEADINGS -->
         <property name="NAME_COLUMN_HEADING"                value="Name"></property>
         <property name="CAPITAL_COLUMN_HEADING"             value="Capital"></property>
