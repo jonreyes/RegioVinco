@@ -1,6 +1,7 @@
 package rvme.gui;
 
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -80,7 +81,7 @@ public class Workspace extends AppWorkspaceComponent {
     RVMEController rvmeController;
     
     Label title;
-    AppFileController fileController;
+    protected AppFileController fileController;
     ToolBar fileToolBar;
     Button newBtn;
     Button loadBtn;
@@ -145,11 +146,32 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initControls(){
         rvmeController =  new RVMEController(app);
+        initFileControls();
         mapDummy.setOnMouseClicked(e->{
             subRegionDialog.show();
         });
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
+        });
+    }
+    
+    private void initFileControls(){
+        fileController = new AppFileController(app);
+        newBtn.setOnAction(e -> {
+            newMapDialog.show();
+            fileController.handleNewRequest();
+        });
+        loadBtn.setOnAction(e -> {
+            fileController.handleLoadRequest();
+        });
+        saveBtn.setOnAction(e -> {
+            fileController.handleSaveRequest();
+        });
+        exportBtn.setOnAction(e -> {
+            //fileController.handleExportRequest();
+        });
+        exitBtn.setOnAction(e -> {
+            fileController.handleExitRequest();
         });
     }
     
@@ -180,7 +202,7 @@ public class Workspace extends AppWorkspaceComponent {
     private void initMapView(){
         mapView = new ScrollPane();
         mapStack = new StackPane();
-        mapDummy = new Circle(250);
+        mapDummy = new Circle(300);
         mapDummy.setFill(Color.LIGHTSKYBLUE);
         Text dumbT = new Text("MAP GOES HERE\nCLICK TO TEST");
         mapStack.getChildren().add(mapDummy);
@@ -242,24 +264,6 @@ public class Workspace extends AppWorkspaceComponent {
         
         fileToolBar.getItems().addAll(newBtn,loadBtn,saveBtn,exportBtn,exitBtn);
         
-	// AND NOW SETUP THEIR EVENT HANDLERS
-        fileController = new AppFileController(app);
-        newBtn.setOnAction(e -> {
-            fileController.handleNewRequest();
-        });
-        loadBtn.setOnAction(e -> {
-            fileController.handleLoadRequest();
-        });
-        saveBtn.setOnAction(e -> {
-            fileController.handleSaveRequest();
-        });
-        exportBtn.setOnAction(e -> {
-            //fileController.handleExportRequest();
-        });
-        exitBtn.setOnAction(e -> {
-            fileController.handleExitRequest();
-        });
-        
         app.getGUI().getAppPane().setTop(fileToolBar);
     }
     
@@ -312,8 +316,8 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initDialogs(){
-        //newMapDialog = NewMapDialogSingleton.getSingleton();
-        //newMapDialog.init(app);
+        newMapDialog = NewMapDialogSingleton.getSingleton();
+        newMapDialog.init(app);
         subRegionDialog = SubRegionDialogSingleton.getSingleton();
         subRegionDialog.init(app);
         dimensionsDialog = DimensionsDialogSingleton.getSingleton();

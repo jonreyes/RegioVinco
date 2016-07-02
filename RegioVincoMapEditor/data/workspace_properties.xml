@@ -30,6 +30,9 @@
 	<property name="WORKSPACE_HEADING_LABEL"    value="To Do List"></property>
 	<property name="DETAILS_HEADING_LABEL"	    value="Details"></property>
 	<property name="NAME_LABEL"                 value="Name:"></property>
+        <property name="PARENT_LABEL"               value="Parent Directory:"></property>
+        <property name="SELECT_LABEL"               value="Select..."></property>
+        <property name="GEO_LABEL"                  value="Geometry File:"></property>
         <property name="BGC_LABEL"                  value="Background Color:"></property>
         <property name="BC_LABEL"                   value="Border Color:"></property>
         <property name="BT_LABEL"                   value="Border Thickness:"></property>
@@ -42,6 +45,7 @@
         <property name="OK_LABEL"                   value="OK"></property>
         
 	<!--DIALOG LABELS-->
+        <property name="NMDIALOG_TITLE"             value="Create a New Map"></property>
         <property name="CAPITAL_LABEL"              value="Capital:"></property>
         <property name="FLAG_LABEL"                 value="Flag:"></property>
         <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>

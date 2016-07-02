@@ -35,8 +35,8 @@ public class AppStartupConstants
     // ERROR DIALOG CONTROL
     public static String CLOSE_BUTTON_LABEL = "Close";
         
-    public static double SCALEX = 0.17;
+    public static double SCALEX = 0.16;
     public static double SCALEY = 0.1;
-    public static double SCALEW = 0.66;
+    public static double SCALEW = 0.68;
     public static double SCALEH = 0.8;
 }

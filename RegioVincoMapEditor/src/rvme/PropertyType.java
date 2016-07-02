@@ -14,7 +14,12 @@ public enum PropertyType {
     WORKSPACE_HEADING_LABEL,
     
     DETAILS_HEADING_LABEL,
+    
     NAME_LABEL,
+    PARENT_LABEL,
+    GEO_LABEL,
+    SELECT_LABEL,
+    
     BGC_LABEL,
     BC_LABEL,
     BT_LABEL,
@@ -48,6 +53,7 @@ public enum PropertyType {
     DIMENSIONS_ICON,
     DIMENSIONS_TOOLTIP,
     
+    NMDIALOG_TITLE,
     SRDIALOG_TITLE,
     DDIALOG_TITLE,
     ADD_ICON, 
