@@ -8,10 +8,14 @@ package rvme.gui;
 import java.net.URL;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,6 +25,11 @@ import static rvme.PropertyType.FLAG_LABEL;
 import static rvme.PropertyType.LEADER_IMAGE_LABEL;
 import static rvme.PropertyType.LEADER_NAME_LABEL;
 import static rvme.PropertyType.NAME_LABEL;
+import static rvme.PropertyType.NEXT_ICON;
+import static rvme.PropertyType.NEXT_TOOLTIP;
+import static rvme.PropertyType.OK_LABEL;
+import static rvme.PropertyType.PREV_ICON;
+import static rvme.PropertyType.PREV_TOOLTIP;
 import static rvme.PropertyType.SRDIALOG_TITLE;
 import saf.AppTemplate;
 import static saf.components.AppStyleArbiter.CLASS_BORDERED_PANE;
@@ -29,6 +38,8 @@ import static saf.components.AppStyleArbiter.CLASS_PROMPT_LABEL;
 import static saf.components.AppStyleArbiter.CLASS_SUBHEADING_LABEL;
 import static saf.settings.AppPropertyType.APP_CSS;
 import static saf.settings.AppPropertyType.APP_PATH_CSS;
+import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
+import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import saf.ui.AppGUI;
 
 /**
@@ -37,6 +48,8 @@ import saf.ui.AppGUI;
  */
 public class SubRegionDialogSingleton extends Stage{
     static SubRegionDialogSingleton singleton = null;
+    
+    PropertiesManager props;
     
     AppTemplate app;
     AppGUI gui;
@@ -58,8 +71,15 @@ public class SubRegionDialogSingleton extends Stage{
     Label leaderImageLabel;
     ImageView leaderImageView;
     
+    HBox buttonBox;
+    Button nextBtn;
+    Button prevBtn;
+    Button okBtn;
+    
+    final double BUTTON_SPACE = 95;
+    final double BUTTON_SIZE = 15;
     final double SCALEW = 0.31;
-    final double SCALEH = 0.31;
+    final double SCALEH = 0.33;
     /**
      * Note that the constructor is private since it follows
      * the singleton design pattern.
@@ -82,6 +102,7 @@ public class SubRegionDialogSingleton extends Stage{
     public void init(AppTemplate initApp){
         app = initApp;
         gui = app.getGUI();
+        props = PropertiesManager.getPropertiesManager();
         initModality(Modality.WINDOW_MODAL);
         initOwner(gui.getWindow());
         initGUI();
@@ -91,7 +112,6 @@ public class SubRegionDialogSingleton extends Stage{
     }
     
     private void initGUI(){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
         nameLabel = new Label(props.getProperty(NAME_LABEL));
         nameTextField = new TextField();
         capitalLabel = new Label(props.getProperty(CAPITAL_LABEL));
@@ -102,6 +122,9 @@ public class SubRegionDialogSingleton extends Stage{
         leaderTextField = new TextField();
         leaderImageLabel = new Label(props.getProperty(LEADER_IMAGE_LABEL));
         leaderImageView = new ImageView();
+        nextBtn = initChildButton(NEXT_ICON.toString(), NEXT_TOOLTIP.toString(), false);
+        prevBtn = initChildButton(PREV_ICON.toString(), PREV_TOOLTIP.toString(), false);
+        okBtn = new Button(props.getProperty(OK_LABEL));
         
         srGrid = new GridPane();
         srGrid.add(nameLabel, 0, 0);
@@ -115,14 +138,54 @@ public class SubRegionDialogSingleton extends Stage{
         srGrid.add(leaderImageLabel, 0, 4);
         srGrid.add(leaderImageView, 1, 4);
         
+        buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setSpacing(BUTTON_SPACE);
+        buttonBox.getChildren().add(prevBtn);
+        buttonBox.getChildren().add(okBtn);
+        buttonBox.getChildren().add(nextBtn);
+        
         messageLabel = new Label(props.getProperty(SRDIALOG_TITLE));
         messagePane = new VBox();
         messagePane.setAlignment(Pos.CENTER);
         messagePane.getChildren().add(messageLabel);
         messagePane.getChildren().add(srGrid);
+        messagePane.getChildren().add(buttonBox);
         messageScene = new Scene(messagePane, SCALEW*gui.getWindow().getWidth(), SCALEH*gui.getWindow().getHeight());
         this.setScene(messageScene);
         this.setTitle(props.getProperty(SRDIALOG_TITLE));
+    }
+    
+    /**
+     * This is a private helper method for initializing a simple button with
+     * an icon and tooltip.
+     * 
+     * @param icon Icon image file name for the button.
+     * 
+     * @param tooltip Tooltip to appear when the user mouses over the button.
+     * 
+     * @param disabled true if the button is to start off disabled, false otherwise.
+     * 
+     * @return A constructed, fully initialized button placed into its appropriate
+     * pane container.
+     */
+    private Button initChildButton(String icon, String tooltip, boolean disabled) {
+	// LOAD THE ICON FROM THE PROVIDED FILE
+        String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(icon);
+        Image buttonIcon = new Image(imagePath);
+	
+	// NOW MAKE THE BUTTON
+        Button button = new Button();
+        button.setDisable(disabled);
+        ImageView iconView = new ImageView(buttonIcon);
+        iconView.setFitWidth(BUTTON_SIZE);
+        iconView.setFitHeight(BUTTON_SIZE);
+        button.setGraphic(iconView);
+        Tooltip buttonTooltip = new Tooltip(props.getProperty(tooltip));
+        button.setTooltip(buttonTooltip);
+	
+	// AND RETURN THE COMPLETED BUTTON
+        return button;
     }
     
     private void initHandlers(){
@@ -131,7 +194,6 @@ public class SubRegionDialogSingleton extends Stage{
     
     private void initStyleSheet(){
          // LOADING CSS
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
 	String stylesheet = props.getProperty(APP_PATH_CSS);
 	stylesheet += props.getProperty(APP_CSS);
 	URL stylesheetURL = app.getClass().getResource(stylesheet);

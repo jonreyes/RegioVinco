@@ -1,7 +1,6 @@
 package rvme.gui;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -153,7 +152,6 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initTitle(){
         title = new Label(props.getProperty(APP_TITLE));
-        title.setTranslateX(0.33*app.getGUI().getWindow().getWidth());
         fileToolBar.getItems().add(title);
     }
     
@@ -320,8 +318,8 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     /**
-     * This is a public helper method for initializing a simple button with
-     * an icon and tooltip and placing it into a toolbar.
+     * This is a private helper method for initializing a simple button with
+     * an icon and tooltip.
      * 
      * @param toolbar Toolbar pane into which to place this button.
      * 

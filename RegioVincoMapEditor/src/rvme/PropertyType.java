@@ -23,6 +23,7 @@ public enum PropertyType {
     RAC_LABEL,
     ANTHEM_LABEL,
     DIMENSIONS_LABEL,
+    OK_LABEL,
     
     DATA_LABEL,
     
@@ -37,6 +38,10 @@ public enum PropertyType {
     RAC_TOOLTIP,
     ANTHEM_ICON,
     ANTHEM_TOOLTIP,
+    NEXT_ICON,
+    NEXT_TOOLTIP,
+    PREV_ICON,
+    PREV_TOOLTIP,
     DIMENSIONS_ICON,
     DIMENSIONS_TOOLTIP,
     
@@ -57,5 +62,6 @@ public enum PropertyType {
     CAPITAL_COLUMN_HEADING,
     FLAG_COLUMN_HEADING,
     LEADER_NAME_COLUMN_HEADING,
-    LEADER_IMAGE_COLUMN_HEADING
+    LEADER_IMAGE_COLUMN_HEADING,
+    
 }
