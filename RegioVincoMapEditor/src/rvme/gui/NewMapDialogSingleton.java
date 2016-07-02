@@ -70,7 +70,7 @@ public class NewMapDialogSingleton extends Stage{
     Button okBtn;
     
     final double SPACE = 10;
-    final double SCALEW = 0.35;
+    final double SCALEW = 0.33;
     final double SCALEH = 0.3;
     
     /**

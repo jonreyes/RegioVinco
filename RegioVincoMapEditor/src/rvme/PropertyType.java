@@ -24,7 +24,8 @@ public enum PropertyType {
     BC_LABEL,
     BT_LABEL,
     ZOOM_LABEL,
-    ADD_IMAGE_LABEL,
+    ADD_LABEL,
+    RM_LABEL,
     RAC_LABEL,
     ANTHEM_LABEL,
     DIMENSIONS_LABEL,
@@ -40,8 +41,11 @@ public enum PropertyType {
     WIDTH_LABEL,
     HEIGHT_LABEL,
     
-    ADD_IMAGE_ICON,
-    ADD_IMAGE_TOOLTIP,
+    ADD_ICON,
+    ADD_TOOLTIP,
+    RM_ICON, 
+    RM_TOOLTIP, 
+    
     RAC_ICON,
     RAC_TOOLTIP,
     ANTHEM_ICON,
@@ -56,17 +60,6 @@ public enum PropertyType {
     NMDIALOG_TITLE,
     SRDIALOG_TITLE,
     DDIALOG_TITLE,
-    ADD_ICON, 
-    ADD_ITEM_TOOLTIP, 
-    
-    REMOVE_ICON, 
-    REMOVE_ITEM_TOOLTIP, 
-    
-    MOVE_UP_ICON, 
-    MOVE_UP_ITEM_TOOLTIP, 
-    
-    MOVE_DOWN_ICON, 
-    MOVE_DOWN_ITEM_TOOLTIP,
     
     NAME_COLUMN_HEADING,
     CAPITAL_COLUMN_HEADING,

@@ -7,7 +7,8 @@
 <properties>
     <property_list>
         <!-- PROGRAM ICON FILES -->
-        <property name="ADD_IMAGE_ICON"         value="add_image.png"></property>
+        <property name="ADD_ICON"               value="add.png"></property>
+        <property name="RM_ICON"                value="remove.png"></property>
         <property name="RAC_ICON"               value="dice.png"></property>
         <property name="ANTHEM_ICON"            value="music.png"></property>
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
@@ -15,11 +16,8 @@
         <property name="PREV_ICON"              value="prev.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
-	<property name="ADD_ITEM_TOOLTIP"	    value="Select Background Color"></property>
-	<property name="REMOVE_ITEM_TOOLTIP"        value="Select Fill Color"></property>
-	<property name="MOVE_UP_ITEM_TOOLTIP"	    value="Select Outline Color"></property>
-	<property name="MOVE_DOWN_ITEM_TOOLTIP"	    value="Take Snapshot"></property>
-        <property name="ADD_IMAGE_TOOLTIP"          value="Add an Image to the Map"></property>
+        <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
+        <property name="RM_TOOLTIP"                 value="Remove Selected Image from Map"></property>
 	<property name="RAC_TOOLTIP"                value="Randomly Reassign Map Colors"></property>
         <property name="ANTHEM_TOOLTIP"             value="Play the Map Region Anthem"></property>
         <property name="DIMENSIONS_TOOLTIP"         value="Change Map Dimensions"></property>
@@ -37,7 +35,8 @@
         <property name="BC_LABEL"                   value="Border Color:"></property>
         <property name="BT_LABEL"                   value="Border Thickness:"></property>
         <property name="ZOOM_LABEL"                 value="Zoom:"></property>
-        <property name="ADD_IMAGE_LABEL"            value="Add Image:"></property>
+        <property name="ADD_LABEL"                  value="Add Image:"></property>
+        <property name="RM_LABEL"                  value="Remove Image:"></property>
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
         <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
         <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>

@@ -25,9 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import properties_manager.PropertiesManager;
-import static rvme.PropertyType.ADD_IMAGE_ICON;
-import static rvme.PropertyType.ADD_IMAGE_LABEL;
-import static rvme.PropertyType.ADD_IMAGE_TOOLTIP;
+import static rvme.PropertyType.ADD_ICON;
 import static rvme.PropertyType.ANTHEM_ICON;
 import static rvme.PropertyType.ANTHEM_LABEL;
 import static rvme.PropertyType.ANTHEM_TOOLTIP;
@@ -65,6 +63,11 @@ import static saf.settings.AppPropertyType.SAVE_ICON;
 import static saf.settings.AppPropertyType.SAVE_TOOLTIP;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
+import static rvme.PropertyType.ADD_LABEL;
+import static rvme.PropertyType.ADD_TOOLTIP;
+import static rvme.PropertyType.RM_ICON;
+import static rvme.PropertyType.RM_LABEL;
+import static rvme.PropertyType.RM_TOOLTIP;
 
 /**
  * This class serves as the workspace component for this application, providing
@@ -101,8 +104,10 @@ public class Workspace extends AppWorkspaceComponent {
     Slider btSlider;
     Label zoomLabel;
     Slider zoomSlider;
-    Label addImageLabel;
-    Button addImageBtn;
+    Label addLabel;
+    Button addBtn;
+    Label rmLabel;
+    Button rmBtn;
     Label racLabel;
     Button racBtn;
     Label anthemLabel;
@@ -272,20 +277,31 @@ public class Workspace extends AppWorkspaceComponent {
         
         nameLabel = new Label(props.getProperty(NAME_LABEL));
         nameTextField = new TextField();
+        
         bgcLabel = new Label(props.getProperty(BGC_LABEL));
         bgcPicker = new ColorPicker();
+        
         bcLabel = new Label(props.getProperty(BC_LABEL));
         bcPicker = new ColorPicker();
+        
         btLabel = new Label(props.getProperty(BT_LABEL));
         btSlider = new Slider();
+        
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
         zoomSlider = new Slider();
-        addImageLabel = new Label(props.getProperty(ADD_IMAGE_LABEL));
-        addImageBtn = initChildButton(ADD_IMAGE_ICON.toString(), ADD_IMAGE_TOOLTIP.toString(), false);
+        
+        addLabel = new Label(props.getProperty(ADD_LABEL));
+        addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
+        
+        rmLabel = new Label(props.getProperty(RM_LABEL));
+        rmBtn = initChildButton(RM_ICON.toString(), RM_TOOLTIP.toString(), false);
+        
         racLabel = new Label(props.getProperty(RAC_LABEL));
         racBtn = initChildButton(RAC_ICON.toString(), RAC_TOOLTIP.toString(), false);
+        
         anthemLabel = new Label(props.getProperty(ANTHEM_LABEL));
         anthemBtn = initChildButton(ANTHEM_ICON.toString(), ANTHEM_TOOLTIP.toString(), false);
+        
         dimensionsLabel = new Label(props.getProperty(DIMENSIONS_LABEL));
         dimensionsBtn = initChildButton(DIMENSIONS_ICON.toString(), DIMENSIONS_TOOLTIP.toString(), false);
         
@@ -300,18 +316,21 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(btSlider, 3, 1);
         editGrid.add(zoomLabel, 4, 0);
         editGrid.add(zoomSlider, 4, 1);
-        editGrid.add(addImageLabel, 5, 0);
-        editGrid.add(addImageBtn, 5, 1);
-        editGrid.add(racLabel, 6, 0);
-        editGrid.add(racBtn, 6, 1);
-        editGrid.add(anthemLabel, 7, 0);
-        editGrid.add(anthemBtn, 7, 1);
-        editGrid.add(dimensionsLabel, 8, 0);
-        editGrid.add(dimensionsBtn, 8, 1);
+        editGrid.add(addLabel, 5, 0);
+        editGrid.add(addBtn, 5, 1);
+        editGrid.add(rmLabel, 6, 0);
+        editGrid.add(rmBtn, 6, 1);
+        editGrid.add(racLabel, 7, 0);
+        editGrid.add(racBtn, 7, 1);
+        editGrid.add(anthemLabel, 8, 0);
+        editGrid.add(anthemBtn, 8, 1);
+        editGrid.add(dimensionsLabel, 9, 0);
+        editGrid.add(dimensionsBtn, 9, 1);
         
         for(Node node : editGrid.getChildren()){
             GridPane.setHalignment(node, HPos.CENTER);
         }
+        
         editToolBar.getChildren().add(editGrid);
     }
     
@@ -374,7 +393,8 @@ public class Workspace extends AppWorkspaceComponent {
         bcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         btLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         zoomLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        addImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        addLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        rmLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         racLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         anthemLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         dimensionsLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
