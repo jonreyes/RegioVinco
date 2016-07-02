@@ -76,7 +76,7 @@ public class SubRegionDialogSingleton extends Stage{
     Button prevBtn;
     Button okBtn;
     
-    final double BUTTON_SPACE = 95;
+    final double BUTTON_SPACE = 90;
     final double BUTTON_SIZE = 15;
     final double SCALEW = 0.31;
     final double SCALEH = 0.33;
