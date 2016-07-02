@@ -36,6 +36,9 @@ import static rvme.PropertyType.BGC_LABEL;
 import static rvme.PropertyType.BT_LABEL;
 import static rvme.PropertyType.CAPITAL_COLUMN_HEADING;
 import static rvme.PropertyType.DATA_LABEL;
+import static rvme.PropertyType.DIMENSIONS_ICON;
+import static rvme.PropertyType.DIMENSIONS_LABEL;
+import static rvme.PropertyType.DIMENSIONS_TOOLTIP;
 import static rvme.PropertyType.EXPORT_ICON;
 import static rvme.PropertyType.FLAG_COLUMN_HEADING;
 import static rvme.PropertyType.LEADER_IMAGE_COLUMN_HEADING;
@@ -104,6 +107,8 @@ public class Workspace extends AppWorkspaceComponent {
     Button racBtn;
     Label anthemLabel;
     Button anthemBtn;
+    Label dimensionsLabel;
+    Button dimensionsBtn;
     
     SplitPane editView;
     ScrollPane mapView;
@@ -148,6 +153,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initTitle(){
         title = new Label(props.getProperty(APP_TITLE));
+        title.setTranslateX(0.33*app.getGUI().getWindow().getWidth());
         fileToolBar.getItems().add(title);
     }
     
@@ -275,6 +281,8 @@ public class Workspace extends AppWorkspaceComponent {
         racBtn = initChildButton(RAC_ICON.toString(), RAC_TOOLTIP.toString(), false);
         anthemLabel = new Label(props.getProperty(ANTHEM_LABEL));
         anthemBtn = initChildButton(ANTHEM_ICON.toString(), ANTHEM_TOOLTIP.toString(), false);
+        dimensionsLabel = new Label(props.getProperty(DIMENSIONS_LABEL));
+        dimensionsBtn = initChildButton(DIMENSIONS_ICON.toString(), DIMENSIONS_TOOLTIP.toString(), false);
         
         editGrid = new GridPane();
         editGrid.add(nameLabel, 0, 0);
@@ -293,6 +301,8 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(racBtn, 6, 1);
         editGrid.add(anthemLabel, 7, 0);
         editGrid.add(anthemBtn, 7, 1);
+        editGrid.add(dimensionsLabel, 8, 0);
+        editGrid.add(dimensionsBtn, 8, 1);
         
         for(Node node : editGrid.getChildren()){
             GridPane.setHalignment(node, HPos.CENTER);
@@ -362,6 +372,7 @@ public class Workspace extends AppWorkspaceComponent {
         addImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         racLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         anthemLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        dimensionsLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         dataView.getStyleClass().add(CLASS_BORDERED_PANE);
         dataLabel.getStyleClass().add(CLASS_HEADING_LABEL);
     }

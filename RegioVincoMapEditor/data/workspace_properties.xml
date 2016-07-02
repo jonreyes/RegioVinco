@@ -14,6 +14,7 @@
         <property name="ADD_IMAGE_ICON"         value="Add Image-64.png"></property>
         <property name="RAC_ICON"               value="Dice-64.png"></property>
         <property name="ANTHEM_ICON"            value="Music-64.png"></property>
+        <property name="DIMENSIONS_ICON"        value="Resize-64.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
 	<property name="ADD_ITEM_TOOLTIP"	    value="Select Background Color"></property>
@@ -21,8 +22,9 @@
 	<property name="MOVE_UP_ITEM_TOOLTIP"	    value="Select Outline Color"></property>
 	<property name="MOVE_DOWN_ITEM_TOOLTIP"	    value="Take Snapshot"></property>
         <property name="ADD_IMAGE_TOOLTIP"          value="Add an Image to the Map"></property>
-	<property name="RAC_TOOLTIP"          value="Randomly Reassign the Colors of Map"></property>
-        <property name="ANTHEM_TOOLTIP"       value="Play the Map Region's Anthem"></property>
+	<property name="RAC_TOOLTIP"          value="Randomly Reassign Map Colors"></property>
+        <property name="ANTHEM_TOOLTIP"       value="Play the Map Region Anthem"></property>
+        <property name="DIMENSIONS_TOOLTIP"     value="Change Map Dimensions"></property>
         
 	<!-- HEADINGS AND PROMPTS -->
 	<property name="WORKSPACE_HEADING_LABEL"    value="To Do List"></property>
@@ -35,13 +37,16 @@
         <property name="ADD_IMAGE_LABEL"            value="Add Image:"></property>
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
         <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
+        <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>
         <property name="DATA_LABEL"                 value="Map Data"></property>
+        
 	<!--DIALOG LABELS-->
         <property name="CAPITAL_LABEL"              value="Capital:"></property>
         <property name="FLAG_LABEL"                 value="Flag:"></property>
         <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>
         <property name="LEADER_IMAGE_LABEL"         value="Leader Image:"></property>
         <property name="SRDIALOG_TITLE"             value="Edit SubRegion Details"></property>
+        
         <!-- TABLE COLUMN HEADINGS -->
         <property name="NAME_COLUMN_HEADING"                value="Name"></property>
         <property name="CAPITAL_COLUMN_HEADING"             value="Capital"></property>

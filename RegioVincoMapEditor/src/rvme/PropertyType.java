@@ -22,6 +22,8 @@ public enum PropertyType {
     ADD_IMAGE_LABEL,
     RAC_LABEL,
     ANTHEM_LABEL,
+    DIMENSIONS_LABEL,
+    
     DATA_LABEL,
     
     CAPITAL_LABEL,
@@ -35,6 +37,8 @@ public enum PropertyType {
     RAC_TOOLTIP,
     ANTHEM_ICON,
     ANTHEM_TOOLTIP,
+    DIMENSIONS_ICON,
+    DIMENSIONS_TOOLTIP,
     
     SRDIALOG_TITLE,
     ADD_ICON, 
