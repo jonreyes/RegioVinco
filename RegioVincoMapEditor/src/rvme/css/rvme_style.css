@@ -21,7 +21,7 @@
 .grid_pane {
     -fx-background-color: #68C2F2;    
     -fx-padding: 5px;
-    -fx-hgap: 5px;
+    -fx-hgap: 10px;
     -fx-vgap: 10px;    
     -fx-alignment: CENTER;
 }

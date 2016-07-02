@@ -112,7 +112,7 @@ public class DimensionsDialogSingleton extends Stage {
     }
    
     private void initHandlers(){
-        
+        okBtn.setOnAction(e->this.hide());
     }
     
     private void initStyleSheet(){
