@@ -14,11 +14,11 @@
 	<property name="APP_CSS"	    value="rvme_style.css"></property>
         
         <!-- PROGRAM ICON FILES -->
-        <property name="NEW_ICON"	    value="Create New-64.png"></property>
-        <property name="LOAD_ICON"	    value="Open Folder-64.png"></property>
-        <property name="SAVE_ICON"	    value="Save-64.png"></property>
-        <property name="EXPORT_ICON"        value="Export-64.png"></property>
-        <property name="EXIT_ICON"          value="Exit Sign-64.png"></property> 
+        <property name="NEW_ICON"	    value="new.png"></property>
+        <property name="LOAD_ICON"	    value="open.png"></property>
+        <property name="SAVE_ICON"	    value="save.png"></property>
+        <property name="EXPORT_ICON"        value="export.png"></property>
+        <property name="EXIT_ICON"          value="exit.png"></property> 
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="NEW_TOOLTIP"		value="Create a New Map"></property>
