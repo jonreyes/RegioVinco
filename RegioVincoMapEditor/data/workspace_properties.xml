@@ -47,6 +47,9 @@
         <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>
         <property name="LEADER_IMAGE_LABEL"         value="Leader Image:"></property>
         <property name="SRDIALOG_TITLE"             value="Edit SubRegion Details"></property>
+        <property name="WIDTH_LABEL"                value="Width:"></property>
+        <property name="HEIGHT_LABEL"               value="Height:"></property>
+        <property name="DDIALOG_TITLE"              value="Change Dimensions"></property>
         
         <!-- TABLE COLUMN HEADINGS -->
         <property name="NAME_COLUMN_HEADING"                value="Name"></property>

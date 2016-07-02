@@ -126,7 +126,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     NewMapDialogSingleton newMapDialog;
     SubRegionDialogSingleton subRegionDialog;
-    //DimensionsDialogSingleton dimensionsDialog;
+    DimensionsDialogSingleton dimensionsDialog;
     
     final double BUTTON_SIZE = 20;
     
@@ -147,6 +147,9 @@ public class Workspace extends AppWorkspaceComponent {
         rvmeController =  new RVMEController(app);
         mapDummy.setOnMouseClicked(e->{
             subRegionDialog.show();
+        });
+        dimensionsBtn.setOnMouseClicked(e->{
+            dimensionsDialog.show();
         });
     }
     
@@ -313,8 +316,8 @@ public class Workspace extends AppWorkspaceComponent {
         //newMapDialog.init(app);
         subRegionDialog = SubRegionDialogSingleton.getSingleton();
         subRegionDialog.init(app);
-        //dimensionsDialog = DimensionsDialogSingleton.getSingleton();
-        //dimensionsDialog.init(app);
+        dimensionsDialog = DimensionsDialogSingleton.getSingleton();
+        dimensionsDialog.init(app);
     }
     
     /**

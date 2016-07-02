@@ -32,6 +32,9 @@ public enum PropertyType {
     LEADER_NAME_LABEL,
     LEADER_IMAGE_LABEL,
     
+    WIDTH_LABEL,
+    HEIGHT_LABEL,
+    
     ADD_IMAGE_ICON,
     ADD_IMAGE_TOOLTIP,
     RAC_ICON,
@@ -46,6 +49,7 @@ public enum PropertyType {
     DIMENSIONS_TOOLTIP,
     
     SRDIALOG_TITLE,
+    DDIALOG_TITLE,
     ADD_ICON, 
     ADD_ITEM_TOOLTIP, 
     
