@@ -19,7 +19,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_IMAGE_ICON;
 import static rvme.PropertyType.ADD_IMAGE_LABEL;
@@ -42,9 +46,11 @@ import static rvme.PropertyType.RAC_ICON;
 import static rvme.PropertyType.RAC_LABEL;
 import static rvme.PropertyType.RAC_TOOLTIP;
 import static rvme.PropertyType.ZOOM_LABEL;
+import rvme.controller.RVMEController;
 import saf.AppTemplate;
 import saf.components.AppWorkspaceComponent;
 import saf.controller.AppFileController;
+import static saf.settings.AppPropertyType.APP_TITLE;
 import static saf.settings.AppPropertyType.EXIT_ICON;
 import static saf.settings.AppPropertyType.EXIT_TOOLTIP;
 import static saf.settings.AppPropertyType.EXPORT_TOOLTIP;
@@ -67,9 +73,11 @@ import static saf.settings.AppStartupConstants.PATH_IMAGES;
 public class Workspace extends AppWorkspaceComponent {
     
     AppTemplate app;
+    PropertiesManager props;
     
-    VBox controlBox;
+    RVMEController rvmeController;
     
+    Label title;
     AppFileController fileController;
     ToolBar fileToolBar;
     Button newBtn;
@@ -99,7 +107,9 @@ public class Workspace extends AppWorkspaceComponent {
     
     SplitPane editView;
     ScrollPane mapView;
-
+    StackPane mapStack;
+    Circle mapDummy;
+    
     VBox dataView;
     Label dataLabel;
     
@@ -110,16 +120,35 @@ public class Workspace extends AppWorkspaceComponent {
     TableColumn leaderNameColumn;
     TableColumn leaderImageColumn;
     
-    final double BUTTON_SIZE = 25;
+    NewMapDialogSingleton newMapDialog;
+    SubRegionDialogSingleton subRegionDialog;
+    //DimensionsDialogSingleton dimensionsDialog;
+    
+    final double BUTTON_SIZE = 20;
     
     public Workspace(AppTemplate initApp) {
         app = initApp;
+        props = PropertiesManager.getPropertiesManager();
         initGUI();
+        initControls();
     }
     
     private void initGUI(){
         initFileToolbar();
+        initTitle();
         initWorkspace();
+    }
+    
+    private void initControls(){
+        rvmeController =  new RVMEController(app);
+        mapDummy.setOnMouseClicked(e->{
+            subRegionDialog.show();
+        });
+    }
+    
+    private void initTitle(){
+        title = new Label(props.getProperty(APP_TITLE));
+        fileToolBar.getItems().add(title);
     }
     
     private void initWorkspace(){
@@ -128,6 +157,7 @@ public class Workspace extends AppWorkspaceComponent {
         initEditView();
         workspace.getChildren().add(editToolBar);
         workspace.getChildren().add(editView);
+        initDialogs();
     }
     
     private void initEditView(){
@@ -142,10 +172,16 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapView(){
         mapView = new ScrollPane();
+        mapStack = new StackPane();
+        mapDummy = new Circle(250);
+        mapDummy.setFill(Color.LIGHTSKYBLUE);
+        Text dumbT = new Text("MAP GOES HERE\nCLICK TO TEST");
+        mapStack.getChildren().add(mapDummy);
+        mapStack.getChildren().add(dumbT);
+        mapView.setContent(mapStack);
     }
     
     private void initDataView(){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
         dataView = new VBox();
         dataLabel = new Label(props.getProperty(DATA_LABEL));
         initTableView();
@@ -154,7 +190,6 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initTableView(){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
         dataTable = new TableView();
         
         nameColumn = new TableColumn(props.getProperty(NAME_COLUMN_HEADING));
@@ -222,7 +257,6 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initEditToolbar(){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
         editToolBar = new FlowPane();
         
         nameLabel = new Label(props.getProperty(NAME_LABEL));
@@ -243,9 +277,6 @@ public class Workspace extends AppWorkspaceComponent {
         anthemBtn = initChildButton(ANTHEM_ICON.toString(), ANTHEM_TOOLTIP.toString(), false);
         
         editGrid = new GridPane();
-        editGrid.setAlignment(Pos.CENTER);
-        editGrid.setHgap(10);
-        editGrid.setVgap(5);
         editGrid.add(nameLabel, 0, 0);
         editGrid.add(nameTextField, 0, 1);
         editGrid.add(bgcLabel, 1, 0);
@@ -269,6 +300,15 @@ public class Workspace extends AppWorkspaceComponent {
         editToolBar.getChildren().add(editGrid);
     }
     
+    private void initDialogs(){
+        //newMapDialog = NewMapDialogSingleton.getSingleton();
+        //newMapDialog.init(app);
+        subRegionDialog = SubRegionDialogSingleton.getSingleton();
+        subRegionDialog.init(app);
+        //dimensionsDialog = DimensionsDialogSingleton.getSingleton();
+        //dimensionsDialog.init(app);
+    }
+    
     /**
      * This is a public helper method for initializing a simple button with
      * an icon and tooltip and placing it into a toolbar.
@@ -285,8 +325,6 @@ public class Workspace extends AppWorkspaceComponent {
      * pane container.
      */
     private Button initChildButton(String icon, String tooltip, boolean disabled) {
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
-	
 	// LOAD THE ICON FROM THE PROVIDED FILE
         String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(icon);
         Image buttonIcon = new Image(imagePath);
@@ -312,8 +350,10 @@ public class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
+        title.getStyleClass().add(CLASS_HEADING_LABEL);
         fileToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
         editToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
+        editGrid.getStyleClass().add(CLASS_GRID_PANE);
         nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         bgcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         bcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
