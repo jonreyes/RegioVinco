@@ -79,7 +79,7 @@ public class SubRegionDialogSingleton extends Stage{
     final double BUTTON_SPACE = 90;
     final double BUTTON_SIZE = 15;
     final double SCALEW = 0.31;
-    final double SCALEH = 0.33;
+    final double SCALEH = 0.65;
     /**
      * Note that the constructor is private since it follows
      * the singleton design pattern.
@@ -117,11 +117,17 @@ public class SubRegionDialogSingleton extends Stage{
         capitalLabel = new Label(props.getProperty(CAPITAL_LABEL));
         capitalTextField = new TextField();
         flagLabel = new Label(props.getProperty(FLAG_LABEL));
-        flagImageView = new ImageView();
+        Image dummyFlag = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkflag.png");
+        flagImageView = new ImageView(dummyFlag);
+        flagImageView.setFitWidth(200);
+        flagImageView.setFitHeight(100);
         leaderNameLabel = new Label(props.getProperty(LEADER_NAME_LABEL));
         leaderTextField = new TextField();
         leaderImageLabel = new Label(props.getProperty(LEADER_IMAGE_LABEL));
-        leaderImageView = new ImageView();
+        Image dummyLeader = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkleader.png");
+        leaderImageView = new ImageView(dummyLeader);
+        leaderImageView.setFitWidth(200);
+        leaderImageView.setFitHeight(200);
         nextBtn = initChildButton(NEXT_ICON.toString(), NEXT_TOOLTIP.toString(), false);
         prevBtn = initChildButton(PREV_ICON.toString(), PREV_TOOLTIP.toString(), false);
         okBtn = new Button(props.getProperty(OK_LABEL));
