@@ -1,12 +1,12 @@
 package rvme.gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
@@ -18,17 +18,12 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
 import static rvme.PropertyType.ANTHEM_ICON;
@@ -74,6 +69,7 @@ import static rvme.PropertyType.MAP_IMAGE;
 import static rvme.PropertyType.RM_ICON;
 import static rvme.PropertyType.RM_LABEL;
 import static rvme.PropertyType.RM_TOOLTIP;
+import rvme.data.SubRegion;
 
 /**
  * This class serves as the workspace component for this application, providing
@@ -130,7 +126,7 @@ public class Workspace extends AppWorkspaceComponent {
     VBox dataView;
     Label dataLabel;
     
-    TableView dataTable;
+    TableView<SubRegion> dataTable;
     TableColumn nameColumn;
     TableColumn capitalColumn;
     TableColumn flagColumn;
@@ -198,6 +194,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initTitle(){
         title = new Label(props.getProperty(APP_TITLE));
+        title.setTranslateX(670);
         fileToolBar.getItems().add(title);
     }
     
@@ -250,8 +247,6 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.getChildren().add(mapBorder);
     }
     
-    
-    
     private void initDataView(){
         dataView = new VBox();
         dataLabel = new Label(props.getProperty(DATA_LABEL));
@@ -261,36 +256,42 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initTableView(){
-        dataTable = new TableView();
+        dataTable = new TableView<>();
+        dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         nameColumn = new TableColumn(props.getProperty(NAME_COLUMN_HEADING));
         capitalColumn = new TableColumn(props.getProperty(CAPITAL_COLUMN_HEADING));
         flagColumn = new TableColumn(props.getProperty(FLAG_COLUMN_HEADING));
-        leaderNameColumn = new TableColumn(props.getProperty(LEADER_NAME_COLUMN_HEADING));
+        leaderNameColumn = new TableColumn(props.getProperty(LEADER_NAME_COLUMN_HEADING).substring(0, 6));
         leaderImageColumn = new TableColumn(props.getProperty(LEADER_IMAGE_COLUMN_HEADING));
         
         // AND LINK THE COLUMNS TO THE DATA
         nameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("name"));
         capitalColumn.setCellValueFactory(new PropertyValueFactory<String, String>("capital"));
         flagColumn.setCellValueFactory(new PropertyValueFactory<ImageView, String>("flag"));
-        leaderNameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader name"));
+        leaderNameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader"));
         leaderImageColumn.setCellValueFactory(new PropertyValueFactory<ImageView, String>("leader image"));
         
         
         // SCALE THE COLUMN SIZES
         nameColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         capitalColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
-        flagColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
-        leaderImageColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
+        //flagColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
+        //leaderImageColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         leaderNameColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         
         dataTable.getColumns().add(nameColumn);
         dataTable.getColumns().add(capitalColumn);
-        dataTable.getColumns().add(flagColumn);
-        dataTable.getColumns().add(leaderImageColumn);
+        //dataTable.getColumns().add(flagColumn);
+        //dataTable.getColumns().add(leaderImageColumn);
         dataTable.getColumns().add(leaderNameColumn);
+        
+        ObservableList<SubRegion> data = FXCollections.observableArrayList();
+        data.add(new SubRegion("North Korea","Pyongyang","Kim Jong Un"));
+        data.add(new SubRegion("TEST","TEST","TEST"));
+        
+        dataTable.setItems(data);
     }
-    
     /**
      * This function initializes all the buttons in the toolbar at the top of
      * the application window. These are related to file management.
@@ -324,9 +325,9 @@ public class Workspace extends AppWorkspaceComponent {
         
         btLabel = new Label(props.getProperty(BT_LABEL));
         btSlider = new Slider();
-        
+
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
-        zoomSlider = new Slider();
+        zoomSlider = new Slider(0,99,50);
         
         addLabel = new Label(props.getProperty(ADD_LABEL));
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
@@ -460,5 +461,5 @@ public class Workspace extends AppWorkspaceComponent {
         dataView.getStyleClass().add(CLASS_BORDERED_PANE);
         dataLabel.getStyleClass().add(CLASS_HEADING_LABEL);
     }
-
 }
+
