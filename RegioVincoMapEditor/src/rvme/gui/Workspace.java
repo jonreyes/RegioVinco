@@ -1,11 +1,12 @@
 package rvme.gui;
 
-import java.awt.Color;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
@@ -17,10 +18,15 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
@@ -117,6 +123,7 @@ public class Workspace extends AppWorkspaceComponent {
     SplitPane editView;
     ScrollPane mapView;
     StackPane mapStack;
+    Rectangle mapBG;
     ImageView mapDummy;
     Node selection;
     
@@ -218,9 +225,20 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack = new StackPane();
         mapDummy = initImageView(MAP_IMAGE.toString());
         Text dumbT = new Text("MAP GOES HERE\nCLICK TO TEST");
+        initMapBG();
         mapStack.getChildren().add(mapDummy);
         mapStack.getChildren().add(dumbT);
         mapView.setContent(mapStack);
+    }
+    
+    private void initMapBG(){
+        mapBG = new Rectangle();
+        mapBG.widthProperty().bind(mapView.widthProperty());
+        mapBG.heightProperty().bind(mapView.heightProperty());
+        mapBG.fillProperty().bind(bgcPicker.valueProperty());
+        mapBG.strokeProperty().bind(bcPicker.valueProperty());
+        mapBG.strokeWidthProperty().bind(btSlider.valueProperty());
+        mapStack.getChildren().add(mapBG);
     }
     
     private void initDataView(){
@@ -355,8 +373,8 @@ public class Workspace extends AppWorkspaceComponent {
         String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(img);
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(500);
-        imageView.setFitHeight(500);
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(600);
         return imageView;
     }
     
