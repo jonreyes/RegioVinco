@@ -114,20 +114,28 @@ public class SubRegionDialogSingleton extends Stage{
     private void initGUI(){
         nameLabel = new Label(props.getProperty(NAME_LABEL));
         nameTextField = new TextField();
+        nameTextField.setText("North Korea");
+        
         capitalLabel = new Label(props.getProperty(CAPITAL_LABEL));
         capitalTextField = new TextField();
+        capitalTextField.setText("Pyongyang");
+        
         flagLabel = new Label(props.getProperty(FLAG_LABEL));
         Image dummyFlag = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkflag.png");
         flagImageView = new ImageView(dummyFlag);
         flagImageView.setFitWidth(200);
         flagImageView.setFitHeight(100);
+        
         leaderNameLabel = new Label(props.getProperty(LEADER_NAME_LABEL));
         leaderTextField = new TextField();
+        leaderTextField.setText("Kim Jong Un");
+        
         leaderImageLabel = new Label(props.getProperty(LEADER_IMAGE_LABEL));
         Image dummyLeader = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkleader.png");
         leaderImageView = new ImageView(dummyLeader);
         leaderImageView.setFitWidth(200);
-        leaderImageView.setFitHeight(200);
+        leaderImageView.setFitHeight(225);
+
         nextBtn = initChildButton(NEXT_ICON.toString(), NEXT_TOOLTIP.toString(), false);
         prevBtn = initChildButton(PREV_ICON.toString(), PREV_TOOLTIP.toString(), false);
         okBtn = new Button(props.getProperty(OK_LABEL));
