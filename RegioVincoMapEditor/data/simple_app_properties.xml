@@ -9,7 +9,7 @@
 <properties>
     <property_list>
         <property name="APP_TITLE"	    value="Regio Vinco Map Editor"></property>
-	<property name="APP_LOGO"	    value="RVMELogo.png"></property>
+	<property name="APP_LOGO"	    value="rvmelogo.png"></property>
 	<property name="APP_PATH_CSS"	    value="css/"></property>
 	<property name="APP_CSS"	    value="rvme_style.css"></property>
         
