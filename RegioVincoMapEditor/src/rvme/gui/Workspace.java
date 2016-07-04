@@ -1,5 +1,6 @@
 package rvme.gui;
 
+import java.awt.Color;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -117,6 +118,7 @@ public class Workspace extends AppWorkspaceComponent {
     ScrollPane mapView;
     StackPane mapStack;
     ImageView mapDummy;
+    Node selection;
     
     VBox dataView;
     Label dataLabel;
@@ -178,6 +180,9 @@ public class Workspace extends AppWorkspaceComponent {
     private void initEditControls(){
         addBtn.setOnMouseClicked(e->{
             rvmeController.addImage();
+        });
+        rmBtn.setOnMouseClicked(e->{
+           rvmeController.removeImage();
         });
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
@@ -391,6 +396,15 @@ public class Workspace extends AppWorkspaceComponent {
     
     public StackPane getMapStack(){
         return mapStack;
+    }
+    
+    public Node getSelection(){
+        return selection;
+    }
+    
+    public void setSelection(ImageView imageView){
+        selection = imageView;
+        System.out.println(selection.toString()+"selected");
     }
     
     @Override

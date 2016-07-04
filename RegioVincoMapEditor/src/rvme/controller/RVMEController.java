@@ -8,6 +8,7 @@ package rvme.controller;
 import java.io.File;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import properties_manager.PropertiesManager;
@@ -49,6 +50,7 @@ public class RVMEController {
                 String imagePath = FILE_PROTOCOL + selectedFile.getPath();
                 Image image = new Image(imagePath);
                 ImageView addImageView = new ImageView(image);
+                initImageControls(addImageView);
                 
                 Workspace workspace = (Workspace) app.getWorkspaceComponent();
                 StackPane mapStack = workspace.getMapStack();
@@ -62,5 +64,24 @@ public class RVMEController {
                 dialog.show(props.getProperty(ADD_ERROR_TITLE), props.getProperty(ADD_ERROR_MESSAGE));
             }
         }
+    }
+    
+    public void removeImage(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        StackPane mapStack = workspace.getMapStack();
+        mapStack.getChildren().remove(workspace.getSelection());
+    }
+    
+    private void initImageControls(ImageView imageView){
+        imageView.setOnMouseClicked(e->{
+            if(e.getClickCount()==2){
+                selectImage(imageView);
+            }
+        });
+    }
+    
+    private void selectImage(ImageView imageView){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.setSelection(imageView);
     }
 }
