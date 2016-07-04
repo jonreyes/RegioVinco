@@ -8,7 +8,6 @@ package rvme.controller;
 import java.io.File;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import properties_manager.PropertiesManager;
@@ -83,5 +82,17 @@ public class RVMEController {
     private void selectImage(ImageView imageView){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.setSelection(imageView);
+    }
+
+    public void playAnthem(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getPlayButton().setVisible(false);
+        workspace.getPauseButton().setVisible(true);
+    }
+    
+    public void pauseAnthem(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getPauseButton().setVisible(false);
+        workspace.getPauseButton().setVisible(true);
     }
 }

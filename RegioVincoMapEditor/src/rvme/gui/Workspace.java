@@ -29,9 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
-import static rvme.PropertyType.ANTHEM_ICON;
 import static rvme.PropertyType.ANTHEM_LABEL;
-import static rvme.PropertyType.ANTHEM_TOOLTIP;
 import static rvme.PropertyType.BC_LABEL;
 import static rvme.PropertyType.BGC_LABEL;
 import static rvme.PropertyType.BT_LABEL;
@@ -69,11 +67,15 @@ import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import static rvme.PropertyType.ADD_LABEL;
 import static rvme.PropertyType.ADD_TOOLTIP;
 import static rvme.PropertyType.MAP_IMAGE;
+import static rvme.PropertyType.PAUSE_ICON;
+import static rvme.PropertyType.PAUSE_TOOLTIP;
 import static rvme.PropertyType.RM_ICON;
 import static rvme.PropertyType.RM_LABEL;
 import static rvme.PropertyType.RM_TOOLTIP;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
+import static rvme.PropertyType.PLAY_ICON;
+import static rvme.PropertyType.PLAY_TOOLTIP;
 
 /**
  * This class serves as the workspace component for this application, providing
@@ -117,7 +119,8 @@ public class Workspace extends AppWorkspaceComponent {
     Label racLabel;
     Button racBtn;
     Label anthemLabel;
-    Button anthemBtn;
+    Button playBtn;
+    Button pauseBtn;
     Label dimensionsLabel;
     Button dimensionsBtn;
     
@@ -199,6 +202,13 @@ public class Workspace extends AppWorkspaceComponent {
         rmBtn.setOnMouseClicked(e->{
            rvmeController.removeImage();
         });
+        playBtn.setOnMouseClicked(e->{
+           rvmeController.playAnthem();
+        });
+        pauseBtn.setOnMouseClicked(e->{
+            pauseBtn.setVisible(false);
+            playBtn.setVisible(true);
+        });
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
         });    
@@ -239,7 +249,7 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.scaleXProperty().bind(zoomSlider.valueProperty());
         mapStack.scaleYProperty().bind(zoomSlider.valueProperty());
 
-        mapDummy = initImageView(MAP_IMAGE.toString());
+        mapDummy = initImageView(MAP_IMAGE.toString(),600);
         
         initMapBG();
         mapStack.getChildren().add(mapDummy);
@@ -395,7 +405,10 @@ public class Workspace extends AppWorkspaceComponent {
         racBtn = initChildButton(RAC_ICON.toString(), RAC_TOOLTIP.toString(), false);
         
         anthemLabel = new Label(props.getProperty(ANTHEM_LABEL));
-        anthemBtn = initChildButton(ANTHEM_ICON.toString(), ANTHEM_TOOLTIP.toString(), false);
+        
+        playBtn = initChildButton(PLAY_ICON.toString(), PLAY_TOOLTIP.toString(), false);
+        pauseBtn = initChildButton(PAUSE_ICON.toString(), PAUSE_TOOLTIP.toString(), false);
+        pauseBtn.setVisible(false);
         
         dimensionsLabel = new Label(props.getProperty(DIMENSIONS_LABEL));
         dimensionsBtn = initChildButton(DIMENSIONS_ICON.toString(), DIMENSIONS_TOOLTIP.toString(), false);
@@ -418,7 +431,8 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(racLabel, 7, 0);
         editGrid.add(racBtn, 7, 1);
         editGrid.add(anthemLabel, 8, 0);
-        editGrid.add(anthemBtn, 8, 1);
+        editGrid.add(playBtn, 8, 1);
+        editGrid.add(pauseBtn, 8, 1);
         editGrid.add(dimensionsLabel, 9, 0);
         editGrid.add(dimensionsBtn, 9, 1);
         
@@ -438,12 +452,12 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsDialog.init(app);
     }
     
-    public ImageView initImageView(String img){
+    public ImageView initImageView(String img, double size){
         String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(img);
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(600);
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
         return imageView;
     }
     
@@ -483,6 +497,14 @@ public class Workspace extends AppWorkspaceComponent {
     
     public StackPane getMapStack(){
         return mapStack;
+    }
+    
+    public Button getPlayButton(){
+        return playBtn;
+    }
+    
+    public Button getPauseButton(){
+        return pauseBtn;
     }
     
     public Node getSelection(){

@@ -10,7 +10,8 @@
         <property name="ADD_ICON"               value="add.png"></property>
         <property name="RM_ICON"                value="remove.png"></property>
         <property name="RAC_ICON"               value="dice.png"></property>
-        <property name="ANTHEM_ICON"            value="music.png"></property>
+        <property name="PLAY_ICON"              value="play.png"></property>
+        <property name="PAUSE_ICON"             value="pause.png"></property>
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
         <property name="NEXT_ICON"              value="next.png"></property>
         <property name="PREV_ICON"              value="prev.png"></property>
@@ -20,7 +21,8 @@
         <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
         <property name="RM_TOOLTIP"                 value="Remove Selected Image from Map"></property>
 	<property name="RAC_TOOLTIP"                value="Randomly Reassign Map Colors"></property>
-        <property name="ANTHEM_TOOLTIP"             value="Play the Map Region Anthem"></property>
+        <property name="PLAY_TOOLTIP"               value="Play the Region Anthem"></property>
+        <property name="PAUSE_TOOLTIP"              value="Pause the Region Anthem"></property>
         <property name="DIMENSIONS_TOOLTIP"         value="Change Map Dimensions"></property>
         <property name="NEXT_TOOLTIP"               value="Next SubRegion"></property>
         <property name="PREV_TOOLTIP"               value="Previous SubRegion"></property>
@@ -35,7 +37,7 @@
         <property name="ADD_LABEL"                  value="Add Image:"></property>
         <property name="RM_LABEL"                   value="Remove Image:"></property>
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
-        <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
+        <property name="ANTHEM_LABEL"               value="Anthem:"></property>
         <property name="DATA_LABEL"                 value="Map Data"></property>
         
 	<!--DIALOG LABELS-->

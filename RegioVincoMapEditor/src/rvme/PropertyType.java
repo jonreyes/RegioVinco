@@ -45,8 +45,10 @@ public enum PropertyType {
     
     RAC_ICON,
     RAC_TOOLTIP,
-    ANTHEM_ICON,
-    ANTHEM_TOOLTIP,
+    PLAY_ICON,
+    PAUSE_ICON,
+    PLAY_TOOLTIP,
+    PAUSE_TOOLTIP,
     NEXT_ICON,
     NEXT_TOOLTIP,
     PREV_ICON,
