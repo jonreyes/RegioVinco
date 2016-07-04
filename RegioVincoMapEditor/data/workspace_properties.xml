@@ -14,7 +14,7 @@
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
         <property name="NEXT_ICON"              value="next.png"></property>
         <property name="PREV_ICON"              value="prev.png"></property>
-        <property name="MAP_IMAGE"              value="rvmelogo.png"></property>
+        <property name="MAP_IMAGE"              value="nkmap.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
