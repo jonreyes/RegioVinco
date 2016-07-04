@@ -5,26 +5,64 @@
  */
 package rvme.data;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.image.Image;
 
 /**
  *
  * @author Jon Reyes
- *//*
+ */
 public class SubRegion {
-    final StringProperty parent;
-    final StringProperty geometry;
-    
     final StringProperty name;
     final StringProperty capital;
-    final ObjectProperty flag;
-    final StringProperty leaderName;
-    final ObjectProperty leaderImage;
+    final StringProperty leader;
     
-    public SubRegion(String name, String capital, Image flag, String leaderName, Image leaderImage){
-        
+    public SubRegion(){
+        name = new SimpleStringProperty();
+        capital = new SimpleStringProperty();
+        leader = new SimpleStringProperty();
+    }
+    
+    public SubRegion(String name, String capital, String leader){
+        this();
+        this.name.set(name);
+        this.capital.set(capital);
+        this.leader.set(leader);
+    }
+    
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public StringProperty capitalProperty() {
+        return capital;
+    }
+
+    public StringProperty leaderProperty() {
+        return leader;
+    }
+    
+    public String getName(){
+        return name.get();
+    }
+    
+    public String getCapital(){
+        return capital.get();
+    }
+    
+    public String getLeader(){
+        return leader.get();
+    }
+    
+    public void setName(String name){
+        this.name.set(name);
+    }
+    
+    public void setCapital(String capital){
+        this.capital.set(capital);
+    }
+    
+    public void setLeader(String leader){
+        this.leader.set(leader);
     }
 }
-*/
