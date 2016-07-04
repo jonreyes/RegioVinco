@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
+import javafx.scene.shape.Polygon;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -35,82 +36,39 @@ import rvme.data.DataManager;
  */
 public class FileManager implements AppFileComponent {
     // FOR JSON SAVING AND LOADING
-    static final String JSON_CATEGORY = "category";
-    static final String JSON_DESCRIPTION = "description";
-    static final String JSON_START_DATE = "start_date";
-    static final String JSON_END_DATE = "end_date";
-    static final String JSON_COMPLETED = "completed";
+    static final String JSON_X = "X";
+    static final String JSON_Y = "Y";
     
-    static final String JSON_NAME = "name";
-    static final String JSON_OWNER = "owner";
-    static final String JSON_ITEMS = "items";
+    static final String JSON_SUBREGION_POLYGONS = "SUBREGION_POLYGONS";
     
-    /**
-     * This method is for saving user work.
-     * 
-     * @param data The data management component for this application.
-     * 
-     * @param filePath Path (including file name/extension) to where
-     * to save the data to.
-     * 
-     * @throws IOException Thrown should there be an error writing 
-     * out data to the file.
-     */
-    @Override
-    public void saveData(AppDataComponent data, String filePath) throws IOException {
-	// GET THE DATA
-	DataManager dataManager = (DataManager)data;
-	
-	// NOW BUILD THE JSON ARRAY FOR THE LIST
-	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-	
-	// AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> properties = new HashMap<>(1);
-	properties.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
-	StringWriter sw = new StringWriter();
-	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.close();
-
-	// INIT THE WRITER
-	OutputStream os = new FileOutputStream(filePath);
-	JsonWriter jsonFileWriter = Json.createWriter(os);
-	String prettyPrinted = sw.toString();
-	PrintWriter pw = new PrintWriter(filePath);
-	pw.write(prettyPrinted);
-	pw.close();
-    }
+    static final String JSON_SUBREGIONS = "SUBREGIONS";
     
-    /**
-     * This method loads data from a JSON formatted file into the data 
-     * management component and then forces the updating of the workspace
-     * such that the user may edit the data.
-     * 
-     * @param data Data management component where we'll load the file into.
-     * 
-     * @param filePath Path (including file name/extension) to where
-     * to load the data from.
-     * 
-     * @throws IOException Thrown should there be an error reading
-     * in data from the file.
-     */
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
-	// CLEAR THE OLD DATA OUT
+        // CLEAR THE OLD DATA OUT
 	DataManager dataManager = (DataManager)data;
 	dataManager.reset();
 	
 	// LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
-	
-	// LOAD LIST NAME AND OWNER
-	String name = json.getString(JSON_NAME);
-	String owner = json.getString(JSON_OWNER);
-	
-	// AND NOW LOAD ALL THE ITEMS
-	JsonArray jsonItemArray = json.getJsonArray(JSON_ITEMS);
-	for (int i = 0; i < jsonItemArray.size(); i++) {
-	    JsonObject jsonItem = jsonItemArray.getJsonObject(i);
+        
+        // AND NOW LOAD ALL THE SUBREGIONS
+	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS);
+	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
+	    JsonObject jsonSubRegion = jsonSubRegionArray.getJsonObject(i);
+	    JsonArray jsonSubRegionPolygonArray = jsonSubRegion.getJsonArray(JSON_SUBREGION_POLYGONS);
+            for (int j = 0; j < jsonSubRegionPolygonArray.size(); j++){
+                JsonArray jsonSubRegionPolygon = jsonSubRegionPolygonArray.getJsonArray(j);
+                Polygon subregionpolygon = new Polygon();
+                for(int k = 0; k < jsonSubRegionPolygon.size(); k++){
+                    JsonObject jsonPoint = jsonSubRegionPolygon.getJsonObject(k);
+                    for(int l = 0; l < jsonPoint.size(); l++){
+                        Double[] point = loadPoint(jsonPoint);
+                        subregionpolygon.getPoints().addAll(point);
+                    }
+                }
+                dataManager.add(subregionpolygon);
+            }
 	}
     }
     
@@ -119,7 +77,20 @@ public class FileManager implements AppFileComponent {
 	JsonNumber number = (JsonNumber)value;
 	return number.bigDecimalValue().doubleValue();	
     }
-
+    
+    public int getDataAsInt(JsonObject json, String dataName) {
+        JsonValue value = json.get(dataName);
+        JsonNumber number = (JsonNumber)value;
+        return number.bigIntegerValue().intValue();
+    }
+    
+    public Double[] loadPoint(JsonObject jsonPoint){
+        double x = getDataAsDouble(jsonPoint,JSON_X);
+        double y = getDataAsDouble(jsonPoint,JSON_Y);
+        Double[] point = new Double[]{x,y};
+        return point;
+    }
+    
     // HELPER METHOD FOR LOADING DATA FROM A JSON FORMAT
     private JsonObject loadJSONFile(String jsonFilePath) throws IOException {
 	InputStream is = new FileInputStream(jsonFilePath);
@@ -129,22 +100,19 @@ public class FileManager implements AppFileComponent {
 	is.close();
 	return json;
     }
-    
-    /**
-     * This method would be used to export data to another format,
-     * which we're not doing in this assignment.
-     */
+
+    @Override
+    public void saveData(AppDataComponent data, String filePath) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    /**
-     * This method is provided to satisfy the compiler, but it
-     * is not used by this application.
-     */
+
     @Override
     public void importData(AppDataComponent data, String filePath) throws IOException {
-        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
