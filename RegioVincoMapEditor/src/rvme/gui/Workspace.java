@@ -25,6 +25,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -213,7 +214,6 @@ public class Workspace extends AppWorkspaceComponent {
     private void initEditView(){
         editView = new SplitPane();
         editView.setDividerPositions(0.5);
-        editView.setMinHeight(app.getGUI().getWindow().getHeight());
         initMapView();
         initDataView();
         editView.getItems().add(mapView);
@@ -224,17 +224,15 @@ public class Workspace extends AppWorkspaceComponent {
         mapView = new ScrollPane();
         mapStack = new StackPane();
         mapDummy = initImageView(MAP_IMAGE.toString());
-        Text dumbT = new Text("MAP GOES HERE\nCLICK TO TEST");
         initMapBG();
         mapStack.getChildren().add(mapDummy);
-        mapStack.getChildren().add(dumbT);
         mapView.setContent(mapStack);
     }
     
     private void initMapBG(){
         mapBG = new Rectangle();
-        mapBG.widthProperty().bind(mapView.widthProperty());
-        mapBG.heightProperty().bind(mapView.heightProperty());
+        mapBG.widthProperty().bind(mapView.widthProperty().subtract(mapBG.strokeWidthProperty()));
+        mapBG.heightProperty().bind(mapView.heightProperty().subtract(mapBG.strokeWidthProperty()));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapBG.strokeProperty().bind(bcPicker.valueProperty());
         mapBG.strokeWidthProperty().bind(btSlider.valueProperty());
@@ -309,6 +307,7 @@ public class Workspace extends AppWorkspaceComponent {
         
         bcLabel = new Label(props.getProperty(BC_LABEL));
         bcPicker = new ColorPicker();
+        bcPicker.setValue(Color.BLACK);
         
         btLabel = new Label(props.getProperty(BT_LABEL));
         btSlider = new Slider();
