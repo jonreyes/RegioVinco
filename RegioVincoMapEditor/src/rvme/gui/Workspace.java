@@ -221,6 +221,9 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapView(){
         mapView = new ScrollPane();
+        mapView.setMinSize(900, 700);
+        mapView.setPrefSize(900, 700);
+        mapView.setMaxSize(900, 700);
         mapStack = new StackPane();
         mapDummy = initImageView(MAP_IMAGE.toString());
         initMapBG();

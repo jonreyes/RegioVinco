@@ -38,5 +38,5 @@ public class AppStartupConstants
     public static double SCALEX = 0.125;
     public static double SCALEY = 0.1;
     public static double SCALEW = 0.75;
-    public static double SCALEH = 0.78;
+    public static double SCALEH = 0.85;
 }
