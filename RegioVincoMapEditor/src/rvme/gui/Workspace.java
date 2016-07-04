@@ -4,6 +4,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -19,6 +20,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -70,6 +72,7 @@ import static rvme.PropertyType.MAP_IMAGE;
 import static rvme.PropertyType.RM_ICON;
 import static rvme.PropertyType.RM_LABEL;
 import static rvme.PropertyType.RM_TOOLTIP;
+import rvme.data.DataManager;
 import rvme.data.SubRegion;
 
 /**
@@ -121,7 +124,11 @@ public class Workspace extends AppWorkspaceComponent {
     SplitPane editView;
     ScrollPane mapView;
     StackPane mapStack;
+    Rectangle mapBG;
     ImageView mapDummy;
+    Group region;
+    double mapWidth = 900;
+    double mapHeight = 700;
     Node selection;
     
     VBox dataView;
@@ -142,15 +149,16 @@ public class Workspace extends AppWorkspaceComponent {
     
     public Workspace(AppTemplate initApp) {
         app = initApp;
+        app.getGUI().getWindow().setResizable(false);
         props = PropertiesManager.getPropertiesManager();
         initGUI();
         initControls();
     }
     
     private void initGUI(){
+        initWorkspace();
         initFileToolbar();
         initTitle();
-        initWorkspace();
     }
     
     private void initControls(){
@@ -159,6 +167,9 @@ public class Workspace extends AppWorkspaceComponent {
         initEditControls();
         mapDummy.setOnMouseClicked(e->{
             subRegionDialog.show();
+            if(e.getButton()==MouseButton.SECONDARY){
+                mapStack.getChildren().remove(mapDummy);
+            }
         });
     }
     
@@ -219,29 +230,28 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapView(){
         mapView = new ScrollPane();
-        mapView.setMinSize(900, 700);
-        mapView.setPrefSize(900, 700);
-        mapView.setMaxSize(900, 700);
+        mapView.setMinSize(mapWidth,mapHeight);
+        mapView.setMaxSize(mapWidth, mapHeight);
         
         mapStack = new StackPane();
         
-        DoubleBinding zoom = zoomSlider.valueProperty().divide(50);
-        mapStack.scaleXProperty().bind(zoom);
-        mapStack.scaleYProperty().bind(zoom);
-        
+        mapStack.setMinSize(mapWidth, mapHeight);
+        mapStack.scaleXProperty().bind(zoomSlider.valueProperty());
+        mapStack.scaleYProperty().bind(zoomSlider.valueProperty());
+
         mapDummy = initImageView(MAP_IMAGE.toString());
-        mapDummy.scaleXProperty().bind(zoom);
-        mapDummy.scaleYProperty().bind(zoom);
         
         initMapBG();
         mapStack.getChildren().add(mapDummy);
         initMapBorder();
         
         mapView.setContent(mapStack);
+        
+        reloadWorkspace();
     }
     
     private void initMapBG(){
-        Rectangle mapBG = new Rectangle();
+        mapBG = new Rectangle();
         mapBG.widthProperty().bind(mapView.widthProperty().subtract(mapBG.strokeWidthProperty()));
         mapBG.heightProperty().bind(mapView.heightProperty().subtract(mapBG.strokeWidthProperty()));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
@@ -257,6 +267,14 @@ public class Workspace extends AppWorkspaceComponent {
         DoubleBinding strokeSize = btSlider.valueProperty().divide(200).multiply(mapView.heightProperty());
         mapBorder.strokeWidthProperty().bind(strokeSize);
         mapStack.getChildren().add(mapBorder);
+    }
+    
+    private void initRegionView(){
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        region = dataManager.mapTo(mapBG);
+        region.scaleXProperty().bind(zoomSlider.valueProperty());
+        region.scaleYProperty().bind(zoomSlider.valueProperty());
+        mapStack.getChildren().add(region);
     }
     
     private void initDataView(){
@@ -297,12 +315,23 @@ public class Workspace extends AppWorkspaceComponent {
         //dataTable.getColumns().add(flagColumn);
         //dataTable.getColumns().add(leaderImageColumn);
         dataTable.getColumns().add(leaderNameColumn);
+
+        String a = "TEST";
+        String b = "DUMMY";
+        String c = "DATA";
         
         ObservableList<SubRegion> data = FXCollections.observableArrayList();
         data.add(new SubRegion("North Korea","Pyongyang","Kim Jong Un"));
-        data.add(new SubRegion("TEST","TEST","TEST"));
+        data.add(new SubRegion(a,b,c));
+        data.add(new SubRegion(b,c,a));
+        data.add(new SubRegion(c,b,a));
+        data.add(new SubRegion(a,a,a));
+        data.add(new SubRegion(b,b,b));
+        data.add(new SubRegion(c,c,c));
         
         dataTable.setItems(data);
+        
+        dataTable.setMinHeight(mapHeight*0.85);
     }
     /**
      * This function initializes all the buttons in the toolbar at the top of
@@ -322,6 +351,21 @@ public class Workspace extends AppWorkspaceComponent {
         app.getGUI().getAppPane().setTop(fileToolBar);
     }
     
+    /**
+     * This method is used to activate/deactivate toolbar buttons when
+     * they can and cannot be used so as to provide foolproof design.
+     * 
+     * @param saved Describes whether the loaded Page has been saved or not.
+     */
+    public void updateToolbarControls(boolean saved) {
+        saveBtn.setDisable(saved);
+
+	newBtn.setDisable(false);
+        loadBtn.setDisable(false);
+	exportBtn.setDisable(saved);
+        exitBtn.setDisable(false);
+    }
+    
     private void initEditToolbar(){
         editToolBar = new FlowPane();
         
@@ -339,7 +383,7 @@ public class Workspace extends AppWorkspaceComponent {
         btSlider = new Slider(0,100,0);
 
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
-        zoomSlider = new Slider(0,100,50);
+        zoomSlider = new Slider(0,16,1);
         
         addLabel = new Label(props.getProperty(ADD_LABEL));
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
@@ -452,6 +496,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
+        initRegionView();
     }
 
     @Override
