@@ -14,6 +14,7 @@
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
         <property name="NEXT_ICON"              value="next.png"></property>
         <property name="PREV_ICON"              value="prev.png"></property>
+        <property name="MAP_IMAGE"              value="rvmelogo.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
@@ -25,26 +26,23 @@
         <property name="PREV_TOOLTIP"               value="Previous SubRegion"></property>
         
 	<!-- HEADINGS AND PROMPTS -->
-	<property name="WORKSPACE_HEADING_LABEL"    value="To Do List"></property>
-	<property name="DETAILS_HEADING_LABEL"	    value="Details"></property>
 	<property name="NAME_LABEL"                 value="Name:"></property>
-        <property name="PARENT_LABEL"               value="Parent Directory:"></property>
-        <property name="SELECT_LABEL"               value="Select..."></property>
-        <property name="GEO_LABEL"                  value="Geometry File:"></property>
+        
         <property name="BGC_LABEL"                  value="Background Color:"></property>
         <property name="BC_LABEL"                   value="Border Color:"></property>
         <property name="BT_LABEL"                   value="Border Thickness:"></property>
         <property name="ZOOM_LABEL"                 value="Zoom:"></property>
         <property name="ADD_LABEL"                  value="Add Image:"></property>
-        <property name="RM_LABEL"                  value="Remove Image:"></property>
+        <property name="RM_LABEL"                   value="Remove Image:"></property>
         <property name="RAC_LABEL"                  value="Reassign Colors:"></property>
         <property name="ANTHEM_LABEL"               value="Play Anthem:"></property>
-        <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>
         <property name="DATA_LABEL"                 value="Map Data"></property>
-        <property name="OK_LABEL"                   value="OK"></property>
         
 	<!--DIALOG LABELS-->
         <property name="NMDIALOG_TITLE"             value="Create a New Map"></property>
+        <property name="PARENT_LABEL"               value="Parent Directory:"></property>
+        <property name="SELECT_LABEL"               value="Select..."></property>
+        <property name="GEO_LABEL"                  value="Geometry File:"></property>
         <property name="CAPITAL_LABEL"              value="Capital:"></property>
         <property name="FLAG_LABEL"                 value="Flag:"></property>
         <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>
@@ -53,6 +51,11 @@
         <property name="WIDTH_LABEL"                value="Width:"></property>
         <property name="HEIGHT_LABEL"               value="Height:"></property>
         <property name="DDIALOG_TITLE"              value="Change Dimensions"></property>
+        <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>
+        <property name="OK_LABEL"                   value="OK"></property>
+        <property name="ADD_TITLE"                  value="Add Image"></property>
+        <property name="PARENT_TITLE"               value="Select Parent Directory"></property>
+        <property name="GEO_TITLE"                  value="Select Geometry File"></property>
         
         <!-- TABLE COLUMN HEADINGS -->
         <property name="NAME_COLUMN_HEADING"                value="Name"></property>
@@ -67,6 +70,13 @@
 	<property name="ATTRIBUTE_UPDATE_ERROR_TITLE"	    value="Attribute Update Error"></property>
 	<property name="UPDATE_ERROR_MESSAGE"		    value="An error occured updating the UI"></property>
 	<property name="UPDATE_ERROR_TITLE"		    value="UI Update Error"></property>
+        <property name="ADD_ERROR_TITLE"                    value="Load Image Error"></property>
+        <property name="ADD_ERROR_MESSAGE"                  value="An error occurred loading the image."></property>
+        <property name="IMAGE_EXT_DESC"                     value="Images"></property>
+        <property name="PNG_EXT"                            value="*.png"></property>
+        <property name="JPG_EXT"                            value="*.jpg"></property>
+        
+        
     </property_list>
     <property_options_list>
     </property_options_list>

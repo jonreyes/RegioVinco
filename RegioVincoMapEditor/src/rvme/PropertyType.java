@@ -11,9 +11,6 @@ package rvme;
  */
 public enum PropertyType {
     EXPORT_ICON,
-    WORKSPACE_HEADING_LABEL,
-    
-    DETAILS_HEADING_LABEL,
     
     NAME_LABEL,
     PARENT_LABEL,
@@ -60,11 +57,21 @@ public enum PropertyType {
     NMDIALOG_TITLE,
     SRDIALOG_TITLE,
     DDIALOG_TITLE,
+    ADD_TITLE,
+    PARENT_TITLE,
+    GEO_TITLE,
     
     NAME_COLUMN_HEADING,
     CAPITAL_COLUMN_HEADING,
     FLAG_COLUMN_HEADING,
     LEADER_NAME_COLUMN_HEADING,
     LEADER_IMAGE_COLUMN_HEADING,
+    
+    MAP_IMAGE,
+    IMAGE_EXT_DESC,
+    PNG_EXT,
+    JPG_EXT,
+    ADD_ERROR_TITLE,
+    ADD_ERROR_MESSAGE
     
 }
