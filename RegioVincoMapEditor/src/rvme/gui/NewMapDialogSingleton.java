@@ -5,36 +5,51 @@
  */
 package rvme.gui;
 
+import java.io.File;
 import java.net.URL;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
+import static rvme.PropertyType.ADD_ERROR_MESSAGE;
+import static rvme.PropertyType.ADD_ERROR_TITLE;
+import static rvme.PropertyType.ADD_TITLE;
 import static rvme.PropertyType.GEO_LABEL;
+import static rvme.PropertyType.GEO_TITLE;
+import static rvme.PropertyType.IMAGE_EXT_DESC;
+import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.NAME_LABEL;
 import static rvme.PropertyType.NMDIALOG_TITLE;
 import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.PARENT_LABEL;
+import static rvme.PropertyType.PARENT_TITLE;
 import static rvme.PropertyType.SELECT_LABEL;
 import saf.AppTemplate;
 import static saf.components.AppStyleArbiter.CLASS_BORDERED_PANE;
 import static saf.components.AppStyleArbiter.CLASS_GRID_PANE;
 import static saf.components.AppStyleArbiter.CLASS_PROMPT_LABEL;
 import static saf.components.AppStyleArbiter.CLASS_SUBHEADING_LABEL;
-import saf.controller.AppFileController;
 import static saf.settings.AppPropertyType.APP_CSS;
 import static saf.settings.AppPropertyType.APP_PATH_CSS;
+import static saf.settings.AppPropertyType.NEW_COMPLETED_MESSAGE;
+import static saf.settings.AppPropertyType.NEW_COMPLETED_TITLE;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
+import static saf.settings.AppStartupConstants.PATH_DATA;
+import static saf.settings.AppStartupConstants.PATH_WORK;
 import saf.ui.AppGUI;
+import saf.ui.AppMessageDialogSingleton;
 
 /**
  *
@@ -110,6 +125,7 @@ public class NewMapDialogSingleton extends Stage{
         
         parentLabel = new Label(props.getProperty(PARENT_LABEL));
         parentTextField = new TextField();
+        parentTextField.setEditable(false);
         parentBtn = new Button(props.getProperty(SELECT_LABEL));
         
         parentSelect = new HBox();
@@ -119,6 +135,7 @@ public class NewMapDialogSingleton extends Stage{
     
         geoLabel = new Label(props.getProperty(GEO_LABEL));
         geoTextField = new TextField();
+        geoTextField.setEditable(false);
         geoBtn = new Button(props.getProperty(SELECT_LABEL));
         
         geoSelect = new HBox();
@@ -148,7 +165,25 @@ public class NewMapDialogSingleton extends Stage{
     }
     
     private void initHandlers(){
-        okBtn.setOnAction(e->this.hide());
+        parentBtn.setOnAction(e->{
+            DirectoryChooser dc = new DirectoryChooser();
+            dc.setInitialDirectory(new File(PATH_WORK));
+            dc.setTitle(props.getProperty(PARENT_TITLE));
+            File selectedDirectory = dc.showDialog(app.getGUI().getWindow());
+        });
+        geoBtn.setOnAction(e->{
+            FileChooser fc = new FileChooser();
+            fc.setInitialDirectory(new File(PATH_DATA));
+            fc.setTitle(props.getProperty(GEO_TITLE));
+            fc.getExtensionFilters().addAll(
+		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+            File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
+        });
+        okBtn.setOnAction(e->{
+            this.hide();
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.fileController.handleNewRequest();
+        });
     }
     
     private void initStyleSheet(){
