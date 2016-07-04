@@ -1,7 +1,6 @@
 package rvme.gui;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -21,8 +20,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
@@ -65,6 +62,7 @@ import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import static rvme.PropertyType.ADD_LABEL;
 import static rvme.PropertyType.ADD_TOOLTIP;
+import static rvme.PropertyType.MAP_IMAGE;
 import static rvme.PropertyType.RM_ICON;
 import static rvme.PropertyType.RM_LABEL;
 import static rvme.PropertyType.RM_TOOLTIP;
@@ -84,7 +82,7 @@ public class Workspace extends AppWorkspaceComponent {
     RVMEController rvmeController;
     
     Label title;
-    protected AppFileController fileController;
+    AppFileController fileController;
     ToolBar fileToolBar;
     Button newBtn;
     Button loadBtn;
@@ -118,7 +116,7 @@ public class Workspace extends AppWorkspaceComponent {
     SplitPane editView;
     ScrollPane mapView;
     StackPane mapStack;
-    Circle mapDummy;
+    ImageView mapDummy;
     
     VBox dataView;
     Label dataLabel;
@@ -152,11 +150,9 @@ public class Workspace extends AppWorkspaceComponent {
     private void initControls(){
         rvmeController =  new RVMEController(app);
         initFileControls();
+        initEditControls();
         mapDummy.setOnMouseClicked(e->{
             subRegionDialog.show();
-        });
-        dimensionsBtn.setOnMouseClicked(e->{
-            dimensionsDialog.show();
         });
     }
     
@@ -164,7 +160,6 @@ public class Workspace extends AppWorkspaceComponent {
         fileController = new AppFileController(app);
         newBtn.setOnAction(e -> {
             newMapDialog.show();
-            fileController.handleNewRequest();
         });
         loadBtn.setOnAction(e -> {
             fileController.handleLoadRequest();
@@ -178,6 +173,15 @@ public class Workspace extends AppWorkspaceComponent {
         exitBtn.setOnAction(e -> {
             fileController.handleExitRequest();
         });
+    }
+    
+    private void initEditControls(){
+        addBtn.setOnMouseClicked(e->{
+            rvmeController.addImage();
+        });
+        dimensionsBtn.setOnMouseClicked(e->{
+            dimensionsDialog.show();
+        });    
     }
     
     private void initTitle(){
@@ -207,8 +211,7 @@ public class Workspace extends AppWorkspaceComponent {
     private void initMapView(){
         mapView = new ScrollPane();
         mapStack = new StackPane();
-        mapDummy = new Circle(300);
-        mapDummy.setFill(Color.LIGHTSKYBLUE);
+        mapDummy = initImageView(MAP_IMAGE.toString());
         Text dumbT = new Text("MAP GOES HERE\nCLICK TO TEST");
         mapStack.getChildren().add(mapDummy);
         mapStack.getChildren().add(dumbT);
@@ -343,6 +346,15 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsDialog.init(app);
     }
     
+    public ImageView initImageView(String img){
+        String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(img);
+        Image image = new Image(imagePath);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(500);
+        imageView.setFitHeight(500);
+        return imageView;
+    }
+    
     /**
      * This is a private helper method for initializing a simple button with
      * an icon and tooltip.
@@ -377,7 +389,10 @@ public class Workspace extends AppWorkspaceComponent {
         return button;
     }
     
-
+    public StackPane getMapStack(){
+        return mapStack;
+    }
+    
     @Override
     public void reloadWorkspace() {
     }
