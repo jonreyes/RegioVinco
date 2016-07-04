@@ -72,10 +72,11 @@
 	<property name="UPDATE_ERROR_TITLE"		    value="UI Update Error"></property>
         <property name="ADD_ERROR_TITLE"                    value="Load Image Error"></property>
         <property name="ADD_ERROR_MESSAGE"                  value="An error occurred loading the image."></property>
-        <property name="IMAGE_EXT_DESC"                     value="Images"></property>
+        <property name="IMAGE_EXT_DESC"                     value="Images (*.png, *.jpg)"></property>
         <property name="PNG_EXT"                            value="*.png"></property>
         <property name="JPG_EXT"                            value="*.jpg"></property>
-        
+        <property name="JSON_EXT_DESC"                      value="Map Data (*.json)"></property>
+        <property name="JSON_EXT"                           value="*.json"></property>
         
     </property_list>
     <property_options_list>

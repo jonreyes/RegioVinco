@@ -69,8 +69,10 @@ public enum PropertyType {
     
     MAP_IMAGE,
     IMAGE_EXT_DESC,
+    JSON_EXT_DESC,
     PNG_EXT,
     JPG_EXT,
+    JSON_EXT,
     ADD_ERROR_TITLE,
     ADD_ERROR_MESSAGE
     
