@@ -124,7 +124,6 @@ public class Workspace extends AppWorkspaceComponent {
     SplitPane editView;
     ScrollPane mapView;
     StackPane mapStack;
-    Rectangle mapBG;
     ImageView mapDummy;
     Node selection;
     
@@ -226,18 +225,29 @@ public class Workspace extends AppWorkspaceComponent {
         mapDummy = initImageView(MAP_IMAGE.toString());
         initMapBG();
         mapStack.getChildren().add(mapDummy);
+        initMapBorder();
         mapView.setContent(mapStack);
     }
     
     private void initMapBG(){
-        mapBG = new Rectangle();
+        Rectangle mapBG = new Rectangle();
         mapBG.widthProperty().bind(mapView.widthProperty().subtract(mapBG.strokeWidthProperty()));
         mapBG.heightProperty().bind(mapView.heightProperty().subtract(mapBG.strokeWidthProperty()));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
-        mapBG.strokeProperty().bind(bcPicker.valueProperty());
-        mapBG.strokeWidthProperty().bind(btSlider.valueProperty());
         mapStack.getChildren().add(mapBG);
     }
+    
+    private void initMapBorder(){
+        Rectangle mapBorder = new Rectangle();
+        mapBorder.setFill(null);
+        mapBorder.widthProperty().bind(mapView.widthProperty().subtract(mapBorder.strokeWidthProperty()));
+        mapBorder.heightProperty().bind(mapView.heightProperty().subtract(mapBorder.strokeWidthProperty()));
+        mapBorder.strokeProperty().bind(bcPicker.valueProperty());
+        mapBorder.strokeWidthProperty().bind(btSlider.valueProperty());
+        mapStack.getChildren().add(mapBorder);
+    }
+    
+    
     
     private void initDataView(){
         dataView = new VBox();
