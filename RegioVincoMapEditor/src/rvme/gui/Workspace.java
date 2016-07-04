@@ -1,5 +1,6 @@
 package rvme.gui;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -221,11 +222,21 @@ public class Workspace extends AppWorkspaceComponent {
         mapView.setMinSize(900, 700);
         mapView.setPrefSize(900, 700);
         mapView.setMaxSize(900, 700);
+        
         mapStack = new StackPane();
+        
+        DoubleBinding zoom = zoomSlider.valueProperty().divide(50);
+        mapStack.scaleXProperty().bind(zoom);
+        mapStack.scaleYProperty().bind(zoom);
+        
         mapDummy = initImageView(MAP_IMAGE.toString());
+        mapDummy.scaleXProperty().bind(zoom);
+        mapDummy.scaleYProperty().bind(zoom);
+        
         initMapBG();
         mapStack.getChildren().add(mapDummy);
         initMapBorder();
+        
         mapView.setContent(mapStack);
     }
     
@@ -243,7 +254,8 @@ public class Workspace extends AppWorkspaceComponent {
         mapBorder.widthProperty().bind(mapView.widthProperty().subtract(mapBorder.strokeWidthProperty()));
         mapBorder.heightProperty().bind(mapView.heightProperty().subtract(mapBorder.strokeWidthProperty()));
         mapBorder.strokeProperty().bind(bcPicker.valueProperty());
-        mapBorder.strokeWidthProperty().bind(btSlider.valueProperty());
+        DoubleBinding strokeSize = btSlider.valueProperty().divide(200).multiply(mapView.heightProperty());
+        mapBorder.strokeWidthProperty().bind(strokeSize);
         mapStack.getChildren().add(mapBorder);
     }
     
@@ -324,10 +336,10 @@ public class Workspace extends AppWorkspaceComponent {
         bcPicker.setValue(Color.BLACK);
         
         btLabel = new Label(props.getProperty(BT_LABEL));
-        btSlider = new Slider();
+        btSlider = new Slider(0,100,0);
 
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
-        zoomSlider = new Slider(0,99,50);
+        zoomSlider = new Slider(0,100,50);
         
         addLabel = new Label(props.getProperty(ADD_LABEL));
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);

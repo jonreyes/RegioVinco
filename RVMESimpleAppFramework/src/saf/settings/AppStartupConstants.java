@@ -36,7 +36,7 @@ public class AppStartupConstants
     public static String CLOSE_BUTTON_LABEL = "Close";
         
     public static double SCALEX = 0.125;
-    public static double SCALEY = 0.075;
+    public static double SCALEY = 0.07;
     public static double SCALEW = 0.75;
-    public static double SCALEH = 0.85;
+    public static double SCALEH = 0.86;
 }
