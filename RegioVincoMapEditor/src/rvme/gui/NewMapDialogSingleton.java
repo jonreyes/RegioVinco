@@ -166,40 +166,45 @@ public class NewMapDialogSingleton extends Stage{
     
     private void initHandlers(){
         parentBtn.setOnAction(e->{
-            DirectoryChooser dc = new DirectoryChooser();
-            dc.setInitialDirectory(new File(PATH_WORK));
-            dc.setTitle(props.getProperty(PARENT_TITLE));
-            parent = dc.showDialog(app.getGUI().getWindow());
+            selectParent();
         });
         geoBtn.setOnAction(e->{
-            FileChooser fc = new FileChooser();
-            fc.setInitialDirectory(new File(PATH_DATA));
-            fc.setTitle(props.getProperty(GEO_TITLE));
-            fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
-            geometry = fc.showOpenDialog(app.getGUI().getWindow());
-            geoTextField.setText(geometry.getPath());
+            selectGeometry();
         });
         okBtn.setOnAction(e->{
             this.hide();
             loadGeometry();
-            if (geometry == null){
-                Workspace workspace = (Workspace) app.getWorkspaceComponent();
-                workspace.fileController.handleNewRequest();
-                workspace.updateFileControls(workspace.fileController.isSaved());
-            }
+            
         });
+    }
+    
+    private void selectParent(){
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(PATH_WORK));
+        dc.setTitle(props.getProperty(PARENT_TITLE));
+        parent = dc.showDialog(app.getGUI().getWindow());            
+        parentTextField.setText(parent.getPath());
+    }
+    
+    private void selectGeometry(){
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_DATA));
+        fc.setTitle(props.getProperty(GEO_TITLE));
+        fc.getExtensionFilters().addAll(
+	new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
+        geometry = fc.showOpenDialog(app.getGUI().getWindow());
+        geoTextField.setText(geometry.getPath());
     }
     
     private void loadGeometry(){
         AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (geometry != null) {
             try {
                 AppDataComponent dataManager = app.getDataComponent();
                 AppFileComponent fileManager = app.getFileComponent();
                 fileManager.loadData(dataManager, geometry.getAbsolutePath());
                 
-                Workspace workspace = (Workspace) app.getWorkspaceComponent();
                 workspace.reloadWorkspace();
                     
                 workspace.activateWorkspace(app.getGUI().getAppPane());
@@ -209,6 +214,10 @@ public class NewMapDialogSingleton extends Stage{
             }catch (Exception e){
                     dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }
+        }
+        else{
+            workspace.fileController.handleNewRequest();
+            workspace.updateFileControls(workspace.fileController.isSaved());
         }
     }
     
