@@ -62,9 +62,7 @@
         <!-- TABLE COLUMN HEADINGS -->
         <property name="NAME_COLUMN_HEADING"                value="Name"></property>
         <property name="CAPITAL_COLUMN_HEADING"             value="Capital"></property>
-        <property name="FLAG_COLUMN_HEADING"                value="Flag"></property>
-        <property name="LEADER_NAME_COLUMN_HEADING"         value="Leader Name"></property>
-        <property name="LEADER_IMAGE_COLUMN_HEADING"        value="Leader Image"></property>
+        <property name="LEADER_COLUMN_HEADING"              value="Leader"></property>
         
                 	
 	<!-- ERROR MESSAGES AND TITLES FOR THEIR DIALOGS -->
