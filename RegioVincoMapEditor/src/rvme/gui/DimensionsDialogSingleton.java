@@ -6,13 +6,19 @@
 package rvme.gui;
 
 import java.net.URL;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
@@ -54,6 +60,9 @@ public class DimensionsDialogSingleton extends Stage {
     
     Button okBtn;
     
+    DoubleProperty mapW;
+    DoubleProperty mapH;
+    
     final double SCALEW = 0.25;
     final double SCALEH = 0.25;
     /**
@@ -85,6 +94,8 @@ public class DimensionsDialogSingleton extends Stage {
         initHandlers();
         initStyleSheet();
         initStyle();
+        mapW = new SimpleDoubleProperty(900);
+        mapH = new SimpleDoubleProperty(700);
     }
     
     private void initGUI(){
@@ -112,7 +123,15 @@ public class DimensionsDialogSingleton extends Stage {
     }
    
     private void initHandlers(){
-        okBtn.setOnAction(e->this.hide());
+        okBtn.setOnAction(e->{
+            this.hide();
+            changeMapDimensions();
+        });
+    }
+    
+    private void changeMapDimensions(){
+        mapW.set(Double.valueOf(widthTextField.getText()));
+        mapH.set(Double.valueOf(heightTextField.getText()));
     }
     
     private void initStyleSheet(){
@@ -130,6 +149,14 @@ public class DimensionsDialogSingleton extends Stage {
         messageLabel.getStyleClass().add(CLASS_SUBHEADING_LABEL);
         widthLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         heightLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+    }
+
+    public DoubleProperty mapWidthProperty() {
+        return mapW;
+    }
+
+    public DoubleProperty mapHeightProperty() {
+        return mapH;
     }
     
 }

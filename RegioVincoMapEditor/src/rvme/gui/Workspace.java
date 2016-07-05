@@ -1,9 +1,11 @@
 package rvme.gui;
 
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -91,6 +94,7 @@ public class Workspace extends AppWorkspaceComponent {
     Label title;
     AppFileController fileController;
     ToolBar fileToolBar;
+    HBox fileBox;
     Button newBtn;
     Button loadBtn;
     Button saveBtn;
@@ -127,8 +131,8 @@ public class Workspace extends AppWorkspaceComponent {
     Rectangle mapBG;
     ImageView mapDummy;
     Group region;
-    double mapWidth = 900;
-    double mapHeight = 700;
+    DoubleProperty mapWidth;
+    DoubleProperty mapHeight;
     Node selection;
     
     VBox dataView;
@@ -137,9 +141,7 @@ public class Workspace extends AppWorkspaceComponent {
     TableView<SubRegion> dataTable;
     TableColumn nameColumn;
     TableColumn capitalColumn;
-    TableColumn flagColumn;
-    TableColumn leaderNameColumn;
-    TableColumn leaderImageColumn;
+    TableColumn leaderColumn;
     
     NewMapDialogSingleton newMapDialog;
     SubRegionDialogSingleton subRegionDialog;
@@ -194,10 +196,10 @@ public class Workspace extends AppWorkspaceComponent {
             rvmeController.addImage();
         });
         rmBtn.setOnMouseClicked(e->{
-           rvmeController.removeImage();
+            rvmeController.removeImage();
         });
         playBtn.setOnMouseClicked(e->{
-           rvmeController.playAnthem();
+            rvmeController.playAnthem();
         });
         pauseBtn.setOnMouseClicked(e->{
             rvmeController.pauseAnthem();
@@ -205,6 +207,7 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
         });    
+        
     }
     
     private void initTitle(){
@@ -215,11 +218,11 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initWorkspace(){
         workspace = new VBox();
+        initDialogs();
         initEditToolbar();
         initEditView();
         workspace.getChildren().add(editToolBar);
         workspace.getChildren().add(editView);
-        initDialogs();
     }
     
     private void initEditView(){
@@ -228,33 +231,38 @@ public class Workspace extends AppWorkspaceComponent {
         initDataView();
         editView.getItems().add(mapView);
         editView.getItems().add(dataView);
-        editView.setDividerPositions(0.635);
+        editView.setDividerPositions(mapWidth.get()/app.getGUI().getWindow().getWidth());
     }
     
     private void initMapView(){
         mapView = new ScrollPane();
-        
+        mapWidth = dimensionsDialog.mapWidthProperty();
+        mapHeight = dimensionsDialog.mapHeightProperty();
+        initMapLayers();
+        mapView.setContent(mapStack);
+    }
+    
+    private void initMapLayers(){
         mapStack = new StackPane();
         
-        mapStack.setMinSize(mapWidth, mapHeight);
+        mapStack.setMinSize(mapWidth.get(), mapHeight.get());
         mapStack.scaleXProperty().bind(zoomSlider.valueProperty());
         mapStack.scaleYProperty().bind(zoomSlider.valueProperty());
 
-        mapDummy = initImageView(MAP_IMAGE.toString(),600);
-        
+        mapDummy = initImageView(MAP_IMAGE.toString(),mapWidth.get()/2);
+        mapDummy.fitWidthProperty().bind(mapWidth.divide(2));
+        mapDummy.fitHeightProperty().bind(mapWidth.divide(2));
         initMapBG();
         mapStack.getChildren().add(mapDummy);
         initMapBorder();
+        initRegionView();
         
-        mapView.setContent(mapStack);
-        
-        reloadWorkspace();
     }
     
     private void initMapBG(){
         mapBG = new Rectangle();
-        mapBG.widthProperty().bind(mapStack.widthProperty().subtract(mapBG.strokeWidthProperty()));
-        mapBG.heightProperty().bind(mapStack.heightProperty().subtract(mapBG.strokeWidthProperty()));
+        mapBG.widthProperty().bind(mapWidth.subtract(mapBG.strokeWidthProperty()));
+        mapBG.heightProperty().bind(mapHeight.subtract(mapBG.strokeWidthProperty()));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
     }
@@ -262,10 +270,10 @@ public class Workspace extends AppWorkspaceComponent {
     private void initMapBorder(){
         Rectangle mapBorder = new Rectangle();
         mapBorder.setFill(null);
-        mapBorder.widthProperty().bind(mapStack.widthProperty().subtract(mapBorder.strokeWidthProperty()));
-        mapBorder.heightProperty().bind(mapStack.heightProperty().subtract(mapBorder.strokeWidthProperty()));
+        mapBorder.widthProperty().bind(mapWidth.subtract(mapBorder.strokeWidthProperty()));
+        mapBorder.heightProperty().bind(mapHeight.subtract(mapBorder.strokeWidthProperty()));
         mapBorder.strokeProperty().bind(bcPicker.valueProperty());
-        DoubleBinding strokeSize = btSlider.valueProperty().divide(200).multiply(mapView.heightProperty());
+        DoubleBinding strokeSize = btSlider.valueProperty().multiply(mapStack.heightProperty());
         mapBorder.strokeWidthProperty().bind(strokeSize);
         mapStack.getChildren().add(mapBorder);
     }
@@ -292,22 +300,22 @@ public class Workspace extends AppWorkspaceComponent {
         
         nameColumn = new TableColumn(props.getProperty(NAME_COLUMN_HEADING));
         capitalColumn = new TableColumn(props.getProperty(CAPITAL_COLUMN_HEADING));
-        leaderNameColumn = new TableColumn(props.getProperty(LEADER_COLUMN_HEADING));
+        leaderColumn = new TableColumn(props.getProperty(LEADER_COLUMN_HEADING));
         
         // AND LINK THE COLUMNS TO THE DATA
         nameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("name"));
         capitalColumn.setCellValueFactory(new PropertyValueFactory<String, String>("capital"));
-        leaderNameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader"));
+        leaderColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader"));
         
         
         // SCALE THE COLUMN SIZES
         nameColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         capitalColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
-        leaderNameColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
+        leaderColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         
         dataTable.getColumns().add(nameColumn);
         dataTable.getColumns().add(capitalColumn);
-        dataTable.getColumns().add(leaderNameColumn);
+        dataTable.getColumns().add(leaderColumn);
 
         String a = "TEST";
         String b = "DUMMY";
@@ -324,8 +332,9 @@ public class Workspace extends AppWorkspaceComponent {
         
         dataTable.setItems(data);
         
-        dataTable.setMinHeight(mapHeight*0.85);
+        dataTable.setMinHeight(mapHeight.get()*0.85);
     }
+    
     /**
      * This function initializes all the buttons in the toolbar at the top of
      * the application window. These are related to file management.
@@ -333,13 +342,17 @@ public class Workspace extends AppWorkspaceComponent {
     private void initFileToolbar() {
         fileToolBar = new ToolBar();
         
+        fileBox = new HBox();
+        fileBox.setAlignment(Pos.CENTER);
+        fileBox.setSpacing(10);
         newBtn = initChildButton(NEW_ICON.toString(),	    NEW_TOOLTIP.toString(),	false);
         loadBtn = initChildButton(LOAD_ICON.toString(),	    LOAD_TOOLTIP.toString(),	false);
         saveBtn = initChildButton(SAVE_ICON.toString(),	    SAVE_TOOLTIP.toString(),	true);
         exportBtn = initChildButton(EXPORT_ICON.toString(), EXPORT_TOOLTIP.toString(), true);
         exitBtn = initChildButton(EXIT_ICON.toString(),	    EXIT_TOOLTIP.toString(),	false);
         
-        fileToolBar.getItems().addAll(newBtn,loadBtn,saveBtn,exportBtn,exitBtn);
+        fileBox.getChildren().addAll(newBtn,loadBtn,saveBtn,exportBtn,exitBtn);
+        fileToolBar.getItems().add(fileBox);
         
         app.getGUI().getAppPane().setTop(fileToolBar);
     }
@@ -382,7 +395,7 @@ public class Workspace extends AppWorkspaceComponent {
         bcPicker.setValue(Color.BLACK);
         
         btLabel = new Label(props.getProperty(BT_LABEL));
-        btSlider = new Slider(0,100,0);
+        btSlider = new Slider(0,0.5,0);
 
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
         zoomSlider = new Slider(0,16,1);
@@ -391,7 +404,7 @@ public class Workspace extends AppWorkspaceComponent {
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
         
         rmLabel = new Label(props.getProperty(RM_LABEL));
-        rmBtn = initChildButton(RM_ICON.toString(), RM_TOOLTIP.toString(), false);
+        rmBtn = initChildButton(RM_ICON.toString(), RM_TOOLTIP.toString(), true);
         
         racLabel = new Label(props.getProperty(RAC_LABEL));
         racBtn = initChildButton(RAC_ICON.toString(), RAC_TOOLTIP.toString(), false);
@@ -509,8 +522,8 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
+        initMapView();
         updateEditControls();
-        initRegionView();
     }
 
     @Override
