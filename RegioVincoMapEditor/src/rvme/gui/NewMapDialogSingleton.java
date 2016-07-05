@@ -186,7 +186,7 @@ public class NewMapDialogSingleton extends Stage{
             if (geometry == null){
                 Workspace workspace = (Workspace) app.getWorkspaceComponent();
                 workspace.fileController.handleNewRequest();
-                workspace.updateToolbarControls(workspace.fileController.isSaved());
+                workspace.updateFileControls(workspace.fileController.isSaved());
             }
         });
     }
@@ -205,7 +205,7 @@ public class NewMapDialogSingleton extends Stage{
                 workspace.activateWorkspace(app.getGUI().getAppPane());
                     
                 boolean saved = true;
-                workspace.updateToolbarControls(saved);
+                workspace.updateFileControls(saved);
             }catch (Exception e){
                     dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }

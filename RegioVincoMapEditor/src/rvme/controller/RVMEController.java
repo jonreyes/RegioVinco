@@ -82,6 +82,7 @@ public class RVMEController {
     private void selectImage(ImageView imageView){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.setSelection(imageView);
+        
     }
 
     public void playAnthem(){
@@ -93,6 +94,6 @@ public class RVMEController {
     public void pauseAnthem(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getPauseButton().setVisible(false);
-        workspace.getPauseButton().setVisible(true);
+        workspace.getPlayButton().setVisible(true);
     }
 }
