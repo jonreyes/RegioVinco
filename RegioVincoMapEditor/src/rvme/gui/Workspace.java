@@ -184,7 +184,7 @@ public class Workspace extends AppWorkspaceComponent {
             fileController.handleSaveRequest();
         });
         exportBtn.setOnAction(e -> {
-            //fileController.handleExportRequest();
+            rvmeController.exportMap();
         });
         exitBtn.setOnAction(e -> {
             fileController.handleExitRequest();

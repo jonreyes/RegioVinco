@@ -41,6 +41,7 @@
         <property name="DATA_LABEL"                 value="Map Data"></property>
         
 	<!--DIALOG LABELS-->
+        <property name="EXPORT_TITLE"               value="Export Map"></property>
         <property name="NMDIALOG_TITLE"             value="Create a New Map"></property>
         <property name="PARENT_LABEL"               value="Parent Directory:"></property>
         <property name="SELECT_LABEL"               value="Select..."></property>
@@ -72,6 +73,7 @@
 	<property name="UPDATE_ERROR_TITLE"		    value="UI Update Error"></property>
         <property name="ADD_ERROR_TITLE"                    value="Load Image Error"></property>
         <property name="ADD_ERROR_MESSAGE"                  value="An error occurred loading the image."></property>
+        <property name="MAP_EXT_DESC"                       value="RVM Images (*.png)"></property>
         <property name="IMAGE_EXT_DESC"                     value="Images (*.png, *.jpg)"></property>
         <property name="PNG_EXT"                            value="*.png"></property>
         <property name="JPG_EXT"                            value="*.jpg"></property>

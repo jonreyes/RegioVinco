@@ -14,13 +14,17 @@ import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
 import static rvme.PropertyType.ADD_ERROR_TITLE;
 import static rvme.PropertyType.ADD_TITLE;
+import static rvme.PropertyType.EXPORT_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT;
+import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
+import static saf.settings.AppStartupConstants.PATH_WORK;
 import saf.ui.AppMessageDialogSingleton;
 
 /**
@@ -35,6 +39,16 @@ public class RVMEController {
     public RVMEController(AppTemplate initApp){
         app = initApp;
         props = PropertiesManager.getPropertiesManager();
+    }
+    
+    public void exportMap(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setTitle(props.getProperty(EXPORT_TITLE));
+        fc.getExtensionFilters().addAll(
+		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+        File exportFile = fc.showSaveDialog(app.getGUI().getWindow());
     }
     
     public void addImage(){
@@ -71,6 +85,11 @@ public class RVMEController {
         mapStack.getChildren().remove(workspace.getSelection());
     }
     
+    private void selectImage(ImageView imageView){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.setSelection(imageView);
+    }
+    
     private void initImageControls(ImageView imageView){
         imageView.setOnMouseClicked(e->{
             if(e.getClickCount()==2){
@@ -79,12 +98,6 @@ public class RVMEController {
         });
     }
     
-    private void selectImage(ImageView imageView){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.setSelection(imageView);
-        
-    }
-
     public void playAnthem(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getPlayButton().setVisible(false);

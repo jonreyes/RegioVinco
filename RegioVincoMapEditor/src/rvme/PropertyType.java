@@ -56,6 +56,7 @@ public enum PropertyType {
     DIMENSIONS_ICON,
     DIMENSIONS_TOOLTIP,
     
+    EXPORT_TITLE,
     NMDIALOG_TITLE,
     SRDIALOG_TITLE,
     DDIALOG_TITLE,
@@ -68,6 +69,7 @@ public enum PropertyType {
     LEADER_COLUMN_HEADING,
     
     MAP_IMAGE,
+    MAP_EXT_DESC,
     IMAGE_EXT_DESC,
     JSON_EXT_DESC,
     PNG_EXT,
