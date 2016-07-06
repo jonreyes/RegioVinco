@@ -16,7 +16,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -128,6 +127,7 @@ public class Workspace extends AppWorkspaceComponent {
     ScrollPane mapView;
     StackPane mapStack;
     Rectangle mapBG;
+    Rectangle mapBorder;
     ImageView mapDummy;
     Group region;
     DoubleProperty mapWidth;
@@ -150,7 +150,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     public Workspace(AppTemplate initApp) {
         app = initApp;
-        app.getGUI().getWindow().setResizable(false);
+        //app.getGUI().getWindow().setResizable(false);
         props = PropertiesManager.getPropertiesManager();
         initGUI();
         initControls();
@@ -191,6 +191,12 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initEditControls(){
+        bgcPicker.setOnAction(e->{
+            rvmeController.updateBGColor();
+        });
+        bcPicker.setOnAction(e->{
+            rvmeController.updateBorderColor();
+        });
         addBtn.setOnMouseClicked(e->{
             rvmeController.addImage();
         });
@@ -267,14 +273,14 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapBG(){
         mapBG = new Rectangle();
+        mapBG.setFill(bgcPicker.getValue());
         mapBG.widthProperty().bind(mapWidth.subtract(mapBG.strokeWidthProperty()));
         mapBG.heightProperty().bind(mapHeight.subtract(mapBG.strokeWidthProperty()));
-        mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
     }
     
     private void initMapBorder(){
-        Rectangle mapBorder = new Rectangle();
+        mapBorder = new Rectangle();
         mapBorder.setFill(null);
         mapBorder.widthProperty().bind(mapWidth.subtract(mapBorder.strokeWidthProperty()));
         mapBorder.heightProperty().bind(mapHeight.subtract(mapBorder.strokeWidthProperty()));
@@ -323,18 +329,8 @@ public class Workspace extends AppWorkspaceComponent {
         dataTable.getColumns().add(capitalColumn);
         dataTable.getColumns().add(leaderColumn);
 
-        String a = "TEST";
-        String b = "DUMMY";
-        String c = "DATA";
-        
         ObservableList<SubRegion> data = FXCollections.observableArrayList();
         data.add(new SubRegion("North Korea","Pyongyang","Kim Jong Un"));
-        data.add(new SubRegion(a,b,c));
-        data.add(new SubRegion(b,c,a));
-        data.add(new SubRegion(c,b,a));
-        data.add(new SubRegion(a,a,a));
-        data.add(new SubRegion(b,b,b));
-        data.add(new SubRegion(c,c,c));
         
         dataTable.setItems(data);
         
@@ -499,6 +495,22 @@ public class Workspace extends AppWorkspaceComponent {
         return button;
     }
     
+    public Rectangle getMapBG(){
+        return mapBG;
+    }
+    
+    public ColorPicker getBGCPicker(){
+        return bgcPicker;
+    }
+    
+    public Rectangle getMapBorder(){
+        return mapBorder;
+    }
+    
+    public ColorPicker getBCPicker(){
+        return bcPicker;
+    }
+    
     public StackPane getMapStack(){
         return mapStack;
     }
@@ -521,6 +533,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
+        initRegionView();
         updateEditControls();
     }
 

@@ -9,6 +9,7 @@ import java.io.File;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
@@ -18,6 +19,7 @@ import static rvme.PropertyType.EXPORT_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
+import rvme.data.DataManager;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
 import static saf.settings.AppPropertyType.WORK_FILE_EXT;
@@ -49,6 +51,24 @@ public class RVMEController {
         fc.getExtensionFilters().addAll(
 		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
         File exportFile = fc.showSaveDialog(app.getGUI().getWindow());
+    }
+    
+    public void updateBGColor(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        Color bgColor = workspace.getBGCPicker().getValue();
+        dataManager.setBGColor(bgColor);
+        workspace.getMapBG().setFill(bgColor);
+    }
+    
+    public void updateBorderColor(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        Color borderColor = workspace.getBCPicker().getValue();
+        dataManager.setBorderColor(borderColor);
+        workspace.getMapBorder().setStroke(borderColor);
     }
     
     public void addImage(){
