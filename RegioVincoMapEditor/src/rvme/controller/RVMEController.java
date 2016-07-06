@@ -6,6 +6,9 @@
 package rvme.controller;
 
 import java.io.File;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -20,6 +23,7 @@ import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import rvme.data.DataManager;
+import rvme.data.SubRegion;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
 import static saf.settings.AppPropertyType.WORK_FILE_EXT;
@@ -104,15 +108,17 @@ public class RVMEController {
                 initImageControls(addImageView);
                 
                 Workspace workspace = (Workspace) app.getWorkspaceComponent();
+                DataManager dataManager = (DataManager) app.getDataComponent();
+                
                 StackPane mapStack = workspace.getMapStack();
                 mapStack.getChildren().add(addImageView);
                 workspace.reloadWorkspace();
 
-                //saved = false;
-                //app.getGUI().updateToolbarControls(saved);
             } catch (Exception e) {
-                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-                dialog.show(props.getProperty(ADD_ERROR_TITLE), props.getProperty(ADD_ERROR_MESSAGE));
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setHeaderText(props.getProperty(ADD_ERROR_TITLE));
+                alert.setContentText(props.getProperty(ADD_ERROR_MESSAGE));
+                alert.showAndWait();
             }
         }
     }

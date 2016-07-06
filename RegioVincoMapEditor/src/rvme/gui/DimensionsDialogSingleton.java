@@ -8,21 +8,21 @@ package rvme.gui;
 import java.net.URL;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.DDIALOG_TITLE;
+import static rvme.PropertyType.DIMENSIONS_ERROR_MESSAGE;
+import static rvme.PropertyType.DIMENSIONS_ERROR_TITLE;
 import static rvme.PropertyType.HEIGHT_LABEL;
 import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.WIDTH_LABEL;
@@ -124,14 +124,22 @@ public class DimensionsDialogSingleton extends Stage {
    
     private void initHandlers(){
         okBtn.setOnAction(e->{
-            this.hide();
             changeMapDimensions();
         });
     }
     
     private void changeMapDimensions(){
-        mapW.set(Double.valueOf(widthTextField.getText()));
-        mapH.set(Double.valueOf(heightTextField.getText()));
+        try{
+            mapW.set(Double.valueOf(widthTextField.getText()));
+            mapH.set(Double.valueOf(heightTextField.getText()));
+            this.hide();
+        }
+        catch(Exception e){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText(props.getProperty(DIMENSIONS_ERROR_TITLE));
+            alert.setContentText(props.getProperty(DIMENSIONS_ERROR_MESSAGE));
+            alert.showAndWait();
+        }
     }
     
     private void initStyleSheet(){

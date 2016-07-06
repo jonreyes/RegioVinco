@@ -9,6 +9,8 @@ import java.io.File;
 import java.net.URL;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -197,7 +199,6 @@ public class NewMapDialogSingleton extends Stage{
     }
     
     private void loadGeometry(){
-        AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (geometry != null) {
             try {
@@ -212,7 +213,10 @@ public class NewMapDialogSingleton extends Stage{
                 boolean saved = true;
                 workspace.updateFileControls(saved);
             }catch (Exception e){
-                    dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
+                alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
+                alert.showAndWait();
             }
         }
         else{

@@ -76,6 +76,8 @@ public enum PropertyType {
     JPG_EXT,
     JSON_EXT,
     ADD_ERROR_TITLE,
-    ADD_ERROR_MESSAGE
+    ADD_ERROR_MESSAGE,
+    DIMENSIONS_ERROR_TITLE,
+    DIMENSIONS_ERROR_MESSAGE,
     
 }
