@@ -71,6 +71,24 @@ public class RVMEController {
         workspace.getMapBorder().setStroke(borderColor);
     }
     
+    public void updateBorderThickness(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        double borderThickness = workspace.getBTSlider().getValue();
+        dataManager.setBorderThickness(borderThickness);
+        workspace.getBTSlider().setValue(borderThickness);
+    }
+    
+    public void updateZoom(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        double zoom = workspace.getZoomSlider().getValue();
+        dataManager.setZoom(zoom);
+        workspace.getZoomSlider().setValue(zoom);
+    }
+    
     public void addImage(){
          FileChooser fc = new FileChooser();
          fc.setInitialDirectory(new File(PATH_IMAGES));

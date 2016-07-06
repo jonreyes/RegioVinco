@@ -150,7 +150,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     public Workspace(AppTemplate initApp) {
         app = initApp;
-        //app.getGUI().getWindow().setResizable(false);
+        app.getGUI().getWindow().setResizable(false);
         props = PropertiesManager.getPropertiesManager();
         initGUI();
         initControls();
@@ -196,6 +196,12 @@ public class Workspace extends AppWorkspaceComponent {
         });
         bcPicker.setOnAction(e->{
             rvmeController.updateBorderColor();
+        });
+        btSlider.valueProperty().addListener(e->{
+            rvmeController.updateBorderThickness();
+        });
+        zoomSlider.valueProperty().addListener(e->{
+            rvmeController.updateZoom();
         });
         addBtn.setOnMouseClicked(e->{
             rvmeController.addImage();
@@ -499,16 +505,24 @@ public class Workspace extends AppWorkspaceComponent {
         return mapBG;
     }
     
-    public ColorPicker getBGCPicker(){
-        return bgcPicker;
-    }
-    
     public Rectangle getMapBorder(){
         return mapBorder;
     }
     
+    public ColorPicker getBGCPicker(){
+        return bgcPicker;
+    }
+    
     public ColorPicker getBCPicker(){
         return bcPicker;
+    }
+    
+    public Slider getBTSlider(){
+        return btSlider;
+    }
+    
+    public Slider getZoomSlider(){
+        return zoomSlider;
     }
     
     public StackPane getMapStack(){

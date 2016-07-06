@@ -23,6 +23,9 @@ public class DataManager implements AppDataComponent {
     Color backgroundColor;
     Color borderColor;
     
+    double borderThickness;
+    double zoom;
+    
     ObservableList<Polygon> geometry;
     
     /**
@@ -30,8 +33,6 @@ public class DataManager implements AppDataComponent {
      *
      * @param initApp The application within which this data manager is serving.
      */
-    // SUBREGIONS
-    
     public DataManager(AppTemplate initApp) {
         app = initApp;
         this.reset();
@@ -69,11 +70,19 @@ public class DataManager implements AppDataComponent {
     }
     
     public void setBGColor(Color bgColor){
-        this.backgroundColor = bgColor;
+        backgroundColor = bgColor;
     }
     
     public void setBorderColor(Color bColor){
-        this.borderColor = bColor;
+        borderColor = bColor;
+    }
+    
+    public void setBorderThickness(double bt){
+        borderThickness = bt;
+    }
+    
+    public void setZoom(double z){
+        zoom = z;
     }
     
     @Override
