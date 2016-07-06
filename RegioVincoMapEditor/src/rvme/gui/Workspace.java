@@ -91,6 +91,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     RVMEController rvmeController;
     
+    StackPane titleBar;
     Label title;
     AppFileController fileController;
     ToolBar fileToolBar;
@@ -209,9 +210,16 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initTitle(){
+        titleBar = new StackPane();
+        titleBar.setMinWidth(app.getGUI().getWindow().getWidth());
+        titleBar.setMinHeight(app.getGUI().getWindow().getHeight());
+        
         title = new Label(props.getProperty(APP_TITLE));
-        title.setTranslateX(250);
-        fileToolBar.getItems().add(title);
+        titleBar.getChildren().add(fileBox);
+        titleBar.getChildren().add(title);
+        
+        fileToolBar.getItems().add(titleBar);
+        app.getGUI().getAppPane().setTop(fileToolBar);
     }
     
     private void initWorkspace(){
@@ -339,10 +347,11 @@ public class Workspace extends AppWorkspaceComponent {
      */
     private void initFileToolbar() {
         fileToolBar = new ToolBar();
-        
+
         fileBox = new HBox();
-        fileBox.setAlignment(Pos.CENTER);
-        fileBox.setSpacing(10);
+        fileBox.setAlignment(Pos.CENTER_LEFT);
+        fileBox.setSpacing(5);
+        
         newBtn = initChildButton(NEW_ICON.toString(),	    NEW_TOOLTIP.toString(),	false);
         loadBtn = initChildButton(LOAD_ICON.toString(),	    LOAD_TOOLTIP.toString(),	false);
         saveBtn = initChildButton(SAVE_ICON.toString(),	    SAVE_TOOLTIP.toString(),	true);
@@ -350,9 +359,6 @@ public class Workspace extends AppWorkspaceComponent {
         exitBtn = initChildButton(EXIT_ICON.toString(),	    EXIT_TOOLTIP.toString(),	false);
         
         fileBox.getChildren().addAll(newBtn,loadBtn,saveBtn,exportBtn,exitBtn);
-        fileToolBar.getItems().add(fileBox);
-        
-        app.getGUI().getAppPane().setTop(fileToolBar);
     }
     
     /**
@@ -515,7 +521,6 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
-        initMapView();
         updateEditControls();
     }
 
