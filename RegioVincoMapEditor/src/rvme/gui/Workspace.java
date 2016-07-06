@@ -103,8 +103,6 @@ public class Workspace extends AppWorkspaceComponent {
     
     FlowPane editToolBar;
     GridPane editGrid;
-    Label nameLabel;
-    TextField nameTextField;
     Label bgcLabel;
     ColorPicker bgcPicker;
     Label bcLabel;
@@ -384,9 +382,6 @@ public class Workspace extends AppWorkspaceComponent {
     private void initEditToolbar(){
         editToolBar = new FlowPane();
         
-        nameLabel = new Label(props.getProperty(NAME_LABEL));
-        nameTextField = new TextField();
-        
         bgcLabel = new Label(props.getProperty(BGC_LABEL));
         bgcPicker = new ColorPicker();
         
@@ -419,27 +414,25 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsBtn = initChildButton(DIMENSIONS_ICON.toString(), DIMENSIONS_TOOLTIP.toString(), false);
         
         editGrid = new GridPane();
-        editGrid.add(nameLabel, 0, 0);
-        editGrid.add(nameTextField, 0, 1);
-        editGrid.add(bgcLabel, 1, 0);
-        editGrid.add(bgcPicker, 1, 1);
-        editGrid.add(bcLabel, 2, 0);
-        editGrid.add(bcPicker, 2, 1);
-        editGrid.add(btLabel, 3, 0);
-        editGrid.add(btSlider, 3, 1);
-        editGrid.add(zoomLabel, 4, 0);
-        editGrid.add(zoomSlider, 4, 1);
-        editGrid.add(addLabel, 5, 0);
-        editGrid.add(addBtn, 5, 1);
-        editGrid.add(rmLabel, 6, 0);
-        editGrid.add(rmBtn, 6, 1);
-        editGrid.add(racLabel, 7, 0);
-        editGrid.add(racBtn, 7, 1);
-        editGrid.add(anthemLabel, 8, 0);
-        editGrid.add(playBtn, 8, 1);
-        editGrid.add(pauseBtn, 8, 1);
-        editGrid.add(dimensionsLabel, 9, 0);
-        editGrid.add(dimensionsBtn, 9, 1);
+        editGrid.add(bgcLabel, 0, 0);
+        editGrid.add(bgcPicker, 0, 1);
+        editGrid.add(bcLabel, 1, 0);
+        editGrid.add(bcPicker, 1, 1);
+        editGrid.add(btLabel, 2, 0);
+        editGrid.add(btSlider, 2, 1);
+        editGrid.add(zoomLabel, 3, 0);
+        editGrid.add(zoomSlider, 3, 1);
+        editGrid.add(addLabel, 4, 0);
+        editGrid.add(addBtn, 4, 1);
+        editGrid.add(rmLabel, 5, 0);
+        editGrid.add(rmBtn, 5, 1);
+        editGrid.add(racLabel, 6, 0);
+        editGrid.add(racBtn, 6, 1);
+        editGrid.add(anthemLabel, 7, 0);
+        editGrid.add(playBtn, 7, 1);
+        editGrid.add(pauseBtn, 7, 1);
+        editGrid.add(dimensionsLabel, 8, 0);
+        editGrid.add(dimensionsBtn, 8, 1);
         
         for(Node node : editGrid.getChildren()){
             GridPane.setHalignment(node, HPos.CENTER);
@@ -532,7 +525,6 @@ public class Workspace extends AppWorkspaceComponent {
         fileToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
         editToolBar.getStyleClass().add(CLASS_BORDERED_PANE);
         editGrid.getStyleClass().add(CLASS_GRID_PANE);
-        nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         bgcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         bcLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         btLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
