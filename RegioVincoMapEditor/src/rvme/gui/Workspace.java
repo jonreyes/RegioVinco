@@ -136,7 +136,6 @@ public class Workspace extends AppWorkspaceComponent {
     
     VBox dataView;
     Label dataLabel;
-    
     TableView<SubRegion> dataTable;
     TableColumn nameColumn;
     TableColumn capitalColumn;
@@ -218,7 +217,6 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
         });    
-        
     }
     
     private void initTitle(){
@@ -239,17 +237,14 @@ public class Workspace extends AppWorkspaceComponent {
         initDialogs();
         initEditToolbar();
         initEditView();
-        workspace.getChildren().add(editToolBar);
-        workspace.getChildren().add(editView);
     }
     
     private void initEditView(){
         editView = new SplitPane();
         initMapView();
         initDataView();
-        editView.getItems().add(mapView);
-        editView.getItems().add(dataView);
         editView.setDividerPositions(mapWidth.get()/app.getGUI().getWindow().getWidth());
+        workspace.getChildren().add(editView);
     }
     
     private void initMapView(){
@@ -257,7 +252,7 @@ public class Workspace extends AppWorkspaceComponent {
         mapWidth = dimensionsDialog.mapWidthProperty();
         mapHeight = dimensionsDialog.mapHeightProperty();
         initMapLayers();
-        mapView.setContent(mapStack);
+        editView.getItems().add(mapView);
     }
     
     private void initMapLayers(){
@@ -267,14 +262,19 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.scaleXProperty().bind(zoomSlider.valueProperty());
         mapStack.scaleYProperty().bind(zoomSlider.valueProperty());
 
-        mapDummy = initImageView(MAP_IMAGE.toString(),mapWidth.get()/2);
-        mapDummy.fitWidthProperty().bind(mapWidth.divide(2));
-        mapDummy.fitHeightProperty().bind(mapWidth.divide(2));
         initMapBG();
-        mapStack.getChildren().add(mapDummy);
+        initMapDummy();
         initMapBorder();
         initRegionView();
         
+        mapView.setContent(mapStack);
+    }
+    
+    private void initMapDummy(){
+        mapDummy = initImageView(MAP_IMAGE.toString(),mapWidth.get()/2);
+        mapDummy.fitWidthProperty().bind(mapWidth.divide(2));
+        mapDummy.fitHeightProperty().bind(mapWidth.divide(2));
+        mapStack.getChildren().add(mapDummy);
     }
     
     private void initMapBG(){
@@ -307,9 +307,9 @@ public class Workspace extends AppWorkspaceComponent {
     private void initDataView(){
         dataView = new VBox();
         dataLabel = new Label(props.getProperty(DATA_LABEL));
-        initTableView();
         dataView.getChildren().add(dataLabel);
-        dataView.getChildren().add(dataTable);
+        initTableView();
+        editView.getItems().add(dataView);
     }
     
     private void initTableView(){
@@ -341,6 +341,13 @@ public class Workspace extends AppWorkspaceComponent {
         dataTable.setItems(data);
         
         dataTable.setMinHeight(mapHeight.get()*0.85);
+        dataView.getChildren().add(dataTable);
+    }
+    
+    private void initTableControls(){
+        dataTable.itemsProperty().addListener(e->{
+            rvmeController.updateTableData();
+        });
     }
     
     /**
@@ -371,7 +378,6 @@ public class Workspace extends AppWorkspaceComponent {
      */
     public void updateFileControls(boolean saved) {
         saveBtn.setDisable(saved);
-
 	newBtn.setDisable(false);
         loadBtn.setDisable(false);
 	exportBtn.setDisable(saved);
@@ -447,6 +453,7 @@ public class Workspace extends AppWorkspaceComponent {
         }
         
         editToolBar.getChildren().add(editGrid);
+        workspace.getChildren().add(editToolBar);
     }
     
     private void initDialogs(){
@@ -527,6 +534,10 @@ public class Workspace extends AppWorkspaceComponent {
     
     public StackPane getMapStack(){
         return mapStack;
+    }
+    
+    public ObservableList<SubRegion> getMapData(){
+        return dataTable.getItems();
     }
     
     public Button getPlayButton(){

@@ -26,6 +26,7 @@ public class DataManager implements AppDataComponent {
     double borderThickness;
     double zoom;
     
+    ObservableList<SubRegion> mapData;
     ObservableList<Polygon> geometry;
     
     /**
@@ -83,6 +84,10 @@ public class DataManager implements AppDataComponent {
     
     public void setZoom(double z){
         zoom = z;
+    }
+    
+    public void setMapData(ObservableList<SubRegion> mapData){
+        this.mapData = mapData;
     }
     
     @Override
