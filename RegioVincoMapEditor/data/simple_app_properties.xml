@@ -54,8 +54,8 @@
         <property name="WORK_LOADED_MESSAGE"		value="The Map has been Loaded"></property>
         <property name="WORK_SAVED_MESSAGE"		value="The Map has been Saved"></property>
         <property name="SAVE_UNSAVED_WORK_MESSAGE"	value="Do you want to save your unsaved work first?"></property>
-	<property name="SAVE_WORK_TITLE"		value="Save your work"></property>
-	<property name="LOAD_WORK_TITLE"		value="Select work file to load"></property>
+	<property name="SAVE_WORK_TITLE"		value="Save Map"></property>
+	<property name="LOAD_WORK_TITLE"		value="Load Map"></property>
 	<property name="WORK_FILE_EXT"			value="rvm"></property>
 	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map Files"></property>
     </property_list>
