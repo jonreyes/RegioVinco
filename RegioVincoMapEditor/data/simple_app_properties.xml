@@ -56,8 +56,8 @@
         <property name="SAVE_UNSAVED_WORK_MESSAGE"	value="Do you want to save your unsaved work first?"></property>
 	<property name="SAVE_WORK_TITLE"		value="Save Map"></property>
 	<property name="LOAD_WORK_TITLE"		value="Load Map"></property>
-	<property name="WORK_FILE_EXT"			value="rvm"></property>
-	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map Files"></property>
+	<property name="WORK_FILE_EXT"			value="*.json"></property>
+	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map JSON"></property>
     </property_list>
     <property_options_list>
     </property_options_list>

@@ -85,7 +85,7 @@ public class NewMapDialogSingleton extends Stage{
     File geometry;
     
     final double SPACE = 10;
-    final double SCALEW = 0.33;
+    final double SCALEW = 0.36;
     final double SCALEH = 0.3;
     
     /**
@@ -188,7 +188,7 @@ public class NewMapDialogSingleton extends Stage{
     
     private void selectGeometry(){
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_DATA));
+        fc.setInitialDirectory(new File(PATH_WORK));
         fc.setTitle(props.getProperty(GEO_TITLE));
         fc.getExtensionFilters().addAll(
 	new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
