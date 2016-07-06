@@ -93,6 +93,14 @@ public class RVMEController {
         workspace.getZoomSlider().setValue(zoom);
     }
     
+    public void updateTableData(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        ObservableList<SubRegion> mapData = workspace.getMapData();
+        dataManager.setMapData(mapData);
+    }
+    
     public void addImage(){
          FileChooser fc = new FileChooser();
          fc.setInitialDirectory(new File(PATH_IMAGES));
