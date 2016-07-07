@@ -55,19 +55,23 @@ public class FileManager implements AppFileComponent {
         // AND NOW LOAD ALL THE SUBREGIONS
 	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS);
 	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
+            // LOAD SUBREGION
 	    JsonObject jsonSubRegion = jsonSubRegionArray.getJsonObject(i);
+            // LOAD SUBREGION POLYGONS
 	    JsonArray jsonSubRegionPolygonArray = jsonSubRegion.getJsonArray(JSON_SUBREGION_POLYGONS);
             for (int j = 0; j < jsonSubRegionPolygonArray.size(); j++){
+                // LOAD SUBREGION POLYGON
                 JsonArray jsonSubRegionPolygon = jsonSubRegionPolygonArray.getJsonArray(j);
                 Polygon subregionpolygon = new Polygon();
                 for(int k = 0; k < jsonSubRegionPolygon.size(); k++){
+                    // LOAD SUBREGION POINT
                     JsonObject jsonPoint = jsonSubRegionPolygon.getJsonObject(k);
                     for(int l = 0; l < jsonPoint.size(); l++){
                         Double[] point = loadPoint(jsonPoint);
                         subregionpolygon.getPoints().addAll(point);
                     }
                 }
-                dataManager.add(subregionpolygon);
+                dataManager.getGeometry().add(subregionpolygon);
             }
 	}
     }
@@ -85,7 +89,9 @@ public class FileManager implements AppFileComponent {
     }
     
     public Double[] loadPoint(JsonObject jsonPoint){
+        // LOAD X
         double x = getDataAsDouble(jsonPoint,JSON_X);
+        // LOAD Y
         double y = getDataAsDouble(jsonPoint,JSON_Y);
         Double[] point = new Double[]{x,y};
         return point;
@@ -103,7 +109,46 @@ public class FileManager implements AppFileComponent {
 
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	DataManager dataManager = (DataManager)data;
+        
+	// NOW BUILD THE JSON ARRAY FOR THE GEOMETRY
+	ObservableList<Polygon> geometry = dataManager.getGeometry();
+        JsonArrayBuilder subRegionsArrayBuilder = Json.createArrayBuilder();
+	for (Polygon polygon : geometry) {
+            JsonArrayBuilder polygonArrayBuilder = Json.createArrayBuilder();
+            for(int i = 0; i < polygon.getPoints().size(); i+=2){
+                JsonObject pointJson = Json.createObjectBuilder()
+                        .add(JSON_X, polygon.getPoints().get(i))
+                        .add(JSON_Y, polygon.getPoints().get(i+1)).build();
+                polygonArrayBuilder.add(pointJson);
+            }
+            JsonArray polygonsArray = polygonArrayBuilder.build();
+            subRegionsArrayBuilder.add(polygonsArray);
+	}
+	JsonArray subRegionsArray = subRegionsArrayBuilder.build();
+	
+	// THEN PUT IT ALL TOGETHER IN A JsonObject
+	JsonObject dataManagerJSO = Json.createObjectBuilder()
+                .add(JSON_SUBREGIONS, subRegionsArray)
+		.build();
+	
+	// AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> properties = new HashMap<>(1);
+	properties.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+	StringWriter sw = new StringWriter();
+	JsonWriter jsonWriter = writerFactory.createWriter(sw);
+	jsonWriter.writeObject(dataManagerJSO);
+	jsonWriter.close();
+
+	// INIT THE WRITER
+	OutputStream os = new FileOutputStream(filePath);
+	JsonWriter jsonFileWriter = Json.createWriter(os);
+	jsonFileWriter.writeObject(dataManagerJSO);
+	String prettyPrinted = sw.toString();
+	PrintWriter pw = new PrintWriter(filePath);
+	pw.write(prettyPrinted);
+	pw.close();
     }
 
     @Override
