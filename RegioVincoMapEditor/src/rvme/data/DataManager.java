@@ -1,5 +1,6 @@
 package rvme.data;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.beans.property.DoubleProperty;
@@ -23,6 +24,9 @@ public class DataManager implements AppDataComponent {
 
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
+    
+    String fileName;
+    File parent;
     
     Color backgroundColor;
     Color borderColor;
@@ -134,6 +138,22 @@ public class DataManager implements AppDataComponent {
     
     public void setMapData(ObservableList<SubRegion> mapData){
         this.mapData = mapData;
+    }
+    
+    public String getFileName(){
+        return fileName;
+    }
+    
+    public void setFileName(String name){
+        fileName = name;
+    }
+    
+    public File getParent(){
+        return parent;
+    }
+    
+    public void setParent(File parent) {
+        this.parent = parent;
     }
     
     @Override

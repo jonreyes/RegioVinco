@@ -32,6 +32,7 @@ import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.PARENT_LABEL;
 import static rvme.PropertyType.PARENT_TITLE;
 import static rvme.PropertyType.SELECT_LABEL;
+import rvme.data.DataManager;
 import saf.AppTemplate;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
@@ -60,6 +61,7 @@ public class NewMapDialogSingleton extends Stage{
     AppTemplate app;
     AppGUI gui;
     
+    DataManager data;
     PropertiesManager props;
     
     VBox messagePane;
@@ -112,6 +114,7 @@ public class NewMapDialogSingleton extends Stage{
     public void init(AppTemplate initApp){
         app = initApp;
         gui = app.getGUI();
+        data = (DataManager) app.getDataComponent();
         props = PropertiesManager.getPropertiesManager();
         initModality(Modality.WINDOW_MODAL);
         initOwner(gui.getWindow());
@@ -175,9 +178,13 @@ public class NewMapDialogSingleton extends Stage{
         });
         okBtn.setOnAction(e->{
             this.hide();
+            setFileName();
             loadGeometry();
-            
         });
+    }
+    
+    private void setFileName(){
+        data.setFileName(nameTextField.getText());
     }
     
     private void selectParent(){
@@ -185,7 +192,8 @@ public class NewMapDialogSingleton extends Stage{
         dc.setInitialDirectory(new File(PATH_WORK));
         dc.setTitle(props.getProperty(PARENT_TITLE));
         parent = dc.showDialog(app.getGUI().getWindow());            
-        parentTextField.setText(parent.getPath());
+        data.setParent(parent);
+        parentTextField.setText(data.getParent().getPath());
     }
     
     private void selectGeometry(){
@@ -209,8 +217,8 @@ public class NewMapDialogSingleton extends Stage{
                 workspace.reloadWorkspace();
                     
                 workspace.activateWorkspace(app.getGUI().getAppPane());
-                    
-                boolean saved = true;
+                
+                boolean saved = false;
                 workspace.updateFileControls(saved);
             }catch (Exception e){
                 Alert alert = new Alert(AlertType.ERROR);
@@ -221,7 +229,8 @@ public class NewMapDialogSingleton extends Stage{
         }
         else{
             workspace.fileController.handleNewRequest();
-            workspace.updateFileControls(workspace.fileController.isSaved());
+            boolean saved = false;
+            workspace.updateFileControls(saved);
         }
     }
     
