@@ -8,6 +8,7 @@ package rvme.controller;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -93,15 +94,17 @@ public class RVMEController {
         DataManager dataManager = (DataManager) app.getDataComponent();
         
         double zoom = workspace.getZoomSlider().getValue();
-        dataManager.setZoom(zoom);
         workspace.getZoomSlider().setValue(zoom);
-        StackPane mapStack = workspace.getMapStack();
-        mapStack.setScaleX(zoom);
-        mapStack.setScaleY(zoom);
-        for(Node node : mapStack.getChildren()){
-            node.setScaleX(zoom);
-            node.setScaleY(zoom);
+        dataManager.setZoom(zoom);
+        
+        if (zoom > 1){
+            zoom -= 1;
+            zoom *= 1024;
         }
+        
+        Group region = workspace.getRegion();
+        region.setScaleX(zoom);
+        region.setScaleY(zoom);
     }
     
     public void updateTableData(){

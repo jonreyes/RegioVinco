@@ -168,9 +168,9 @@ public class Workspace extends AppWorkspaceComponent {
         rvmeController =  new RVMEController(app);
         initFileControls();
         initEditControls();
-        mapDummy.setOnMouseClicked(e->{
+        /*mapDummy.setOnMouseClicked(e->{
             subRegionDialog.show();
-        });
+        });*/
     }
     
     private void initFileControls(){
@@ -267,7 +267,7 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
 
         initMapBG();
-        initMapDummy();
+        //initMapDummy();
         initMapBorder();
         initRegionView();
         
@@ -400,7 +400,7 @@ public class Workspace extends AppWorkspaceComponent {
         btSlider = new Slider(0,0.5,0);
 
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
-        zoomSlider = new Slider(0,16,1);
+        zoomSlider = new Slider(0,2,1);
         
         addLabel = new Label(props.getProperty(ADD_LABEL));
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
@@ -561,6 +561,7 @@ public class Workspace extends AppWorkspaceComponent {
         zoomSlider.setValue(data.getZoom());
         mapWidth.set(data.mapWidthProperty().get());
         mapHeight.set(data.mapHeightProperty().get());
+        mapStack.getChildren().remove(region);
         initRegionView();
         updateEditControls();
         dimensionsDialog.reset();
