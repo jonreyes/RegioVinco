@@ -33,9 +33,9 @@ import static rvme.PropertyType.PARENT_LABEL;
 import static rvme.PropertyType.PARENT_TITLE;
 import static rvme.PropertyType.SELECT_LABEL;
 import rvme.data.DataManager;
+import rvme.file.FileManager;
 import saf.AppTemplate;
 import saf.components.AppDataComponent;
-import saf.components.AppFileComponent;
 import static saf.components.AppStyleArbiter.CLASS_BORDERED_PANE;
 import static saf.components.AppStyleArbiter.CLASS_GRID_PANE;
 import static saf.components.AppStyleArbiter.CLASS_PROMPT_LABEL;
@@ -44,12 +44,8 @@ import static saf.settings.AppPropertyType.APP_CSS;
 import static saf.settings.AppPropertyType.APP_PATH_CSS;
 import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
 import static saf.settings.AppPropertyType.LOAD_ERROR_TITLE;
-import static saf.settings.AppPropertyType.WORK_FILE_EXT;
-import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
-import static saf.settings.AppStartupConstants.PATH_DATA;
 import static saf.settings.AppStartupConstants.PATH_WORK;
 import saf.ui.AppGUI;
-import saf.ui.AppMessageDialogSingleton;
 
 /**
  *
@@ -179,7 +175,7 @@ public class NewMapDialogSingleton extends Stage{
         okBtn.setOnAction(e->{
             this.hide();
             setFileName();
-            loadGeometry();
+            setGeometry();
         });
     }
     
@@ -206,13 +202,13 @@ public class NewMapDialogSingleton extends Stage{
         geoTextField.setText(geometry.getPath());
     }
     
-    private void loadGeometry(){
+    private void setGeometry(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (geometry != null) {
             try {
                 AppDataComponent dataManager = app.getDataComponent();
-                AppFileComponent fileManager = app.getFileComponent();
-                fileManager.loadData(dataManager, geometry.getAbsolutePath());
+                FileManager fileManager = (FileManager) app.getFileComponent();
+                fileManager.loadGeometry(dataManager, geometry.getAbsolutePath());
                 
                 workspace.reloadWorkspace();
                     

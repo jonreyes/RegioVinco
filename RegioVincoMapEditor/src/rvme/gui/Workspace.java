@@ -108,10 +108,14 @@ public class Workspace extends AppWorkspaceComponent {
     ColorPicker bgcPicker;
     Label bcLabel;
     ColorPicker bcPicker;
+    VBox btBox;
     Label btLabel;
     Slider btSlider;
+    Label btValue;
     Label zoomLabel;
+    VBox zoomBox;
     Slider zoomSlider;
+    Label zoomValue;
     Label addLabel;
     Button addBtn;
     Label rmLabel;
@@ -182,7 +186,7 @@ public class Workspace extends AppWorkspaceComponent {
             fileController.handleLoadRequest();
         });
         saveBtn.setOnAction(e -> {
-            fileController.handleSaveRequest();
+            rvmeController.saveMap();
         });
         exportBtn.setOnAction(e -> {
             rvmeController.exportMap();
@@ -249,7 +253,7 @@ public class Workspace extends AppWorkspaceComponent {
         editView = new SplitPane();
         initMapView();
         initDataView();
-        editView.setDividerPositions(mapWidth.get()/app.getGUI().getWindow().getWidth());
+        editView.setDividerPositions(mapWidth.get()/app.getGUI().getWindow().getWidth()+0.005);
         workspace.getChildren().add(editView);
     }
     
@@ -397,10 +401,20 @@ public class Workspace extends AppWorkspaceComponent {
         bcPicker = new ColorPicker();
         
         btLabel = new Label(props.getProperty(BT_LABEL));
+        btBox = new VBox();
+        btBox.setAlignment(Pos.CENTER);
         btSlider = new Slider(0,0.5,0);
-
+        btValue = new Label(String.format("%.2f%%",btSlider.getValue()));
+        btBox.getChildren().add(btSlider);
+        btBox.getChildren().add(btValue);
+        
         zoomLabel = new Label(props.getProperty(ZOOM_LABEL));
+        zoomBox = new VBox();
+        zoomBox.setAlignment(Pos.CENTER);
         zoomSlider = new Slider(0,2,1);
+        zoomValue = new Label(String.format("%.2fx",zoomSlider.getValue()));
+        zoomBox.getChildren().add(zoomSlider);
+        zoomBox.getChildren().add(zoomValue);
         
         addLabel = new Label(props.getProperty(ADD_LABEL));
         addBtn = initChildButton(ADD_ICON.toString(), ADD_TOOLTIP.toString(), false);
@@ -426,9 +440,9 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(bcLabel, 1, 0);
         editGrid.add(bcPicker, 1, 1);
         editGrid.add(btLabel, 2, 0);
-        editGrid.add(btSlider, 2, 1);
+        editGrid.add(btBox, 2, 1);
         editGrid.add(zoomLabel, 3, 0);
-        editGrid.add(zoomSlider, 3, 1);
+        editGrid.add(zoomBox, 3, 1);
         editGrid.add(addLabel, 4, 0);
         editGrid.add(addBtn, 4, 1);
         editGrid.add(rmLabel, 5, 0);
@@ -521,8 +535,16 @@ public class Workspace extends AppWorkspaceComponent {
         return btSlider;
     }
     
+    public Label getBTValue(){
+        return btValue;
+    }
+    
     public Slider getZoomSlider(){
         return zoomSlider;
+    }
+    
+    public Label getZoomValue(){
+        return zoomValue;
     }
     
     public StackPane getMapStack(){
@@ -557,12 +579,12 @@ public class Workspace extends AppWorkspaceComponent {
     public void reloadWorkspace() {
         bgcPicker.setValue(data.getBGColor());
         bcPicker.setValue(data.getBorderColor());
-        btSlider.setValue(data.getBorderThickness());
-        zoomSlider.setValue(data.getZoom());
-        mapWidth.set(data.mapWidthProperty().get());
-        mapHeight.set(data.mapHeightProperty().get());
         mapStack.getChildren().remove(region);
         initRegionView();
+        mapWidth.set(data.mapWidthProperty().get());
+        mapHeight.set(data.mapHeightProperty().get());
+        btSlider.setValue(data.getBorderThickness());
+        zoomSlider.setValue(data.getZoom());
         updateEditControls();
         dimensionsDialog.reset();
     }

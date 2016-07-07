@@ -52,18 +52,21 @@ public class DataManager implements AppDataComponent {
     }
     
     public Group mapTo(Rectangle bounds){
+        if (mapColors.isEmpty()) mapColors = randomColors();
         Group map = new Group();
+        int i = 0;
         for(Polygon polygon : geometry){
             Polygon mapPolygon = new Polygon();
             mapPolygon.setStroke(Color.BLACK);
             mapPolygon.setStrokeWidth(0.01);
-            mapPolygon.setFill(Color.GREENYELLOW);
-            int i = 0;
+            mapPolygon.setFill(mapColors.get(i));
+            i++;
+            int j = 0;
             for(double p: polygon.getPoints()){
-                if(i%2==0) p = mapXto(p, bounds.getWidth());
+                if(j%2==0) p = mapXto(p, bounds.getWidth());
                 else p = mapYto(p, bounds.getHeight());
                 mapPolygon.getPoints().add(p);
-                i++;
+                j++;
             }
             map.getChildren().add(mapPolygon);
         }
@@ -112,6 +115,10 @@ public class DataManager implements AppDataComponent {
         return zoom;
     }
     
+    public void setZoom(double z){
+        zoom = z;
+    }
+    
     public void setBGColor(Color bgColor){
         backgroundColor = bgColor;
     }
@@ -124,16 +131,20 @@ public class DataManager implements AppDataComponent {
         borderThickness = bt;
     }
     
-    public void setZoom(double z){
-        zoom = z;
-    }
-    
     public DoubleProperty mapWidthProperty(){
         return mapWidth;
     }
     
     public DoubleProperty mapHeightProperty(){
         return mapHeight;
+    }
+    
+    public ArrayList<Color> getMapColors(){
+        return mapColors;
+    }
+    
+    public void setMapColors(ArrayList<Color> colors){
+        mapColors = colors;
     }
     
     public void setMapData(ObservableList<SubRegion> mapData){

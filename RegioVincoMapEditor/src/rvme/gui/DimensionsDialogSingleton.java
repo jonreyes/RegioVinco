@@ -137,8 +137,12 @@ public class DimensionsDialogSingleton extends Stage {
     
     private void changeMapDimensions(){
         try{
-            mapWidth.set(Double.valueOf(widthTextField.getText()));
-            mapHeight.set(Double.valueOf(heightTextField.getText()));
+            double newWidth = Double.valueOf(widthTextField.getText());
+            double newHeight = Double.valueOf(heightTextField.getText());
+            data.mapHeightProperty().set(newHeight);
+            data.mapWidthProperty().set(newWidth);
+            mapWidth.set(newWidth);
+            mapHeight.set(newHeight);
             this.hide();
         }
         catch(Exception e){
