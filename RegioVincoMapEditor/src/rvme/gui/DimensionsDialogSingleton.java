@@ -26,6 +26,7 @@ import static rvme.PropertyType.DIMENSIONS_ERROR_TITLE;
 import static rvme.PropertyType.HEIGHT_LABEL;
 import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.WIDTH_LABEL;
+import rvme.data.DataManager;
 import saf.AppTemplate;
 import static saf.components.AppStyleArbiter.CLASS_BORDERED_PANE;
 import static saf.components.AppStyleArbiter.CLASS_GRID_PANE;
@@ -42,6 +43,7 @@ import saf.ui.AppGUI;
 public class DimensionsDialogSingleton extends Stage {
     static DimensionsDialogSingleton singleton = null;
     
+    DataManager data;
     PropertiesManager props;
     
     AppTemplate app;
@@ -55,13 +57,14 @@ public class DimensionsDialogSingleton extends Stage {
     
     Label widthLabel;
     TextField widthTextField;
+    
     Label heightLabel;
     TextField heightTextField;
     
     Button okBtn;
-    
-    DoubleProperty mapW;
-    DoubleProperty mapH;
+
+    DoubleProperty mapWidth;
+    DoubleProperty mapHeight;
     
     final double SCALEW = 0.25;
     final double SCALEH = 0.25;
@@ -87,22 +90,26 @@ public class DimensionsDialogSingleton extends Stage {
     public void init(AppTemplate initApp){
         app = initApp;
         gui = app.getGUI();
+        data = (DataManager) app.getDataComponent();
+        mapWidth = data.mapWidthProperty();
+        mapHeight = data.mapHeightProperty();
         props = PropertiesManager.getPropertiesManager();
         initModality(Modality.WINDOW_MODAL);
         initOwner(gui.getWindow());
         initGUI();
+        this.reset();
         initHandlers();
         initStyleSheet();
         initStyle();
-        mapW = new SimpleDoubleProperty(900);
-        mapH = new SimpleDoubleProperty(700);
     }
     
     private void initGUI(){
         widthLabel = new Label(props.getProperty(WIDTH_LABEL));
         widthTextField = new TextField();
+        
         heightLabel = new Label(props.getProperty(HEIGHT_LABEL));
         heightTextField = new TextField();
+        
         okBtn = new Button(props.getProperty(OK_LABEL));
         
         ddGrid = new GridPane();
@@ -130,8 +137,8 @@ public class DimensionsDialogSingleton extends Stage {
     
     private void changeMapDimensions(){
         try{
-            mapW.set(Double.valueOf(widthTextField.getText()));
-            mapH.set(Double.valueOf(heightTextField.getText()));
+            mapWidth.set(Double.valueOf(widthTextField.getText()));
+            mapHeight.set(Double.valueOf(heightTextField.getText()));
             this.hide();
         }
         catch(Exception e){
@@ -140,6 +147,11 @@ public class DimensionsDialogSingleton extends Stage {
             alert.setContentText(props.getProperty(DIMENSIONS_ERROR_MESSAGE));
             alert.showAndWait();
         }
+    }
+    
+    public void reset(){
+        widthTextField.setText(String.valueOf(mapWidth.get()));
+        heightTextField.setText(String.valueOf(mapHeight.get()));
     }
     
     private void initStyleSheet(){
@@ -158,13 +170,4 @@ public class DimensionsDialogSingleton extends Stage {
         widthLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         heightLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
     }
-
-    public DoubleProperty mapWidthProperty() {
-        return mapW;
-    }
-
-    public DoubleProperty mapHeightProperty() {
-        return mapH;
-    }
-    
 }

@@ -1,5 +1,7 @@
 package rvme.data;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -25,6 +27,9 @@ public class DataManager implements AppDataComponent {
     
     double borderThickness;
     double zoom;
+    
+    DoubleProperty mapWidth;
+    DoubleProperty mapHeight;
     
     ObservableList<SubRegion> mapData;
     ObservableList<Polygon> geometry;
@@ -70,6 +75,22 @@ public class DataManager implements AppDataComponent {
         return geometry;
     }
     
+    public Color getBGColor(){
+        return backgroundColor;
+    }
+    
+    public Color getBorderColor(){
+        return borderColor;
+    }
+    
+    public double getBorderThickness(){
+        return borderThickness;
+    }
+    
+    public double getZoom(){
+        return zoom;
+    }
+    
     public void setBGColor(Color bgColor){
         backgroundColor = bgColor;
     }
@@ -86,12 +107,26 @@ public class DataManager implements AppDataComponent {
         zoom = z;
     }
     
+    public DoubleProperty mapWidthProperty(){
+        return mapWidth;
+    }
+    
+    public DoubleProperty mapHeightProperty(){
+        return mapHeight;
+    }
+    
     public void setMapData(ObservableList<SubRegion> mapData){
         this.mapData = mapData;
     }
     
     @Override
     public void reset() {
+        backgroundColor = Color.WHITE;
+        borderColor = Color.BLACK;
+        borderThickness = 0;
+        zoom = 1;
+        mapWidth = new SimpleDoubleProperty(802);
+        mapHeight = new SimpleDoubleProperty(536);
         geometry = FXCollections.observableArrayList();
     }
 }

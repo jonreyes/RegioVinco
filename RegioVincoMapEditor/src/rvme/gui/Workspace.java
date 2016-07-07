@@ -2,6 +2,7 @@ package rvme.gui;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -26,7 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
@@ -87,6 +87,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     AppTemplate app;
     PropertiesManager props;
+    DataManager data;
     
     RVMEController rvmeController;
     
@@ -150,8 +151,10 @@ public class Workspace extends AppWorkspaceComponent {
     public Workspace(AppTemplate initApp) {
         app = initApp;
         app.getGUI().getWindow().setResizable(false);
+        data = (DataManager) app.getDataComponent();
         props = PropertiesManager.getPropertiesManager();
         initGUI();
+        reloadWorkspace();
         initControls();
     }
     
@@ -190,10 +193,10 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initEditControls(){
-        bgcPicker.setOnAction(e->{
+        bgcPicker.valueProperty().addListener(e->{
             rvmeController.updateBGColor();
         });
-        bcPicker.setOnAction(e->{
+        bcPicker.valueProperty().addListener(e->{
             rvmeController.updateBorderColor();
         });
         btSlider.valueProperty().addListener(e->{
@@ -249,8 +252,8 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapView(){
         mapView = new ScrollPane();
-        mapWidth = dimensionsDialog.mapWidthProperty();
-        mapHeight = dimensionsDialog.mapHeightProperty();
+        mapWidth = data.mapWidthProperty();
+        mapHeight = data.mapHeightProperty();
         initMapLayers();
         editView.getItems().add(mapView);
     }
@@ -259,8 +262,6 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack = new StackPane();
         
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
-        mapStack.scaleXProperty().bind(zoomSlider.valueProperty());
-        mapStack.scaleYProperty().bind(zoomSlider.valueProperty());
 
         initMapBG();
         initMapDummy();
@@ -279,28 +280,24 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapBG(){
         mapBG = new Rectangle();
-        mapBG.setFill(bgcPicker.getValue());
         mapBG.widthProperty().bind(mapWidth.subtract(mapBG.strokeWidthProperty()));
         mapBG.heightProperty().bind(mapHeight.subtract(mapBG.strokeWidthProperty()));
+        mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
     }
     
     private void initMapBorder(){
         mapBorder = new Rectangle();
         mapBorder.setFill(null);
+        
         mapBorder.widthProperty().bind(mapWidth.subtract(mapBorder.strokeWidthProperty()));
         mapBorder.heightProperty().bind(mapHeight.subtract(mapBorder.strokeWidthProperty()));
         mapBorder.strokeProperty().bind(bcPicker.valueProperty());
-        DoubleBinding strokeSize = btSlider.valueProperty().multiply(mapStack.heightProperty());
-        mapBorder.strokeWidthProperty().bind(strokeSize);
         mapStack.getChildren().add(mapBorder);
     }
     
     private void initRegionView(){
-        DataManager dataManager = (DataManager) app.getDataComponent();
-        region = dataManager.mapTo(mapBG);
-        region.scaleXProperty().bind(zoomSlider.valueProperty());
-        region.scaleYProperty().bind(zoomSlider.valueProperty());
+        region = data.mapTo(mapBG);
         mapStack.getChildren().add(region);
     }
     
@@ -324,12 +321,6 @@ public class Workspace extends AppWorkspaceComponent {
         nameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("name"));
         capitalColumn.setCellValueFactory(new PropertyValueFactory<String, String>("capital"));
         leaderColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader"));
-        
-        
-        // SCALE THE COLUMN SIZES
-        nameColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
-        capitalColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
-        leaderColumn.prefWidthProperty().bind(dataTable.widthProperty().multiply(0.2));
         
         dataTable.getColumns().add(nameColumn);
         dataTable.getColumns().add(capitalColumn);
@@ -401,7 +392,6 @@ public class Workspace extends AppWorkspaceComponent {
         
         bcLabel = new Label(props.getProperty(BC_LABEL));
         bcPicker = new ColorPicker();
-        bcPicker.setValue(Color.BLACK);
         
         btLabel = new Label(props.getProperty(BT_LABEL));
         btSlider = new Slider(0,0.5,0);
@@ -558,8 +548,15 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
+        bgcPicker.setValue(data.getBGColor());
+        bcPicker.setValue(data.getBorderColor());
+        btSlider.setValue(data.getBorderThickness());
+        zoomSlider.setValue(data.getZoom());
+        mapWidth.set(data.mapWidthProperty().get());
+        mapHeight.set(data.mapHeightProperty().get());
         initRegionView();
         updateEditControls();
+        dimensionsDialog.reset();
     }
 
     @Override
