@@ -6,6 +6,7 @@
 package rvme.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.FileChooser;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
@@ -32,7 +34,6 @@ import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import static saf.settings.AppStartupConstants.PATH_WORK;
-import saf.ui.AppMessageDialogSingleton;
 
 /**
  *
@@ -42,6 +43,7 @@ public class RVMEController {
     AppTemplate app;
     PropertiesManager props;
     boolean saved;
+    File currentWorkFile;
     
     public RVMEController(AppTemplate initApp){
         app = initApp;
@@ -169,5 +171,19 @@ public class RVMEController {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getPauseButton().setVisible(false);
         workspace.getPlayButton().setVisible(true);
+    }
+    
+    public void reassignColors(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        ArrayList<Color> randomColors = dataManager.randomColors();
+        int i = 0;
+        for(Node node : workspace.getRegion().getChildren()){
+            if (node instanceof Polygon){
+                ((Polygon) node).setFill(randomColors.get(i));
+                i++;
+            }
+        }
     }
 }

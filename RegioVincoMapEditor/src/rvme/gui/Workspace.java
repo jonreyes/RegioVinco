@@ -217,6 +217,9 @@ public class Workspace extends AppWorkspaceComponent {
         pauseBtn.setOnMouseClicked(e->{
             rvmeController.pauseAnthem();
         });
+        racBtn.setOnMouseClicked(e->{
+            rvmeController.reassignColors();
+        });
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
         });    
@@ -524,6 +527,10 @@ public class Workspace extends AppWorkspaceComponent {
     
     public StackPane getMapStack(){
         return mapStack;
+    }
+    
+    public Group getRegion(){
+        return region;
     }
     
     public ObservableList<SubRegion> getMapData(){

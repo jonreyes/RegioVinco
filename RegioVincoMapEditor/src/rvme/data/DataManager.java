@@ -1,5 +1,7 @@
 package rvme.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
@@ -31,6 +33,7 @@ public class DataManager implements AppDataComponent {
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
     
+    ArrayList<Color> mapColors;
     ObservableList<SubRegion> mapData;
     ObservableList<Polygon> geometry;
     
@@ -47,20 +50,34 @@ public class DataManager implements AppDataComponent {
     public Group mapTo(Rectangle bounds){
         Group map = new Group();
         for(Polygon polygon : geometry){
-            int i = 0;
             Polygon mapPolygon = new Polygon();
-            for(double p : polygon.getPoints()){
-                double value = 0;
-                if(i%2==0) value = mapXto(p, bounds.getWidth());
-                else value = mapYto(p, bounds.getHeight());
-                mapPolygon.getPoints().add(value);
+            mapPolygon.setStroke(Color.BLACK);
+            mapPolygon.setStrokeWidth(0.01);
+            mapPolygon.setFill(Color.GREENYELLOW);
+            int i = 0;
+            for(double p: polygon.getPoints()){
+                if(i%2==0) p = mapXto(p, bounds.getWidth());
+                else p = mapYto(p, bounds.getHeight());
+                mapPolygon.getPoints().add(p);
                 i++;
             }
-            mapPolygon.setStroke(Color.BLACK);
-            mapPolygon.setFill(Color.GREENYELLOW);               
             map.getChildren().add(mapPolygon);
         }
         return map;
+    }
+    
+    public ArrayList<Color> randomColors(){
+        ArrayList<Color> randomColors = new ArrayList<>();
+        int size = geometry.size();
+        if(size>0){
+            double value = 255;
+            for (int i = 0; i < value; i+= value/size){
+                Color random = Color.rgb(i, i, i);
+                randomColors.add(random);
+            }
+        }
+        Collections.shuffle(randomColors);
+        return randomColors;
     }
     
     public double mapXto(double x, double w){
@@ -128,5 +145,6 @@ public class DataManager implements AppDataComponent {
         mapWidth = new SimpleDoubleProperty(802);
         mapHeight = new SimpleDoubleProperty(536);
         geometry = FXCollections.observableArrayList();
+        mapColors = randomColors();
     }
 }
