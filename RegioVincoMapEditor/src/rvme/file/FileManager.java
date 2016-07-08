@@ -1,5 +1,6 @@
 package rvme.file;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,8 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
@@ -27,6 +30,7 @@ import javax.json.stream.JsonGenerator;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 import rvme.data.DataManager;
+import rvme.data.SubRegion;
 
 /**
  * This class serves as the file management component for this application,
@@ -37,21 +41,34 @@ import rvme.data.DataManager;
  */
 public class FileManager implements AppFileComponent {
     // FOR JSON SAVING AND LOADING
-    static final String JSON_BACKGROUND = "BACKGROUND";
-    static final String JSON_BORDER_COLOR = "BORDER_COLOR";
-    static final String JSON_BORDER_THICKNESS = "BORDER_THICKNESS";
-    static final String JSON_ZOOM = "ZOOM";
-    
-    static final String JSON_WIDTH = "WIDTH";
-    static final String JSON_HEIGHT = "HEIGHT";
+    static final String JSON_BACKGROUND = "background";
+    static final String JSON_BORDER_COLOR = "border_color";
+    static final String JSON_BORDER_THICKNESS = "border_thickness";
+    static final String JSON_ZOOM = "zoom";
+    static final String JSON_WIDTH = "width";
+    static final String JSON_HEIGHT = "height";
     
     static final String JSON_X = "X";
     static final String JSON_Y = "Y";
     
+    static final String JSON_SUBREGIONS = "SUBREGIONS";
     static final String JSON_SUBREGION_COLOR = "SUBREGION_COLOR";
     static final String JSON_SUBREGION_POLYGONS = "SUBREGION_POLYGONS";
     
-    static final String JSON_SUBREGIONS = "SUBREGIONS";
+    static final String JSON_NAME = "name";
+    
+    static final String JSON_HAS_CAPITALS = "subregions_have_capitals";
+    static final String JSON_HAS_FLAGS = "subregions_have_flags";
+    static final String JSON_HAS_LEADERS = "subregions_have_leaders";
+    
+    static final String JSON_CAPITAL = "capital";
+    static final String JSON_LEADER = "leader";
+    static final String JSON_LEADER_IMAGE = "leader_image";
+    static final String JSON_FLAG = "flag";
+    
+    static final String JSON_RED = "red";
+    static final String JSON_GREEN = "green";
+    static final String JSON_BLUE = "blue";
     
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
@@ -63,7 +80,7 @@ public class FileManager implements AppFileComponent {
 	JsonObject json = loadJSONFile(filePath);
         
         Color backgroundColor = Color.valueOf(json.getString(JSON_BACKGROUND));
-        dataManager.setBGColor(backgroundColor);
+        dataManager.setBackgroundColor(backgroundColor);
         
         Color borderColor = Color.valueOf(json.getString(JSON_BORDER_COLOR));
         dataManager.setBorderColor(borderColor);
@@ -75,16 +92,45 @@ public class FileManager implements AppFileComponent {
         dataManager.setZoom(zoom);
         
         double width = getDataAsDouble(json, JSON_WIDTH);
-        dataManager.mapWidthProperty().set(width);
+        dataManager.setMapWidth(width);
         
         double height = getDataAsDouble(json, JSON_HEIGHT);
-        dataManager.mapHeightProperty().set(height);
+        dataManager.setMapHeight(height);
+        
+        String fileName = json.getString(JSON_NAME);
+        dataManager.setFileName(fileName);
+        
+        boolean hasCapitals = json.getBoolean(JSON_HAS_CAPITALS);
+        dataManager.hasCapitals(hasCapitals);
+        
+        boolean hasFlags = json.getBoolean(JSON_HAS_FLAGS);
+        dataManager.hasFlags(hasFlags);
+        
+        boolean hasLeaders = json.getBoolean(JSON_HAS_FLAGS);
+        dataManager.hasLeaders(hasLeaders);
         
         // AND NOW LOAD ALL THE SUBREGIONS
 	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS);
 	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
             // LOAD SUBREGION
 	    JsonObject jsonSubRegion = jsonSubRegionArray.getJsonObject(i);
+            
+            // LOAD SUBREGION TABLE DATA
+            SubRegion subregion = new SubRegion();
+            if(!dataManager.getTableItems().isEmpty()){
+                subregion = dataManager.getTableItems().get(i);
+            }
+            String name = jsonSubRegion.getString(JSON_NAME);
+            subregion.setName(name);
+            String capital = jsonSubRegion.getString(JSON_CAPITAL);
+            subregion.setCapital(capital);
+            String leader = jsonSubRegion.getString(JSON_LEADER);
+            subregion.setLeader(leader);
+            String leaderImagePath = jsonSubRegion.getString(JSON_LEADER_IMAGE);
+            subregion.setLeaderImage(new File(leaderImagePath));
+            String flagPath = jsonSubRegion.getString(JSON_FLAG);
+            subregion.setFlag(new File(flagPath));
+            
             // LOAD SUBREGION COLOR
             Color mapColor = Color.valueOf(jsonSubRegion.getString(JSON_SUBREGION_COLOR));
             dataManager.getMapColors().add(mapColor);
@@ -110,7 +156,7 @@ public class FileManager implements AppFileComponent {
     public void loadGeometry(AppDataComponent data, String filePath) throws IOException {
         // CLEAR THE OLD DATA OUT
 	DataManager dataManager = (DataManager)data;
-	dataManager.reset();
+	dataManager.setGeometry(new ArrayList<Polygon>());
 	
 	// LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
@@ -174,16 +220,21 @@ public class FileManager implements AppFileComponent {
     public void saveData(AppDataComponent data, String filePath) throws IOException {
 	DataManager dataManager = (DataManager)data;
         
-        Color backgroundColor = dataManager.getBGColor();
+        Color backgroundColor = dataManager.getBackgroundColor();
         Color borderColor = dataManager.getBorderColor();
         double borderThickness = dataManager.getBorderThickness();
         double zoom = dataManager.getZoom();
         
-        double mapWidth = dataManager.mapWidthProperty().get();
-        double mapHeight = dataManager.mapHeightProperty().get();
+        double mapWidth = dataManager.getMapWidth();
+        double mapHeight = dataManager.getMapHeight();
+        
+        String fileName = dataManager.getFileName();
+        boolean hasCapitals = dataManager.hasCapitals();
+        boolean hasFlags = dataManager.hasFlags();
+        boolean hasLeaders = dataManager.hasLeaders();
         
 	// NOW BUILD THE JSON ARRAY FOR THE GEOMETRY
-	ObservableList<Polygon> geometry = dataManager.getGeometry();
+	ArrayList<Polygon> geometry = dataManager.getGeometry();
         JsonArrayBuilder subRegionsArrayBuilder = Json.createArrayBuilder();
 	int i = 0;
         for (Polygon polygon : geometry) {
@@ -200,13 +251,29 @@ public class FileManager implements AppFileComponent {
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             arrayBuilder.add(polygonsArray);
             JsonArray array = arrayBuilder.build();
+            SubRegion subregion = new SubRegion();
+            if (!dataManager.getTableItems().isEmpty()){
+                // LOAD SUBREGION TABLE DATA
+                subregion = dataManager.getTableItems().get(i);
+            }
+            String name = subregion.getName();
+            String capital = subregion.getCapital();
+            String leader = subregion.getLeader();
+            String leaderImagePath = (hasLeaders)? subregion.getLeaderImage().getCanonicalPath(): "";
+            String flagPath = (hasFlags)?subregion.getFlag().getCanonicalPath():"";
+                
             Color mapColor = dataManager.getMapColors().get(i);
             i++;
-            JsonObject subregion = Json.createObjectBuilder()
+            JsonObject subregionJson  = Json.createObjectBuilder()
+                    .add(JSON_NAME, name)
+                    .add(JSON_CAPITAL, capital)
+                    .add(JSON_LEADER, leader)
+                    .add(JSON_LEADER_IMAGE, leaderImagePath)
+                    .add(JSON_FLAG, flagPath)
                     .add(JSON_SUBREGION_COLOR, mapColor.toString())
                     .add(JSON_SUBREGION_POLYGONS,array)
                     .build();
-            subRegionsArrayBuilder.add(subregion);
+            subRegionsArrayBuilder.add(subregionJson);
 	}
         // SAVE SUBREGION
 	JsonArray subRegionsArray = subRegionsArrayBuilder.build();
@@ -219,6 +286,10 @@ public class FileManager implements AppFileComponent {
                 .add(JSON_ZOOM, zoom)
                 .add(JSON_WIDTH, mapWidth)
                 .add(JSON_HEIGHT, mapHeight)
+                .add(JSON_NAME, fileName)
+                .add(JSON_HAS_CAPITALS, hasCapitals)
+                .add(JSON_HAS_FLAGS, hasFlags)
+                .add(JSON_HAS_LEADERS, hasLeaders)
                 .add(JSON_SUBREGIONS, subRegionsArray)
 		.build();
 	

@@ -173,14 +173,16 @@ public class NewMapDialogSingleton extends Stage{
             selectGeometry();
         });
         okBtn.setOnAction(e->{
-            this.hide();
-            setFileName();
-            setGeometry();
+            newMap();
         });
     }
     
-    private void setFileName(){
+    private void newMap(){
+        this.hide();
         data.setFileName(nameTextField.getText());
+        data.setParent(parent);
+        setGeometry();
+        this.reset();
     }
     
     private void selectParent(){
@@ -188,8 +190,7 @@ public class NewMapDialogSingleton extends Stage{
         dc.setInitialDirectory(new File(PATH_WORK));
         dc.setTitle(props.getProperty(PARENT_TITLE));
         parent = dc.showDialog(app.getGUI().getWindow());            
-        data.setParent(parent);
-        parentTextField.setText(data.getParent().getPath());
+        parentTextField.setText(parent.getPath());
     }
     
     private void selectGeometry(){
@@ -197,7 +198,7 @@ public class NewMapDialogSingleton extends Stage{
         fc.setInitialDirectory(new File(PATH_WORK));
         fc.setTitle(props.getProperty(GEO_TITLE));
         fc.getExtensionFilters().addAll(
-	new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
+            new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
         geometry = fc.showOpenDialog(app.getGUI().getWindow());
         geoTextField.setText(geometry.getPath());
     }
@@ -228,6 +229,12 @@ public class NewMapDialogSingleton extends Stage{
             boolean saved = false;
             workspace.updateFileControls(saved);
         }
+    }
+    
+    private void reset(){
+        nameTextField.clear();
+        parentTextField.clear();
+        geoTextField.clear();
     }
     
     private void initStyleSheet(){

@@ -5,6 +5,9 @@
  */
 package rvme.data;
 
+import java.io.File;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -16,11 +19,15 @@ public class SubRegion {
     final StringProperty name;
     final StringProperty capital;
     final StringProperty leader;
+    final ObjectProperty<File> flag;
+    final ObjectProperty<File> leaderImage;
     
     public SubRegion(){
-        name = new SimpleStringProperty();
-        capital = new SimpleStringProperty();
-        leader = new SimpleStringProperty();
+        name = new SimpleStringProperty("");
+        capital = new SimpleStringProperty("");
+        leader = new SimpleStringProperty("");
+        leaderImage = new SimpleObjectProperty();
+        flag = new SimpleObjectProperty();
     }
     
     public SubRegion(String name, String capital, String leader){
@@ -42,6 +49,14 @@ public class SubRegion {
         return leader;
     }
     
+    public ObjectProperty leaderImageProperty(){
+        return leaderImage;
+    }
+    
+    public ObjectProperty flagProperty(){
+        return flag;
+    }
+    
     public String getName(){
         return name.get();
     }
@@ -54,6 +69,14 @@ public class SubRegion {
         return leader.get();
     }
     
+    public File getLeaderImage(){
+        return leaderImage.get();
+    }
+    
+    public File getFlag(){
+        return flag.get();
+    }
+    
     public void setName(String name){
         this.name.set(name);
     }
@@ -64,5 +87,13 @@ public class SubRegion {
     
     public void setLeader(String leader){
         this.leader.set(leader);
+    }
+    
+    public void setLeaderImage(File leaderImage){
+        this.leaderImage.set(leaderImage);
+    }
+    
+    public void setFlag(File flag){
+        this.flag.set(flag);
     }
 }
