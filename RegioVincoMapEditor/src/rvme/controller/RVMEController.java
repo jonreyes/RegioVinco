@@ -68,7 +68,9 @@ public class RVMEController {
 	    else {
 		// PROMPT THE USER FOR A FILE NAME
 		FileChooser fc = new FileChooser();
-		fc.setInitialDirectory(new File(PATH_WORK));
+                DataManager dataManager = (DataManager) app.getDataComponent();
+		fc.setInitialFileName(dataManager.getFileName());
+                fc.setInitialDirectory(dataManager.getParent());
 		fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
 		fc.getExtensionFilters().addAll(
 		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
@@ -120,7 +122,7 @@ public class RVMEController {
         DataManager dataManager = (DataManager) app.getDataComponent();
         
         Color bgColor = workspace.getBGCPicker().getValue();
-        dataManager.setBGColor(bgColor);
+        dataManager.setBackgroundColor(bgColor);
         workspace.updateFileControls(false);
     }
     
@@ -139,13 +141,8 @@ public class RVMEController {
         
         double borderThickness = workspace.getBTSlider().getValue();
         dataManager.setBorderThickness(borderThickness);
-        double width = workspace.getMapStack().getWidth();
-        double height = workspace.getMapStack().getHeight();
-        double btConstant = (width>height)?height:width;
-        borderThickness *= btConstant;
         
-        workspace.getBTValue().setText(String.format("%.2f%%", borderThickness/btConstant*200));
-        workspace.getMapBorder().setStrokeWidth(borderThickness);
+        workspace.getBTValue().setText(String.format("%.2f", borderThickness));
         workspace.updateFileControls(false);
     }
     
@@ -178,7 +175,7 @@ public class RVMEController {
         DataManager dataManager = (DataManager) app.getDataComponent();
         
         ObservableList<SubRegion> mapData = workspace.getMapData();
-        dataManager.setMapData(mapData);
+        dataManager.setTableItems(mapData);
         workspace.updateFileControls(false);
     }
     

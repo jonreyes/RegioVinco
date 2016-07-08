@@ -68,6 +68,8 @@ public class DataManager implements AppDataComponent {
         int i = 0;
         for(Polygon polygon : geometry){
             Polygon mapPolygon = new Polygon();
+            mapPolygon.strokeProperty().bind(borderColor);
+            mapPolygon.strokeWidthProperty().bind(borderThickness);
             mapPolygon.setFill(mapColors.get(i));
             i++;
             int j = 0;

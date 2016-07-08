@@ -1,9 +1,6 @@
 package rvme.gui;
 
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -65,7 +62,6 @@ import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import static rvme.PropertyType.ADD_LABEL;
 import static rvme.PropertyType.ADD_TOOLTIP;
-import static rvme.PropertyType.MAP_IMAGE;
 import static rvme.PropertyType.PAUSE_ICON;
 import static rvme.PropertyType.PAUSE_TOOLTIP;
 import static rvme.PropertyType.RM_ICON;
@@ -132,8 +128,6 @@ public class Workspace extends AppWorkspaceComponent {
     ScrollPane mapView;
     StackPane mapStack;
     Rectangle mapBG;
-    Rectangle mapBorder;
-    ImageView mapDummy;
     Group region;
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
@@ -172,9 +166,6 @@ public class Workspace extends AppWorkspaceComponent {
         rvmeController =  new RVMEController(app);
         initFileControls();
         initEditControls();
-        /*mapDummy.setOnMouseClicked(e->{
-            subRegionDialog.show();
-        });*/
     }
     
     private void initFileControls(){
@@ -267,22 +258,12 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapLayers(){
         mapStack = new StackPane();
-        
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
 
         initMapBG();
-        //initMapDummy();
-        initMapBorder();
         initRegionView();
         
         mapView.setContent(mapStack);
-    }
-    
-    private void initMapDummy(){
-        mapDummy = initImageView(MAP_IMAGE.toString(),mapWidth.get()/2);
-        mapDummy.fitWidthProperty().bind(mapWidth.divide(2));
-        mapDummy.fitHeightProperty().bind(mapWidth.divide(2));
-        mapStack.getChildren().add(mapDummy);
     }
     
     private void initMapBG(){
@@ -291,16 +272,6 @@ public class Workspace extends AppWorkspaceComponent {
         mapBG.heightProperty().bind(mapHeight.subtract(mapBG.strokeWidthProperty()));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
-    }
-    
-    private void initMapBorder(){
-        mapBorder = new Rectangle();
-        mapBorder.setFill(null);
-        
-        mapBorder.widthProperty().bind(mapWidth.subtract(mapBorder.strokeWidthProperty()));
-        mapBorder.heightProperty().bind(mapHeight.subtract(mapBorder.strokeWidthProperty()));
-        mapBorder.strokeProperty().bind(bcPicker.valueProperty());
-        mapStack.getChildren().add(mapBorder);
     }
     
     private void initRegionView(){
@@ -332,12 +303,7 @@ public class Workspace extends AppWorkspaceComponent {
         dataTable.getColumns().add(nameColumn);
         dataTable.getColumns().add(capitalColumn);
         dataTable.getColumns().add(leaderColumn);
-
-        ObservableList<SubRegion> data = FXCollections.observableArrayList();
-        data.add(new SubRegion("North Korea","Pyongyang","Kim Jong Un"));
-        
-        dataTable.setItems(data);
-        
+        dataTable.itemsProperty().bind(data.tableItemsProperty());
         dataTable.setMinHeight(mapHeight.get()*0.85);
         dataView.getChildren().add(dataTable);
     }
@@ -403,8 +369,8 @@ public class Workspace extends AppWorkspaceComponent {
         btLabel = new Label(props.getProperty(BT_LABEL));
         btBox = new VBox();
         btBox.setAlignment(Pos.CENTER);
-        btSlider = new Slider(0,0.5,0);
-        btValue = new Label(String.format("%.2f%%",btSlider.getValue()));
+        btSlider = new Slider(0,0.05,0);
+        btValue = new Label(String.format("%.2f",btSlider.getValue()));
         btBox.getChildren().add(btSlider);
         btBox.getChildren().add(btValue);
         
@@ -519,10 +485,6 @@ public class Workspace extends AppWorkspaceComponent {
         return mapBG;
     }
     
-    public Rectangle getMapBorder(){
-        return mapBorder;
-    }
-    
     public ColorPicker getBGCPicker(){
         return bgcPicker;
     }
@@ -577,12 +539,12 @@ public class Workspace extends AppWorkspaceComponent {
     
     @Override
     public void reloadWorkspace() {
-        bgcPicker.setValue(data.getBGColor());
+        bgcPicker.setValue(data.getBackgroundColor());
         bcPicker.setValue(data.getBorderColor());
         mapStack.getChildren().remove(region);
         initRegionView();
-        mapWidth.set(data.mapWidthProperty().get());
-        mapHeight.set(data.mapHeightProperty().get());
+        mapWidth.set(data.getMapWidth());
+        mapHeight.set(data.getMapHeight());
         btSlider.setValue(data.getBorderThickness());
         zoomSlider.setValue(data.getZoom());
         updateEditControls();
