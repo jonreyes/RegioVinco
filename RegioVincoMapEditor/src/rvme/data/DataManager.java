@@ -244,4 +244,43 @@ public class DataManager implements AppDataComponent {
         geometry = new ArrayList<>(); 
         mapColors = randomColors();
     }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        DataManager data = (DataManager) obj;
+    
+        return(
+            data.hasCapitals() == this.hasCapitals &&
+            data.hasFlags() == this.hasFlags &&
+            data.hasLeaders() == this.hasLeaders &&
+            
+            data.getBackgroundColor().equals(this.backgroundColor) &&
+            data.getBorderColor().equals(this.borderColor) &&
+            data.getBorderThickness() == this.getBorderThickness() &&
+            data.getZoom() == this.getZoom() &&
+            
+            data.getMapColors().equals(this.mapColors) &&
+            data.getGeometry().equals(this.getGeometry()) &&
+            data.getTableItems().equals(this.getTableItems())
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + (this.hasCapitals ? 1 : 0);
+        hash = 89 * hash + (this.hasFlags ? 1 : 0);
+        hash = 89 * hash + (this.hasLeaders ? 1 : 0);
+        hash = 89 * hash + Objects.hashCode(this.backgroundColor);
+        hash = 89 * hash + Objects.hashCode(this.borderColor);
+        hash = 89 * hash + Objects.hashCode(this.borderThickness);
+        hash = 89 * hash + Objects.hashCode(this.zoom);
+        hash = 89 * hash + Objects.hashCode(this.mapWidth);
+        hash = 89 * hash + Objects.hashCode(this.mapHeight);
+        hash = 89 * hash + Objects.hashCode(this.mapColors);
+        hash = 89 * hash + Objects.hashCode(this.tableItems);
+        hash = 89 * hash + Objects.hashCode(this.geometry);
+        return hash;
+    }
 }
