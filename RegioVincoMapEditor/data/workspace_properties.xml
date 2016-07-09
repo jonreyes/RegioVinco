@@ -20,7 +20,7 @@
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
         <property name="RM_TOOLTIP"                 value="Remove Selected Image from Map"></property>
-	<property name="RAC_TOOLTIP"                value="Randomly Reassign Map Colors"></property>
+	<property name="RAC_TOOLTIP"                value="Randomize the Colors of the Map"></property>
         <property name="PLAY_TOOLTIP"               value="Play the Region Anthem"></property>
         <property name="PAUSE_TOOLTIP"              value="Pause the Region Anthem"></property>
         <property name="DIMENSIONS_TOOLTIP"         value="Change Map Dimensions"></property>
