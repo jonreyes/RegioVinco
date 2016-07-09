@@ -179,6 +179,7 @@ public class NewMapDialogSingleton extends Stage{
     
     private void newMap(){
         this.hide();
+        data.reset();
         data.setFileName(nameTextField.getText());
         data.setParent(parent);
         setGeometry();
