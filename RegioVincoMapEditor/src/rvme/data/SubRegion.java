@@ -19,15 +19,15 @@ public class SubRegion {
     final StringProperty name;
     final StringProperty capital;
     final StringProperty leader;
-    final ObjectProperty<File> flag;
-    final ObjectProperty<File> leaderImage;
+    final StringProperty flagPath;
+    final StringProperty leaderPath;
     
     public SubRegion(){
         name = new SimpleStringProperty("");
         capital = new SimpleStringProperty("");
         leader = new SimpleStringProperty("");
-        leaderImage = new SimpleObjectProperty();
-        flag = new SimpleObjectProperty();
+        leaderPath = new SimpleStringProperty("");
+        flagPath = new SimpleStringProperty("");
     }
     
     public SubRegion(String name, String capital, String leader){
@@ -49,12 +49,12 @@ public class SubRegion {
         return leader;
     }
     
-    public ObjectProperty leaderImageProperty(){
-        return leaderImage;
+    public StringProperty leaderImageProperty(){
+        return leaderPath;
     }
     
-    public ObjectProperty flagProperty(){
-        return flag;
+    public StringProperty flagProperty(){
+        return flagPath;
     }
     
     public String getName(){
@@ -69,12 +69,12 @@ public class SubRegion {
         return leader.get();
     }
     
-    public File getLeaderImage(){
-        return leaderImage.get();
+    public String getLeaderPath(){
+        return leaderPath.get();
     }
     
-    public File getFlag(){
-        return flag.get();
+    public String getFlagPath(){
+        return flagPath.get();
     }
     
     public void setName(String name){
@@ -89,11 +89,11 @@ public class SubRegion {
         this.leader.set(leader);
     }
     
-    public void setLeaderImage(File leaderImage){
-        this.leaderImage.set(leaderImage);
+    public void setLeaderPath(String leaderImage){
+        this.leaderPath.set(leaderImage);
     }
     
-    public void setFlag(File flag){
-        this.flag.set(flag);
+    public void setFlagPath(String flag){
+        this.flagPath.set(flag);
     }
 }

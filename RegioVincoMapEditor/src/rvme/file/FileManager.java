@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -126,10 +127,10 @@ public class FileManager implements AppFileComponent {
             subregion.setCapital(capital);
             String leader = jsonSubRegion.getString(JSON_LEADER);
             subregion.setLeader(leader);
-            String leaderImagePath = jsonSubRegion.getString(JSON_LEADER_IMAGE);
-            subregion.setLeaderImage(new File(leaderImagePath));
+            String leaderPath = jsonSubRegion.getString(JSON_LEADER_IMAGE);
+            subregion.setLeaderPath(leaderPath);
             String flagPath = jsonSubRegion.getString(JSON_FLAG);
-            subregion.setFlag(new File(flagPath));
+            subregion.setFlagPath(flagPath);
             
             // LOAD SUBREGION COLOR
             Color mapColor = Color.valueOf(jsonSubRegion.getString(JSON_SUBREGION_COLOR));
@@ -240,17 +241,18 @@ public class FileManager implements AppFileComponent {
         for (Polygon polygon : geometry) {
             JsonArrayBuilder polygonArrayBuilder = Json.createArrayBuilder();
             for(int j = 0; j < polygon.getPoints().size(); j+=2){
-                // SAVE POINT
+                // LOAD POINT
                 JsonObject pointJson = Json.createObjectBuilder()
                         .add(JSON_X, polygon.getPoints().get(j))
                         .add(JSON_Y, polygon.getPoints().get(j+1)).build();
                 polygonArrayBuilder.add(pointJson);
             }
-            // SAVE SUBREGION POLYGONS
+            // LOAD SUBREGION POLYGONS
             JsonArray polygonsArray = polygonArrayBuilder.build();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             arrayBuilder.add(polygonsArray);
             JsonArray array = arrayBuilder.build();
+            
             SubRegion subregion = new SubRegion();
             if (!dataManager.getTableItems().isEmpty()){
                 // LOAD SUBREGION TABLE DATA
@@ -259,10 +261,10 @@ public class FileManager implements AppFileComponent {
             String name = subregion.getName();
             String capital = subregion.getCapital();
             String leader = subregion.getLeader();
-            String leaderImagePath = (hasLeaders)? subregion.getLeaderImage().getCanonicalPath(): "";
-            String flagPath = (hasFlags)?subregion.getFlag().getCanonicalPath():"";
+            String leaderImagePath = subregion.getLeaderPath();
+            String flagPath = subregion.getFlagPath();
                 
-            Color mapColor = dataManager.getMapColors().get(i);
+            String mapColor = (!dataManager.getMapColors().isEmpty())?dataManager.getMapColors().get(i).toString():"";
             i++;
             JsonObject subregionJson  = Json.createObjectBuilder()
                     .add(JSON_NAME, name)
@@ -270,7 +272,7 @@ public class FileManager implements AppFileComponent {
                     .add(JSON_LEADER, leader)
                     .add(JSON_LEADER_IMAGE, leaderImagePath)
                     .add(JSON_FLAG, flagPath)
-                    .add(JSON_SUBREGION_COLOR, mapColor.toString())
+                    .add(JSON_SUBREGION_COLOR, mapColor)
                     .add(JSON_SUBREGION_POLYGONS,array)
                     .build();
             subRegionsArrayBuilder.add(subregionJson);
