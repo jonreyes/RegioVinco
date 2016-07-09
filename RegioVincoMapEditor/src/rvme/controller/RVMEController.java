@@ -8,6 +8,7 @@ package rvme.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -153,10 +154,6 @@ public class RVMEController {
         double zoom = workspace.getZoomSlider().getValue();
         dataManager.setZoom(zoom);
         
-        if (zoom > 1){
-            zoom -= 1;
-            zoom *= 1024;
-        }
         workspace.getZoomValue().setText(String.format("%.2fx", zoom));
         
         StackPane mapStack = workspace.getMapStack();
@@ -247,15 +244,11 @@ public class RVMEController {
     public void reassignColors(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
-        
-        ArrayList<Color> randomColors = dataManager.randomColors();
-        dataManager.setMapColors(randomColors);
-        
-        int i = 0;
-        for(Node node : workspace.getRegion().getChildren()){
+        Random rand = new Random();
+        for(Node node: workspace.getRegion().getChildren()){
             if (node instanceof Polygon){
-                ((Polygon) node).setFill(randomColors.get(i));
-                i++;
+                int c = rand.nextInt(255);
+                ((Polygon) node).setFill(Color.rgb(c,c,c));
             }
         }
         workspace.updateFileControls(false);

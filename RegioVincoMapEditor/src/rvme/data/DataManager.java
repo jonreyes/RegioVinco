@@ -3,6 +3,8 @@ package rvme.data;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Random;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -57,44 +59,41 @@ public class DataManager implements AppDataComponent {
         this.reset();
     }
 
-    public DataManager(String fileName) {
-        this.fileName = fileName;
+    public DataManager() {
         this.reset();
     }
 
     public Group mapTo(Rectangle bounds){
-        if (mapColors.isEmpty()) mapColors = randomColors();
-        Group map = new Group();
-        int i = 0;
-        for(Polygon polygon : geometry){
-            Polygon mapPolygon = new Polygon();
-            mapPolygon.strokeProperty().bind(borderColor);
-            mapPolygon.strokeWidthProperty().bind(borderThickness);
-            mapPolygon.setFill(mapColors.get(i));
-            i++;
-            int j = 0;
-            for(double p: polygon.getPoints()){
-                if(j%2==0) p = mapXto(p, bounds.getWidth());
-                else p = mapYto(p, bounds.getHeight());
-                mapPolygon.getPoints().add(p);
-                j++;
+        Group map = new Group();  
+        if (!geometry.isEmpty()){
+            if(mapColors.isEmpty()) mapColors = randomColors();
+            int i = 0;
+            for(Polygon polygon : geometry){
+                Polygon mapPolygon = new Polygon();
+                mapPolygon.strokeProperty().bind(borderColor);
+                mapPolygon.strokeWidthProperty().bind(borderThickness);
+                mapPolygon.setFill(mapColors.get(i));
+                i++;
+                int j = 0;
+                for(double p: polygon.getPoints()){
+                    if(j%2==0) p = mapXto(p, bounds.getWidth());
+                    else p = mapYto(p, bounds.getHeight());
+                    mapPolygon.getPoints().add(p);
+                    j++;
+                }
+                map.getChildren().add(mapPolygon);
             }
-            map.getChildren().add(mapPolygon);
         }
         return map;
     }
     
     public ArrayList<Color> randomColors(){
         ArrayList<Color> randomColors = new ArrayList<>();
-        int size = geometry.size();
-        if(size>0){
-            double value = 255;
-            for (int i = 0; i < value; i+= value/size){
-                Color random = Color.rgb(i,i,i);
-                randomColors.add(random);
-            }
+        Random rand = new Random();
+        for (int i=0; i<geometry.size(); i++){
+            int c = rand.nextInt(255);
+            randomColors.add(Color.rgb(c, c, c));
         }
-        Collections.shuffle(randomColors);
         return randomColors;
     }
     
@@ -201,14 +200,6 @@ public class DataManager implements AppDataComponent {
     public void setMapHeight(double mapHeight) {
         this.mapHeight.set(mapHeight);
     }
-
-    public ArrayList<Color> getMapColors() {
-        return mapColors;
-    }
-
-    public void setMapColors(ArrayList<Color> mapColors) {
-        this.mapColors = mapColors;
-    }
     
     public ObjectProperty<ObservableList<SubRegion>> tableItemsProperty(){
         return tableItems;
@@ -221,7 +212,15 @@ public class DataManager implements AppDataComponent {
     public void setTableItems(ObservableList<SubRegion> tableItems) {
         this.tableItems.set(tableItems);
     }
-
+    
+    public ArrayList<Color> getMapColors(){
+        return mapColors;
+    }
+    
+    public void setMapColors(ArrayList<Color> colors){
+        mapColors = colors;
+    }
+    
     public ArrayList<Polygon> getGeometry() {
         return geometry;
     }
