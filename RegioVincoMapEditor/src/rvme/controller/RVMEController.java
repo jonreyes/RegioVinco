@@ -24,10 +24,13 @@ import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
 import static rvme.PropertyType.ADD_ERROR_TITLE;
 import static rvme.PropertyType.ADD_TITLE;
+import static rvme.PropertyType.EXPORT_EXT;
+import static rvme.PropertyType.EXPORT_EXT_DESC;
 import static rvme.PropertyType.EXPORT_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
+import static rvme.RVMEConstants.PATH_EXPORT;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
 import rvme.gui.Workspace;
@@ -81,7 +84,7 @@ public class RVMEController {
 		    save(selectedFile);
 		}
 	    }
-        } catch (IOException ioe) {
+        } catch (Exception e) {
 	    Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
             alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
@@ -111,10 +114,10 @@ public class RVMEController {
     public void exportMap(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setInitialDirectory(new File(PATH_EXPORT));
         fc.setTitle(props.getProperty(EXPORT_TITLE));
         fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+		new FileChooser.ExtensionFilter(props.getProperty(EXPORT_EXT_DESC), props.getProperty(EXPORT_EXT)));
         File exportFile = fc.showSaveDialog(app.getGUI().getWindow());
     }
     
@@ -244,13 +247,17 @@ public class RVMEController {
     public void reassignColors(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
-        Random rand = new Random();
+        
+        ArrayList<Color> randomColors = dataManager.randomColors();
+        int i = 0;
         for(Node node: workspace.getRegion().getChildren()){
             if (node instanceof Polygon){
-                int c = rand.nextInt(255);
-                ((Polygon) node).setFill(Color.rgb(c,c,c));
+                ((Polygon) node).setFill(randomColors.get(i));
+                i++;
             }
         }
+        dataManager.setMapColors(randomColors);
+        
         workspace.updateFileControls(false);
     }
 }
