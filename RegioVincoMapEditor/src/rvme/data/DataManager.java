@@ -244,6 +244,29 @@ public class DataManager implements AppDataComponent {
         geometry = new ArrayList<>(); 
         mapColors = randomColors();
     }
+
+    @Override
+    public String toString() {
+        
+        return "DataManager{" + 
+                "\n fileName=" + fileName + 
+                "\n parent=" + parent + 
+                "\n hasCapitals=" + hasCapitals + 
+                "\n hasFlags=" + hasFlags + 
+                "\n hasLeaders=" + hasLeaders + 
+                "\n backgroundColor=" + backgroundColor + 
+                "\n borderColor=" + borderColor + 
+                "\n borderThickness=" + borderThickness + 
+                "\n zoom=" + zoom + 
+                "\n mapWidth=" + mapWidth + 
+                "\n mapHeight=" + mapHeight + 
+                "\n mapColors=" + mapColors + 
+                "\n tableItems=" + tableItems + 
+                "\n tableSize=" + tableItems.get().size()+
+                "\n geometry=" + geometry + 
+                "\n}";
+    }
+    
     
     
     @Override
