@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -155,7 +156,7 @@ public class FileManager implements AppFileComponent {
     }
     
     public void loadGeometry(AppDataComponent data, String filePath) throws IOException {
-        // CLEAR THE OLD DATA OUT
+        // CLEAR THE OLD GEOMETRY
 	DataManager dataManager = (DataManager)data;
 	dataManager.setGeometry(new ArrayList<Polygon>());
 	
@@ -234,29 +235,32 @@ public class FileManager implements AppFileComponent {
         boolean hasFlags = dataManager.hasFlags();
         boolean hasLeaders = dataManager.hasLeaders();
         
-	// NOW BUILD THE JSON ARRAY FOR THE GEOMETRY
+	// NOW BUILD THE JSON ARRAY FOR THE SUBREGIONS
 	ArrayList<Polygon> geometry = dataManager.getGeometry();
-        JsonArrayBuilder subRegionsArrayBuilder = Json.createArrayBuilder();
-	int i = 0;
+        ObservableList<SubRegion> tableData = dataManager.getTableItems();
+        ArrayList<Color> mapColors = dataManager.getMapColors();
+        JsonArrayBuilder subregionsArrayBuilder = Json.createArrayBuilder();
+	
+        int i = 0;
         for (Polygon polygon : geometry) {
             JsonArrayBuilder polygonArrayBuilder = Json.createArrayBuilder();
             for(int j = 0; j < polygon.getPoints().size(); j+=2){
-                // LOAD POINT
+                // SAVE POINT
                 JsonObject pointJson = Json.createObjectBuilder()
                         .add(JSON_X, polygon.getPoints().get(j))
                         .add(JSON_Y, polygon.getPoints().get(j+1)).build();
                 polygonArrayBuilder.add(pointJson);
             }
-            // LOAD SUBREGION POLYGONS
+            // SAVE SUBREGION POLYGONS
             JsonArray polygonsArray = polygonArrayBuilder.build();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             arrayBuilder.add(polygonsArray);
             JsonArray array = arrayBuilder.build();
             
             SubRegion subregion = new SubRegion();
-            if (!dataManager.getTableItems().isEmpty()){
-                // LOAD SUBREGION TABLE DATA
-                subregion = dataManager.getTableItems().get(i);
+            if (!tableData.isEmpty()){
+                // SAVE SUBREGION TABLE DATA
+                subregion = tableData.get(i);
             }
             String name = subregion.getName();
             String capital = subregion.getCapital();
@@ -264,7 +268,7 @@ public class FileManager implements AppFileComponent {
             String leaderImagePath = subregion.getLeaderPath();
             String flagPath = subregion.getFlagPath();
                 
-            String mapColor = (!dataManager.getMapColors().isEmpty())?dataManager.getMapColors().get(i).toString():"";
+            String mapColor = (!mapColors.isEmpty())?mapColors.get(i).toString():"";
             i++;
             JsonObject subregionJson  = Json.createObjectBuilder()
                     .add(JSON_NAME, name)
@@ -275,10 +279,11 @@ public class FileManager implements AppFileComponent {
                     .add(JSON_SUBREGION_COLOR, mapColor)
                     .add(JSON_SUBREGION_POLYGONS,array)
                     .build();
-            subRegionsArrayBuilder.add(subregionJson);
+            subregionsArrayBuilder.add(subregionJson);
 	}
+        
         // SAVE SUBREGION
-	JsonArray subRegionsArray = subRegionsArrayBuilder.build();
+	JsonArray subRegionsArray = subregionsArrayBuilder.build();
 	
 	// THEN PUT IT ALL TOGETHER IN A JsonObject
 	JsonObject dataManagerJSO = Json.createObjectBuilder()
@@ -316,11 +321,127 @@ public class FileManager implements AppFileComponent {
 
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DataManager dataManager = (DataManager)data;
+        
+        String fileName = dataManager.getFileName();
+        boolean hasCapitals = dataManager.hasCapitals();
+        boolean hasFlags = dataManager.hasFlags();
+        boolean hasLeaders = dataManager.hasLeaders();
+        
+        ArrayList<Color> mapColors = dataManager.getMapColors();
+        ObservableList<SubRegion> tableData = dataManager.getTableItems();
+        JsonArrayBuilder subregionsArrayBuilder = Json.createArrayBuilder();
+	int i = 0;
+        for (SubRegion subregion : tableData) {
+            String name = subregion.getName();
+            String capital = subregion.getCapital();
+            String leader = subregion.getLeader();
+            Color mapColor = (!mapColors.isEmpty())?mapColors.get(i):Color.BLACK;
+            int red = (int) (mapColor.getRed() * 255);
+            int green = (int) (mapColor.getGreen() * 255);
+            int blue = (int) (mapColor.getBlue() * 255);
+            i++;
+            JsonObject subregionJson  = Json.createObjectBuilder()
+                    .add(JSON_NAME, name)
+                    .add(JSON_CAPITAL, capital)
+                    .add(JSON_LEADER, leader)
+                    .add(JSON_RED, red)
+                    .add(JSON_GREEN, green)
+                    .add(JSON_BLUE, blue)
+                    .build();
+            subregionsArrayBuilder.add(subregionJson);
+        }
+        // SAVE SUBREGION
+	JsonArray subRegionsArray = subregionsArrayBuilder.build();
+	
+	// THEN PUT IT ALL TOGETHER IN A JsonObject
+	JsonObject dataManagerJSO = Json.createObjectBuilder()
+                .add(JSON_NAME, fileName)
+                .add(JSON_HAS_CAPITALS, hasCapitals)
+                .add(JSON_HAS_FLAGS, hasFlags)
+                .add(JSON_HAS_LEADERS, hasLeaders)
+                .add(JSON_SUBREGIONS.toLowerCase(), subRegionsArray)
+		.build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> properties = new HashMap<>(1);
+	properties.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+	StringWriter sw = new StringWriter();
+	JsonWriter jsonWriter = writerFactory.createWriter(sw);
+	jsonWriter.writeObject(dataManagerJSO);
+	jsonWriter.close();
+
+	// INIT THE WRITER
+	OutputStream os = new FileOutputStream(filePath);
+	JsonWriter jsonFileWriter = Json.createWriter(os);
+	jsonFileWriter.writeObject(dataManagerJSO);
+	String prettyPrinted = sw.toString();
+	PrintWriter pw = new PrintWriter(filePath);
+	pw.write(prettyPrinted);
+	pw.close();
     }
 
     @Override
     public void importData(AppDataComponent data, String filePath) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // CLEAR OLD DATA
+        DataManager dataManager = (DataManager)data;
+        
+        // LOAD THE JSON FILE WITH ALL THE DATA
+	JsonObject json = loadJSONFile(filePath);
+        
+        ObservableList<SubRegion> newSubRegions = FXCollections.observableArrayList();
+        ArrayList<Color> newMapColors = new ArrayList<>();
+        
+        // IMPORT 
+        
+        // FILE NAME
+        String fileName = json.getString(JSON_NAME);
+        dataManager.setFileName(fileName);
+        
+        // HAS CAPITALS
+        boolean hasCapitals = json.getBoolean(JSON_HAS_CAPITALS);
+        dataManager.hasCapitals(hasCapitals);
+        
+        // HAS FLAGS
+        boolean hasFlags = json.getBoolean(JSON_HAS_FLAGS);
+        dataManager.hasFlags(hasFlags);
+        
+        // HAS LEADERS
+        boolean hasLeaders = json.getBoolean(JSON_HAS_FLAGS);
+        dataManager.hasLeaders(hasLeaders);
+        
+        // AND NOW LOAD ALL THE SUBREGIONS
+	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS.toLowerCase());
+	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
+            // LOAD SUBREGION
+	    JsonObject jsonSubRegion = jsonSubRegionArray.getJsonObject(i);
+            
+            // LOAD SUBREGION TABLE DATA
+            
+            // NAME
+            String name = jsonSubRegion.getString(JSON_NAME);
+            // CAPITAL
+            String capital = jsonSubRegion.getString(JSON_CAPITAL);
+            // LEADER
+            String leader = jsonSubRegion.getString(JSON_LEADER);
+            
+            SubRegion newSubRegion = new SubRegion(name,capital,leader);
+            newSubRegions.add(newSubRegion);
+            
+            // RED
+            int red = jsonSubRegion.getInt(JSON_RED);
+            // GREEN
+            int green = jsonSubRegion.getInt(JSON_GREEN);
+            // BLUE           
+            int blue = jsonSubRegion.getInt(JSON_BLUE);
+            
+            // COLOR
+            Color newColor = Color.rgb(red,green,blue);
+            newMapColors.add(newColor);
+        }
+        
+        dataManager.setTableItems(newSubRegions);
+        dataManager.setMapColors(newMapColors);
     }
 }
