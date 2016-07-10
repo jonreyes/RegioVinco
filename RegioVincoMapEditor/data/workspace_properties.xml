@@ -80,6 +80,8 @@
         <property name="JPG_EXT"                            value="*.jpg"></property>
         <property name="JSON_EXT_DESC"                      value="Map Data (*.json)"></property>
         <property name="JSON_EXT"                           value="*.json"></property>
+        <property name="EXPORT_EXT_DESC"                    value="*Regio Vinco Map (*.rvm)"></property>
+        <property name="EXPORT_EXT"                         value="*.rvm"></property>
         
     </property_list>
     <property_options_list>

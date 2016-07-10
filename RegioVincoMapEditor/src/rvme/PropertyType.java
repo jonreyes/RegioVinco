@@ -72,12 +72,15 @@ public enum PropertyType {
     MAP_EXT_DESC,
     IMAGE_EXT_DESC,
     JSON_EXT_DESC,
+    EXPORT_EXT_DESC,
+    
     PNG_EXT,
     JPG_EXT,
     JSON_EXT,
+    EXPORT_EXT,
+    
     ADD_ERROR_TITLE,
     ADD_ERROR_MESSAGE,
     DIMENSIONS_ERROR_TITLE,
     DIMENSIONS_ERROR_MESSAGE,
-    
 }

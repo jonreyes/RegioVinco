@@ -9,7 +9,7 @@ import static saf.settings.AppStartupConstants.PATH_WORK;
 
 /**
  *
- * @author xion
+ * @author Jon Reyes
  */
 public class RVMEConstants {
     public static final String PATH_EXPORT = PATH_WORK+"export/";
