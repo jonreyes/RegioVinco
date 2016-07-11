@@ -5,6 +5,7 @@
  */
 package rvme.controller;
 
+import audio_manager.AudioManager;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
@@ -41,6 +42,7 @@ import static saf.settings.AppStartupConstants.PATH_IMAGES;
 public class RVMEController {
     AppTemplate app;
     PropertiesManager props;
+    AudioManager anthem;
     
     public RVMEController(AppTemplate initApp){
         app = initApp;
@@ -170,12 +172,23 @@ public class RVMEController {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getPlayButton().setVisible(false);
         workspace.getPauseButton().setVisible(true);
+        
+        DataManager data = (DataManager) app.getDataComponent();
+        anthem = new AudioManager();
+        try {
+            anthem.loadAudio(data.getName(), data.getAnthem());
+        } catch (Exception e){
+        }
+        anthem.play(data.getName(), true);
     }
     
     public void pauseAnthem(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getPauseButton().setVisible(false);
         workspace.getPlayButton().setVisible(true);
+        
+        DataManager data = (DataManager) app.getDataComponent();
+        anthem.stop(data.getName());
     }
     
     public void reassignColors(){
