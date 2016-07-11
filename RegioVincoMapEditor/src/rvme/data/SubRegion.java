@@ -5,9 +5,6 @@
  */
 package rvme.data;
 
-import java.io.File;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -19,15 +16,15 @@ public class SubRegion {
     final StringProperty name;
     final StringProperty capital;
     final StringProperty leader;
-    final StringProperty flagPath;
-    final StringProperty leaderPath;
+    final StringProperty flag;
+    final StringProperty leaderImage;
     
     public SubRegion(){
         name = new SimpleStringProperty("");
         capital = new SimpleStringProperty("");
         leader = new SimpleStringProperty("");
-        leaderPath = new SimpleStringProperty("");
-        flagPath = new SimpleStringProperty("");
+        leaderImage = new SimpleStringProperty("");
+        flag = new SimpleStringProperty("");
     }
     
     public SubRegion(String name, String capital, String leader){
@@ -50,11 +47,11 @@ public class SubRegion {
     }
     
     public StringProperty leaderImageProperty(){
-        return leaderPath;
+        return leaderImage;
     }
     
     public StringProperty flagProperty(){
-        return flagPath;
+        return flag;
     }
     
     public String getName(){
@@ -69,12 +66,12 @@ public class SubRegion {
         return leader.get();
     }
     
-    public String getLeaderPath(){
-        return leaderPath.get();
+    public String getLeaderImage(){
+        return leaderImage.get();
     }
     
-    public String getFlagPath(){
-        return flagPath.get();
+    public String getFlag(){
+        return flag.get();
     }
     
     public void setName(String name){
@@ -89,12 +86,12 @@ public class SubRegion {
         this.leader.set(leader);
     }
     
-    public void setLeaderPath(String leaderImage){
-        this.leaderPath.set(leaderImage);
+    public void setLeaderImage(String leaderImage){
+        this.leaderImage.set(leaderImage);
     }
     
-    public void setFlagPath(String flag){
-        this.flagPath.set(flag);
+    public void setFlag(String flag){
+        this.flag.set(flag);
     }
 
     @Override
@@ -103,8 +100,8 @@ public class SubRegion {
                 "\n name=" + this.getName() + 
                 "\n capital=" + this.getCapital() + 
                 "\n leader=" + this.getLeader() + 
-                "\n flagPath=" + this.getFlagPath() + 
-                "\n leaderPath=" + this.getFlagPath() + 
+                "\n flagPath=" + this.getFlag() + 
+                "\n leaderPath=" + this.getFlag() + 
                 '}';
     }
     
