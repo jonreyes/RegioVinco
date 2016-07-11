@@ -11,6 +11,7 @@ package rvme;
  */
 public enum PropertyType {
     EXPORT_ICON,
+    NO_IMAGE,
     
     NAME_LABEL,
     PARENT_LABEL,
@@ -32,7 +33,7 @@ public enum PropertyType {
     
     CAPITAL_LABEL,
     FLAG_LABEL,
-    LEADER_NAME_LABEL,
+    LEADER_LABEL,
     LEADER_IMAGE_LABEL,
     
     WIDTH_LABEL,

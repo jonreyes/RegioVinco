@@ -15,7 +15,7 @@
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
         <property name="NEXT_ICON"              value="next.png"></property>
         <property name="PREV_ICON"              value="prev.png"></property>
-        <property name="MAP_IMAGE"              value="nkmap.png"></property>
+        <property name="NO_IMAGE"               value="noimage.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="ADD_TOOLTIP"                value="Add an Image to the Map"></property>
@@ -48,7 +48,7 @@
         <property name="GEO_LABEL"                  value="Geometry File:"></property>
         <property name="CAPITAL_LABEL"              value="Capital:"></property>
         <property name="FLAG_LABEL"                 value="Flag:"></property>
-        <property name="LEADER_NAME_LABEL"          value="Leader Name:"></property>
+        <property name="LEADER_LABEL"               value="Leader:"></property>
         <property name="LEADER_IMAGE_LABEL"         value="Leader Image:"></property>
         <property name="SRDIALOG_TITLE"             value="Edit SubRegion Details"></property>
         <property name="WIDTH_LABEL"                value="Width:"></property>
