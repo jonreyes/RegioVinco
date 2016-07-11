@@ -73,6 +73,7 @@ import rvme.data.DataManager;
 import rvme.data.SubRegion;
 import static rvme.PropertyType.PLAY_ICON;
 import static rvme.PropertyType.PLAY_TOOLTIP;
+import rvme.controller.FileController;
 
 /**
  * This class serves as the workspace component for this application, providing
@@ -91,7 +92,8 @@ public class Workspace extends AppWorkspaceComponent {
     
     StackPane titleBar;
     Label title;
-    AppFileController fileController;
+    FileController fileController;
+    AppFileController afc;
     ToolBar fileToolBar;
     HBox fileBox;
     Button newBtn;
@@ -171,21 +173,22 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initFileControls(){
-        fileController = new AppFileController(app);
+        fileController = new FileController(app);
+        afc = new AppFileController(app);
         newBtn.setOnAction(e -> {
-            rvmeController.newMap();
+            fileController.newMap();
         });
         loadBtn.setOnAction(e -> {
-            fileController.handleLoadRequest();
+            afc.handleLoadRequest();
         });
         saveBtn.setOnAction(e -> {
-            rvmeController.saveMap();
+            fileController.saveMap();
         });
         exportBtn.setOnAction(e -> {
-            rvmeController.exportMap();
+            fileController.exportMap();
         });
         exitBtn.setOnAction(e -> {
-            fileController.handleExitRequest();
+            fileController.exitApp();
         });
     }
     
@@ -369,11 +372,11 @@ public class Workspace extends AppWorkspaceComponent {
      * 
      * @param saved Describes whether the loaded Page has been saved or not.
      */
-    public void updateFileControls(boolean saved) {
+    public void updateFileControls(boolean saved, boolean exported) {
         saveBtn.setDisable(saved);
 	newBtn.setDisable(false);
         loadBtn.setDisable(false);
-	exportBtn.setDisable(saved);
+	exportBtn.setDisable(exported);
         exitBtn.setDisable(false);
     }
     

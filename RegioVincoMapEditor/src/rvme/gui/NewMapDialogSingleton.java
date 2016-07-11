@@ -232,8 +232,7 @@ public class NewMapDialogSingleton extends Stage{
                     
                 workspace.activateWorkspace(app.getGUI().getAppPane());
                 
-                boolean saved = false;
-                workspace.updateFileControls(saved);
+                workspace.updateFileControls(false,false);
             }catch (Exception e){
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
@@ -242,9 +241,8 @@ public class NewMapDialogSingleton extends Stage{
             }
         }
         else{
-            workspace.fileController.handleNewRequest();
-            boolean saved = false;
-            workspace.updateFileControls(saved);
+            workspace.afc.handleNewRequest();
+            workspace.updateFileControls(false,false);
         }
     }
     

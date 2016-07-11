@@ -6,9 +6,7 @@
 package rvme.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -25,30 +23,16 @@ import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
 import static rvme.PropertyType.ADD_ERROR_TITLE;
 import static rvme.PropertyType.ADD_TITLE;
-import static rvme.PropertyType.EXPORT_EXT;
-import static rvme.PropertyType.EXPORT_EXT_DESC;
-import static rvme.PropertyType.EXPORT_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
-import static rvme.RVMEConstants.PATH_EXPORT;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
-import rvme.gui.NewMapDialogSingleton;
 import rvme.gui.SubRegionDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
-import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
-import static saf.settings.AppPropertyType.LOAD_ERROR_TITLE;
-import static saf.settings.AppPropertyType.SAVE_COMPLETED_MESSAGE;
-import static saf.settings.AppPropertyType.SAVE_COMPLETED_TITLE;
-import static saf.settings.AppPropertyType.SAVE_WORK_TITLE;
-import static saf.settings.AppPropertyType.WORK_FILE_EXT;
-import static saf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
-import static saf.settings.AppStartupConstants.PATH_WORK;
-import saf.ui.AppMessageDialogSingleton;
 
 /**
  *
@@ -57,79 +41,10 @@ import saf.ui.AppMessageDialogSingleton;
 public class RVMEController {
     AppTemplate app;
     PropertiesManager props;
-    boolean saved;
-    File currentWorkFile;
     
     public RVMEController(AppTemplate initApp){
         app = initApp;
         props = PropertiesManager.getPropertiesManager();
-    }
-    
-    public void newMap(){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        NewMapDialogSingleton newMapDialog = workspace.getNewMapDialog();
-        
-        newMapDialog.reset();
-        newMapDialog.show();
-    }
-    
-    public void saveMap() {
-        try {
-	    // MAYBE WE ALREADY KNOW THE FILE
-	    if (currentWorkFile != null) {
-		save(currentWorkFile);
-	    }
-	    // OTHERWISE WE NEED TO PROMPT THE USER
-	    else {
-		// PROMPT THE USER FOR A FILE NAME
-		FileChooser fc = new FileChooser();
-                DataManager dataManager = (DataManager) app.getDataComponent();
-		fc.setInitialFileName(dataManager.getName());
-                fc.setInitialDirectory(dataManager.getParent());
-		fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
-		fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
-
-		File selectedFile = fc.showSaveDialog(app.getGUI().getWindow());
-		if (selectedFile != null) {
-		    save(selectedFile);
-		}
-	    }
-        } catch (Exception e) {
-	    Alert alert = new Alert(AlertType.ERROR);
-            alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
-            alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
-            alert.showAndWait();
-        }
-    }
-    
-    // HELPER METHOD FOR SAVING WORK
-    private void save(File selectedFile) throws IOException {
-	// SAVE IT TO A FILE
-	app.getFileComponent().saveData(app.getDataComponent(), selectedFile.getPath());
-	
-	// MARK IT AS SAVED
-	currentWorkFile = selectedFile;
-	saved = true;
-	
-	// TELL THE USER THE FILE HAS BEEN SAVED
-	AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-        dialog.show(props.getProperty(SAVE_COMPLETED_TITLE),props.getProperty(SAVE_COMPLETED_MESSAGE));
-		    
-	// AND REFRESH THE GUI, WHICH WILL ENABLE AND DISABLE
-	// THE APPROPRIATE CONTROLS
-	Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.updateFileControls(saved);
-    }
-    
-    public void exportMap(){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_EXPORT));
-        fc.setTitle(props.getProperty(EXPORT_TITLE));
-        fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(EXPORT_EXT_DESC), props.getProperty(EXPORT_EXT)));
-        File exportFile = fc.showSaveDialog(app.getGUI().getWindow());
     }
     
     public void updateBGColor(){
@@ -138,7 +53,7 @@ public class RVMEController {
         
         Color bgColor = workspace.getBGCPicker().getValue();
         dataManager.setBackgroundColor(bgColor);
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     public void updateBorderColor(){
@@ -147,7 +62,7 @@ public class RVMEController {
         
         Color borderColor = workspace.getBCPicker().getValue();
         dataManager.setBorderColor(borderColor);
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     public void updateBorderThickness(){
@@ -158,7 +73,7 @@ public class RVMEController {
         dataManager.setBorderThickness(borderThickness);
         
         workspace.getBTValue().setText(String.format("%.2f", borderThickness));
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     public void updateZoom(){
@@ -178,7 +93,7 @@ public class RVMEController {
             }
         }
         
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     public void editSubRegion(MouseEvent e){
@@ -195,7 +110,7 @@ public class RVMEController {
         
         ObservableList<SubRegion> mapData = workspace.getMapData();
         dataManager.setTableItems(mapData);
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     public void addImage(){
@@ -219,7 +134,7 @@ public class RVMEController {
                 
                 StackPane mapStack = workspace.getMapStack();
                 mapStack.getChildren().add(addImageView);
-                workspace.updateFileControls(false);
+                workspace.updateFileControls(false,false);
                 workspace.reloadWorkspace();
 
             } catch (Exception e) {
@@ -235,7 +150,7 @@ public class RVMEController {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         StackPane mapStack = workspace.getMapStack();
         mapStack.getChildren().remove(workspace.getSelection());
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
     
     private void selectImage(ImageView imageView){
@@ -277,6 +192,6 @@ public class RVMEController {
         }
         dataManager.setMapColors(randomColors);
         
-        workspace.updateFileControls(false);
+        workspace.updateFileControls(false,false);
     }
 }
