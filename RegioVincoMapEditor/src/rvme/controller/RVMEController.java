@@ -114,36 +114,43 @@ public class RVMEController {
     }
     
     public void addImage(){
-         FileChooser fc = new FileChooser();
-         fc.setInitialDirectory(new File(PATH_IMAGES));
-         fc.setTitle(props.getProperty(ADD_TITLE));
-         fc.getExtensionFilters().addAll(
+        try{
+            FileChooser fc = new FileChooser();
+            fc.setInitialDirectory(new File(PATH_IMAGES));
+            fc.setTitle(props.getProperty(ADD_TITLE));
+            fc.getExtensionFilters().addAll(
 		new FileChooser.ExtensionFilter(props.getProperty(IMAGE_EXT_DESC), props.getProperty(PNG_EXT), props.getProperty(JPG_EXT)));
-         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
-         if (selectedFile != null) {
-            try {
-                String imagePath = FILE_PROTOCOL + selectedFile.getPath();
-                Image image = new Image(imagePath);
-                ImageView addImageView = new ImageView(image);
-                addImageView.setPreserveRatio(true);
-                addImageView.setFitWidth(200);
-                initImageControls(addImageView);
-                
-                Workspace workspace = (Workspace) app.getWorkspaceComponent();
-                DataManager dataManager = (DataManager) app.getDataComponent();
-                
-                StackPane mapStack = workspace.getMapStack();
-                mapStack.getChildren().add(addImageView);
-                workspace.updateFileControls(false,false);
-                workspace.reloadWorkspace();
-
-            } catch (Exception e) {
+            File selectedImage = fc.showOpenDialog(app.getGUI().getWindow());
+            if (selectedImage != null) {
+                add(selectedImage);
+            }
+        }catch (Exception e) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setHeaderText(props.getProperty(ADD_ERROR_TITLE));
                 alert.setContentText(props.getProperty(ADD_ERROR_MESSAGE));
                 alert.showAndWait();
-            }
         }
+    }
+    
+    public void add(File selectedImage){
+        String imagePath = FILE_PROTOCOL + selectedImage.getPath();
+        Image image = new Image(imagePath);
+        ImageView addImageView = new ImageView(image);
+        addImageView.setPreserveRatio(true);
+        addImageView.setFitWidth(200);
+        addImageView.setOnMouseClicked(e->{
+            if(e.getClickCount()==2){
+                selectImage(addImageView);
+            }
+        });
+                
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        DataManager dataManager = (DataManager) app.getDataComponent();
+                
+        StackPane mapStack = workspace.getMapStack();
+        mapStack.getChildren().add(addImageView);
+        workspace.updateFileControls(false,false);
+        //workspace.reloadWorkspace();
     }
     
     public void removeImage(){
@@ -156,14 +163,7 @@ public class RVMEController {
     private void selectImage(ImageView imageView){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.setSelection(imageView);
-    }
-    
-    private void initImageControls(ImageView imageView){
-        imageView.setOnMouseClicked(e->{
-            if(e.getClickCount()==2){
-                selectImage(imageView);
-            }
-        });
+        workspace.updateEditControls();
     }
     
     public void playAnthem(){
