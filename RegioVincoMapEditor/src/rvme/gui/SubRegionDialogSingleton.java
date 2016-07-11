@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Modality;
@@ -28,10 +29,11 @@ import properties_manager.PropertiesManager;
 import static rvme.PropertyType.CAPITAL_LABEL;
 import static rvme.PropertyType.FLAG_LABEL;
 import static rvme.PropertyType.LEADER_IMAGE_LABEL;
-import static rvme.PropertyType.LEADER_NAME_LABEL;
+import static rvme.PropertyType.LEADER_LABEL;
 import static rvme.PropertyType.NAME_LABEL;
 import static rvme.PropertyType.NEXT_ICON;
 import static rvme.PropertyType.NEXT_TOOLTIP;
+import static rvme.PropertyType.NO_IMAGE;
 import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.PREV_ICON;
 import static rvme.PropertyType.PREV_TOOLTIP;
@@ -84,10 +86,11 @@ public class SubRegionDialogSingleton extends Stage{
     Button prevBtn;
     Button okBtn;
     
+    String PATH_NO_IMAGE;
     final double BUTTON_SPACE = 90;
     final double BUTTON_SIZE = 15;
     final double SCALEW = 0.31;
-    final double SCALEH = 0.75;
+    final double SCALEH = 1.1;
     /**
      * Note that the constructor is private since it follows
      * the singleton design pattern.
@@ -112,6 +115,7 @@ public class SubRegionDialogSingleton extends Stage{
         gui = app.getGUI();
         data = (DataManager) app.getDataComponent();
         props = PropertiesManager.getPropertiesManager();
+        PATH_NO_IMAGE = FILE_PROTOCOL+PATH_IMAGES+props.getProperty(NO_IMAGE);
         initModality(Modality.WINDOW_MODAL);
         initOwner(gui.getWindow());
         initGUI();
@@ -127,21 +131,20 @@ public class SubRegionDialogSingleton extends Stage{
         capitalLabel = new Label(props.getProperty(CAPITAL_LABEL));
         capitalTextField = new TextField();
         
-        flagLabel = new Label(props.getProperty(FLAG_LABEL));
-        Image dummyFlag = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkflag.png");
-        flagImageView = new ImageView(dummyFlag);
-        flagImageView.setFitWidth(200);
-        flagImageView.setFitHeight(100);
-        
-        leaderLabel = new Label(props.getProperty(LEADER_NAME_LABEL));
+        leaderLabel = new Label(props.getProperty(LEADER_LABEL));
         leaderTextField = new TextField();
-        
         leaderImageLabel = new Label(props.getProperty(LEADER_IMAGE_LABEL));
-        Image dummyLeader = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkleader.png");
-        leaderImageView = new ImageView(dummyLeader);
+        leaderImageView = new ImageView();
+        leaderImageView.setImage(new Image(PATH_NO_IMAGE));
+        leaderImageView.setPreserveRatio(true);
         leaderImageView.setFitWidth(200);
-        leaderImageView.setFitHeight(225);
-
+        
+        flagLabel = new Label(props.getProperty(FLAG_LABEL));
+        flagImageView = new ImageView();
+        flagImageView.setImage(new Image(PATH_NO_IMAGE));
+        flagImageView.setPreserveRatio(true);
+        flagImageView.setFitWidth(200);
+        
         nextBtn = initChildButton(NEXT_ICON.toString(), NEXT_TOOLTIP.toString(), false);
         prevBtn = initChildButton(PREV_ICON.toString(), PREV_TOOLTIP.toString(), false);
         okBtn = new Button(props.getProperty(OK_LABEL));
@@ -151,12 +154,12 @@ public class SubRegionDialogSingleton extends Stage{
         srGrid.add(nameTextField, 1, 0);
         srGrid.add(capitalLabel, 0, 1);
         srGrid.add(capitalTextField, 1, 1);
-        srGrid.add(flagLabel, 0, 2);
-        srGrid.add(flagImageView, 1, 2);
-        srGrid.add(leaderLabel, 0, 3);
-        srGrid.add(leaderTextField, 1, 3);
-        srGrid.add(leaderImageLabel, 0, 4);
-        srGrid.add(leaderImageView, 1, 4);
+        srGrid.add(leaderLabel, 0, 2);
+        srGrid.add(leaderTextField, 1, 2);
+        srGrid.add(leaderImageLabel, 0, 3);
+        srGrid.add(leaderImageView, 1, 3);
+        srGrid.add(flagLabel, 0, 4);
+        srGrid.add(flagImageView, 1, 4);
         
         buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
@@ -240,6 +243,28 @@ public class SubRegionDialogSingleton extends Stage{
         capitalTextField.setText(selected.getCapital());
         leaderTextField.setText(selected.getLeader());
         
+        if(selected.getLeaderImage()!=null && !selected.getLeaderImage().isEmpty()){
+            leaderImageView.setImage(new Image(FILE_PROTOCOL+selected.getLeaderImage()));
+            leaderImageView.setPreserveRatio(true);
+            leaderImageView.setFitWidth(200);
+            if(leaderImageView.getImage().getWidth()==0){
+                leaderImageView.setImage(new Image(PATH_NO_IMAGE));
+                leaderImageView.setPreserveRatio(true);
+                leaderImageView.setFitWidth(200);
+            };
+        }
+        if(selected.getFlag()!=null && !selected.getFlag().isEmpty()){
+            flagImageView.setImage(new Image(FILE_PROTOCOL+selected.getFlag()));
+            flagImageView.setPreserveRatio(true);
+            flagImageView.setFitWidth(200);
+            if(flagImageView.getImage().getWidth()==0){
+                flagImageView.setImage(new Image(PATH_NO_IMAGE));
+                flagImageView.setPreserveRatio(true);
+                flagImageView.setFitWidth(200);
+            }
+        }
+        srGrid.setPrefHeight(this.getOwner().getHeight()*SCALEH);
+
         // UPDATE TABLE W/ SELECTED SUBREGION
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getMapTable().getSelectionModel().select(selected);
