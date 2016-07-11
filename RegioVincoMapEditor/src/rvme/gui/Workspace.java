@@ -563,8 +563,8 @@ public class Workspace extends AppWorkspaceComponent {
         return selection;
     }
     
-    public void setSelection(ImageView imageView){
-        selection = imageView;
+    public void setSelection(Node node){
+        selection = (node instanceof ImageView)?node:null;
     }
     
     public TableView<SubRegion> getMapTable(){

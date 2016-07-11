@@ -140,11 +140,8 @@ public class RVMEController {
         ImageView addImageView = new ImageView(image);
         addImageView.setPreserveRatio(true);
         addImageView.setFitWidth(200);
-        addImageView.setOnMouseClicked(e->{
-            if(e.getClickCount()==2){
-                selectImage(addImageView);
-            }
-        });
+        selectImage(addImageView);
+        dragImage(addImageView);
                 
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
@@ -159,13 +156,53 @@ public class RVMEController {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         StackPane mapStack = workspace.getMapStack();
         mapStack.getChildren().remove(workspace.getSelection());
+        workspace.setSelection(null);
         workspace.updateFileControls(false,false);
+        workspace.updateEditControls();
     }
     
-    private void selectImage(ImageView imageView){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.setSelection(imageView);
-        workspace.updateEditControls();
+    private void selectImage(Node node){
+        node.addEventFilter(
+            MouseEvent.ANY,
+            e->{
+                // disable mouse events for all children
+                // e.consume();
+                Workspace workspace = (Workspace) app.getWorkspaceComponent();
+                workspace.setSelection(node);
+                workspace.updateEditControls();
+            }
+        );
+    }
+    
+    private void dragImage(final Node node) {
+        final DragContext dragContext = new DragContext();
+        
+        node.addEventFilter(
+                MouseEvent.MOUSE_PRESSED,
+                e->{
+                    // remember initial mouse cursor coordinates
+                    // and node position
+                    dragContext.mouseAnchorX = e.getX();
+                    dragContext.mouseAnchorY = e.getY();
+                    dragContext.initialTranslateX = node.getTranslateX();
+                    dragContext.initialTranslateY = node.getTranslateY();
+                });
+
+        node.addEventFilter(
+                MouseEvent.MOUSE_DRAGGED,
+                e->{
+                            // shift node from its initial position by delta
+                            // calculated from mouse cursor movement
+                            node.setTranslateX(
+                                    dragContext.initialTranslateX
+                                        + e.getX()
+                                        - dragContext.mouseAnchorX);
+                            node.setTranslateY(
+                                    dragContext.initialTranslateY
+                                        + e.getY()
+                                        - dragContext.mouseAnchorY);
+                });
+                
     }
     
     public void playAnthem(){
@@ -206,5 +243,14 @@ public class RVMEController {
         dataManager.setMapColors(randomColors);
         
         workspace.updateFileControls(false,false);
+    }
+    
+    
+    
+    private static final class DragContext {
+        public double mouseAnchorX;
+        public double mouseAnchorY;
+        public double initialTranslateX;
+        public double initialTranslateY;
     }
 }
