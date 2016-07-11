@@ -46,7 +46,7 @@ public class TestSave {
         System.out.println("SETTING UP HARD CODE VALUES...");
         
         // IMPORT AVAILABLE VALUES FROM EXPORT FILE
-        data.setFileName(fileName);
+        data.setName(fileName);
         String andorraRVM = "Andorra.rvm";
         String andorraPath = PATH_ANDORRA+andorraRVM;
         File andorraFile = new File(andorraPath);
@@ -83,7 +83,7 @@ public class TestSave {
             try (BufferedReader br = new BufferedReader(new FileReader(savedFile.getCanonicalPath()))) {
                 String line = null;
                 while ((line = br.readLine()) != null) {
-                    //System.out.println(line);
+                    System.out.println(line);
                 }
             }
         }

@@ -39,7 +39,7 @@ public class TestLoad {
         // HARD CODE DATA VALUES
         
         // IMPORT AVAILABLE VALUES FROM EXPORT FILE
-        data.setFileName(fileName);
+        data.setName(fileName);
         String andorraRVM = "Andorra.rvm";
         String andorraPath = PATH_ANDORRA+andorraRVM;
         File andorraFile = new File(andorraPath);
