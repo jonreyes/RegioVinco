@@ -96,4 +96,16 @@ public class SubRegion {
     public void setFlagPath(String flag){
         this.flagPath.set(flag);
     }
+
+    @Override
+    public String toString() {
+        return "SubRegion{" + 
+                "\n name=" + this.getName() + 
+                "\n capital=" + this.getCapital() + 
+                "\n leader=" + this.getLeader() + 
+                "\n flagPath=" + this.getFlagPath() + 
+                "\n leaderPath=" + this.getFlagPath() + 
+                '}';
+    }
+    
 }
