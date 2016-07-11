@@ -269,25 +269,4 @@ public class NewMapDialogSingleton extends Stage{
         parentLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         geoLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
     }
-    
-    /**
-     * This method loads a custom message into the label and
-     * then pops open the dialog.
-     * 
-     * @param title The title to appear in the dialog window.
-     * 
-     * @param message Message to appear inside the dialog.
-     */
-    public void show(String title, String message) {
-	// SET THE DIALOG TITLE BAR TITLE
-	setTitle(title);
-	
-	// SET THE MESSAGE TO DISPLAY TO THE USER
-        messageLabel.setText(message);
-	
-	// AND OPEN UP THIS DIALOG, MAKING SURE THE APPLICATION
-	// WAITS FOR IT TO BE RESOLVED BEFORE LETTING THE USER
-	// DO MORE WORK.
-        showAndWait();
-    }
 }
