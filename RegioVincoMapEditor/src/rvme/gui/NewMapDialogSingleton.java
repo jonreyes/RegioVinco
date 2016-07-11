@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -27,6 +28,8 @@ import static rvme.PropertyType.GEO_TITLE;
 import static rvme.PropertyType.JSON_EXT;
 import static rvme.PropertyType.JSON_EXT_DESC;
 import static rvme.PropertyType.NAME_LABEL;
+import static rvme.PropertyType.NEW_ERROR_MESSAGE;
+import static rvme.PropertyType.NEW_ERROR_TITLE;
 import static rvme.PropertyType.NMDIALOG_TITLE;
 import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.PARENT_LABEL;
@@ -81,6 +84,7 @@ public class NewMapDialogSingleton extends Stage{
     
     Button okBtn;
     
+    String name;
     File parent;
     File geometry;
     
@@ -173,17 +177,29 @@ public class NewMapDialogSingleton extends Stage{
             selectGeometry();
         });
         okBtn.setOnAction(e->{
-            newMap();
+            submitNewMap();
         });
     }
     
-    private void newMap(){
-        this.hide();
-        data.reset();
-        data.setFileName(nameTextField.getText());
-        data.setParent(parent);
-        setGeometry();
-        this.reset();
+    private void submitNewMap(){
+        name = nameTextField.getText();
+        try{
+            if(name.isEmpty() || parent==null){ throw new Exception();}
+            data.reset();
+            data.setName(name);
+            data.setParent(parent);
+            this.hide();
+            setGeometry();
+            this.reset();
+        }
+        catch(Exception e){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText(props.getProperty(NEW_ERROR_TITLE));
+            alert.setContentText(props.getProperty(NEW_ERROR_MESSAGE));
+            // RESIZE FOR MESSAGE
+            alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
+            alert.showAndWait();
+        }
     }
     
     private void selectParent(){
@@ -191,7 +207,7 @@ public class NewMapDialogSingleton extends Stage{
         dc.setInitialDirectory(new File(PATH_WORK));
         dc.setTitle(props.getProperty(PARENT_TITLE));
         parent = dc.showDialog(app.getGUI().getWindow());            
-        parentTextField.setText(parent.getPath());
+        if (parent != null) parentTextField.setText(parent.getPath());
     }
     
     private void selectGeometry(){
@@ -201,7 +217,7 @@ public class NewMapDialogSingleton extends Stage{
         fc.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter(props.getProperty(JSON_EXT_DESC), props.getProperty(JSON_EXT)));
         geometry = fc.showOpenDialog(app.getGUI().getWindow());
-        geoTextField.setText(geometry.getPath());
+        if(geometry != null) geoTextField.setText(geometry.getPath());
     }
     
     private void setGeometry(){
@@ -232,7 +248,7 @@ public class NewMapDialogSingleton extends Stage{
         }
     }
     
-    private void reset(){
+    public void reset(){
         nameTextField.clear();
         parentTextField.clear();
         geoTextField.clear();

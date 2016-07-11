@@ -79,6 +79,8 @@ public enum PropertyType {
     JSON_EXT,
     EXPORT_EXT,
     
+    NEW_ERROR_TITLE,
+    NEW_ERROR_MESSAGE,
     ADD_ERROR_TITLE,
     ADD_ERROR_MESSAGE,
     DIMENSIONS_ERROR_TITLE,
