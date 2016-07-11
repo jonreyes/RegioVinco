@@ -70,6 +70,9 @@
 	<property name="ATTRIBUTE_UPDATE_ERROR_TITLE"	    value="Attribute Update Error"></property>
 	<property name="UPDATE_ERROR_MESSAGE"		    value="An error occured updating the UI"></property>
 	<property name="UPDATE_ERROR_TITLE"		    value="UI Update Error"></property>
+        <property name="SAVE_PROGRESS_TITLE"                value="Saving"></property>
+        <property name="LOAD_PROGRESS_TITLE"                value="Loading"></property>
+        <property name="EXPORT_PROGRESS_TITLE"              value="Exporting"></property>
         <property name="NEW_ERROR_TITLE"                    value="New Map Error"></property>
         <property name="NEW_ERROR_MESSAGE"                  value="A name and valid parent directory must be specified when creating a new map."></property>
         <property name="EXPORT_ERROR_TITLE"                 value="Export Map Error"></property>

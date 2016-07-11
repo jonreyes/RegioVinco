@@ -98,20 +98,15 @@ public class FileController {
     // HELPER METHOD FOR SAVING WORK
     private void save(File selectedFile) throws IOException {
 	// SAVE IT TO A FILE
-	app.getFileComponent().saveData(app.getDataComponent(), selectedFile.getPath());
-	
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getProgressDialog().show();
+        app.getFileComponent().saveData(app.getDataComponent(), selectedFile.getPath());
+        workspace.getProgressDialog().update(0);
+
+        
 	// MARK IT AS SAVED
 	currentWorkFile = selectedFile;
 	saved = true;
-	
-	// TELL THE USER THE FILE HAS BEEN SAVED
-	AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-        dialog.show(props.getProperty(SAVE_COMPLETED_TITLE),props.getProperty(SAVE_COMPLETED_MESSAGE));
-		    
-	// AND REFRESH THE GUI, WHICH WILL ENABLE AND DISABLE
-	// THE APPROPRIATE CONTROLS
-	Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.updateFileControls(saved,exported);
     }
     
     /**
@@ -199,6 +194,23 @@ public class FileController {
         }
     }
     
+    private void load(File selectedFile){
+        try {
+            AppDataComponent dataManager = app.getDataComponent();	
+            AppFileComponent fileManager = app.getFileComponent();
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.getProgressDialog().show();
+            fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
+            workspace.getProgressDialog().update(1);
+            saved = true;
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
+            alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
+            alert.showAndWait();
+        }
+    }
+    
     /**
      * This helper method asks the user for a file to open. The user-selected
      * file is then loaded and the GUI updated. Note that if the user cancels
@@ -214,23 +226,9 @@ public class FileController {
         fc.setInitialDirectory(new File(PATH_WORK));
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
-
         // ONLY OPEN A NEW FILE IF THE USER SAYS OK
         if (selectedFile != null) {
-            try {
-                AppDataComponent dataManager = app.getDataComponent();
-		AppFileComponent fileManager = app.getFileComponent();
-                fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
-                app.getWorkspaceComponent().reloadWorkspace();
-
-		// MAKE SURE THE WORKSPACE IS ACTIVATED
-		app.getWorkspaceComponent().activateWorkspace(app.getGUI().getAppPane());
-                saved = true;
-                app.getGUI().updateToolbarControls(saved);
-            } catch (Exception e) {
-                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
-            }
+            load(selectedFile);
         }
     }
     
@@ -260,20 +258,13 @@ public class FileController {
     // HELPER METHOD FOR EXPORTING WORK
     private void export(File exportFile) throws IOException {
         // EXPORT IT TO A FILE
-	app.getFileComponent().exportData(app.getDataComponent(), exportFile.getPath());
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getProgressDialog().show();
+        app.getFileComponent().exportData(app.getDataComponent(), exportFile.getPath());
+        workspace.getProgressDialog().update(2);
         
 	// MARK IT AS EXPORTED
 	exported = true;
-	
-	// TELL THE USER THE FILE HAS BEEN EXPORTED
-	AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-	PropertiesManager props = PropertiesManager.getPropertiesManager();
-        dialog.show(props.getProperty(EXPORT_COMPLETED_TITLE),props.getProperty(EXPORT_COMPLETED_MESSAGE));
-		    
-	// AND REFRESH THE GUI, WHICH WILL ENABLE AND DISABLE
-	// THE APPROPRIATE CONTROLS
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-	workspace.updateFileControls(saved,exported);	
     }
     
     /**
@@ -300,5 +291,13 @@ public class FileController {
 		PropertiesManager props = PropertiesManager.getPropertiesManager();
                 dialog.show(props.getProperty(SAVE_ERROR_TITLE), props.getProperty(SAVE_ERROR_MESSAGE));
         }
+    }
+    
+    public boolean isSaved(){
+        return saved;
+    }
+    
+    public boolean isExported(){
+        return exported;
     }
 }

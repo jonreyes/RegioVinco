@@ -144,6 +144,7 @@ public class Workspace extends AppWorkspaceComponent {
     TableColumn capitalColumn;
     TableColumn leaderColumn;
     
+    ProgressDialogSingleton progressDialog;
     NewMapDialogSingleton newMapDialog;
     SubRegionDialogSingleton subRegionDialog;
     DimensionsDialogSingleton dimensionsDialog;
@@ -366,12 +367,6 @@ public class Workspace extends AppWorkspaceComponent {
         fileBox.getChildren().addAll(newBtn,loadBtn,saveBtn,exportBtn,exitBtn);
     }
     
-    /**
-     * This method is used to activate/deactivate file toolbar buttons when
-     * they can and cannot be used so as to provide foolproof design.
-     * 
-     * @param saved Describes whether the loaded Page has been saved or not.
-     */
     public void updateFileControls(boolean saved, boolean exported) {
         saveBtn.setDisable(saved);
 	newBtn.setDisable(false);
@@ -462,6 +457,8 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initDialogs(){
+        progressDialog = ProgressDialogSingleton.getSingleton();
+        progressDialog.init(app);
         newMapDialog = NewMapDialogSingleton.getSingleton();
         newMapDialog.init(app);
         subRegionDialog = SubRegionDialogSingleton.getSingleton();
@@ -571,6 +568,10 @@ public class Workspace extends AppWorkspaceComponent {
     
     public TableView<SubRegion> getMapTable(){
         return mapTable;
+    }
+    
+    public ProgressDialogSingleton getProgressDialog(){
+        return progressDialog;
     }
     
     public NewMapDialogSingleton getNewMapDialog(){
