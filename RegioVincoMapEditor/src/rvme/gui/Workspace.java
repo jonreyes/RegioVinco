@@ -440,11 +440,12 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(addBtn, 4, 1);
         editGrid.add(rmLabel, 5, 0);
         editGrid.add(rmBtn, 5, 1);
-        editGrid.add(racLabel, 6, 0);
-        editGrid.add(racBtn, 6, 1);
-        editGrid.add(anthemLabel, 7, 0);
-        editGrid.add(playBtn, 7, 1);
-        editGrid.add(pauseBtn, 7, 1);
+        editGrid.add(anthemLabel, 6, 0);
+        editGrid.add(playBtn, 6, 1);
+        editGrid.add(pauseBtn, 6, 1);
+        editGrid.add(racLabel, 7, 0);
+        editGrid.add(racBtn, 7, 1);
+
         editGrid.add(dimensionsLabel, 8, 0);
         editGrid.add(dimensionsBtn, 8, 1);
         
