@@ -100,7 +100,7 @@ public class FileManager implements AppFileComponent {
         dataManager.setMapHeight(height);
         
         String fileName = json.getString(JSON_NAME);
-        dataManager.setFileName(fileName);
+        dataManager.setName(fileName);
         
         boolean hasCapitals = json.getBoolean(JSON_HAS_CAPITALS);
         dataManager.hasCapitals(hasCapitals);
@@ -112,6 +112,7 @@ public class FileManager implements AppFileComponent {
         dataManager.hasLeaders(hasLeaders);
         
         // AND NOW LOAD ALL THE SUBREGIONS
+        boolean tableEmpty = dataManager.getTableItems().isEmpty();
 	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS);
 	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
             // LOAD SUBREGION
@@ -119,9 +120,6 @@ public class FileManager implements AppFileComponent {
             
             // LOAD SUBREGION TABLE DATA
             SubRegion subregion = new SubRegion();
-            if(!dataManager.getTableItems().isEmpty()){
-                subregion = dataManager.getTableItems().get(i);
-            }
             String name = jsonSubRegion.getString(JSON_NAME);
             subregion.setName(name);
             String capital = jsonSubRegion.getString(JSON_CAPITAL);
@@ -132,6 +130,13 @@ public class FileManager implements AppFileComponent {
             subregion.setLeaderPath(leaderPath);
             String flagPath = jsonSubRegion.getString(JSON_FLAG);
             subregion.setFlagPath(flagPath);
+            
+            if(tableEmpty){
+                dataManager.getTableItems().add(subregion);
+            }
+            else{
+                dataManager.getTableItems().set(i, subregion);
+            }
             
             // LOAD SUBREGION COLOR
             Color mapColor = Color.valueOf(jsonSubRegion.getString(JSON_SUBREGION_COLOR));
@@ -230,7 +235,7 @@ public class FileManager implements AppFileComponent {
         double mapWidth = dataManager.getMapWidth();
         double mapHeight = dataManager.getMapHeight();
         
-        String fileName = dataManager.getFileName();
+        String fileName = dataManager.getName();
         boolean hasCapitals = dataManager.hasCapitals();
         boolean hasFlags = dataManager.hasFlags();
         boolean hasLeaders = dataManager.hasLeaders();
@@ -323,7 +328,7 @@ public class FileManager implements AppFileComponent {
     public void exportData(AppDataComponent data, String filePath) throws IOException {
         DataManager dataManager = (DataManager)data;
         
-        String fileName = dataManager.getFileName();
+        String fileName = dataManager.getName();
         boolean hasCapitals = dataManager.hasCapitals();
         boolean hasFlags = dataManager.hasFlags();
         boolean hasLeaders = dataManager.hasLeaders();
@@ -397,7 +402,7 @@ public class FileManager implements AppFileComponent {
         
         // FILE NAME
         String fileName = json.getString(JSON_NAME);
-        dataManager.setFileName(fileName);
+        dataManager.setName(fileName);
         
         // HAS CAPITALS
         boolean hasCapitals = json.getBoolean(JSON_HAS_CAPITALS);
