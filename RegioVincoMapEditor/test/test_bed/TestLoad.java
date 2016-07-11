@@ -8,7 +8,6 @@ package test_bed;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import static rvme.RVMEConstants.PATH_ANDORRA;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;

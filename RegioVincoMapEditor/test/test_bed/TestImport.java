@@ -5,17 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import org.junit.Test;
 import static rvme.RVMEConstants.PATH_ANDORRA;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
 import rvme.file.FileManager;
-import static saf.settings.AppStartupConstants.PATH_WORK;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

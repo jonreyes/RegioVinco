@@ -8,18 +8,11 @@ package test_bed;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static rvme.RVMEConstants.PATH_ANDORRA;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;
 import rvme.data.DataManager;
 import rvme.file.FileManager;
-import static saf.settings.AppStartupConstants.PATH_WORK;
-import rvme.data.SubRegion;
 import static saf.settings.AppStartupConstants.PATH_WORK;
 
 /**
