@@ -29,7 +29,7 @@ public class DataManager implements AppDataComponent {
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
     
-    String fileName;
+    String name;
     File parent;
     
     boolean hasCapitals;
@@ -73,6 +73,7 @@ public class DataManager implements AppDataComponent {
                 mapPolygon.strokeProperty().bind(borderColor);
                 mapPolygon.strokeWidthProperty().bind(borderThickness);
                 mapPolygon.setFill(mapColors.get(i));
+                mapPolygon.setId(String.valueOf(i));
                 i++;
                 int j = 0;
                 for(double p: polygon.getPoints()){
@@ -86,7 +87,7 @@ public class DataManager implements AppDataComponent {
         }
         return map;
     }
-    
+   
     public ArrayList<Color> randomColors(){
         ArrayList<Color> randomColors = new ArrayList<>();
         Random rand = new Random();
@@ -105,12 +106,12 @@ public class DataManager implements AppDataComponent {
         return (0.5-y/180) * h;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getName() {
+        return name;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public File getParent() {
@@ -242,14 +243,14 @@ public class DataManager implements AppDataComponent {
         mapHeight = new SimpleDoubleProperty(536);
         tableItems = new SimpleObjectProperty(FXCollections.observableArrayList());
         geometry = new ArrayList<>(); 
-        mapColors = randomColors();
+        mapColors = new ArrayList<>();
     }
 
     @Override
     public String toString() {
         
         return "DataManager{" + 
-                "\n fileName=" + fileName + 
+                "\n fileName=" + name + 
                 "\n parent=" + parent + 
                 "\n hasCapitals=" + hasCapitals + 
                 "\n hasFlags=" + hasFlags + 
