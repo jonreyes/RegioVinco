@@ -1,6 +1,7 @@
 package rvme.gui;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -13,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
@@ -24,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ICON;
@@ -39,7 +42,6 @@ import static rvme.PropertyType.DIMENSIONS_TOOLTIP;
 import static rvme.PropertyType.EXPORT_ICON;
 import static rvme.PropertyType.LEADER_COLUMN_HEADING;
 import static rvme.PropertyType.NAME_COLUMN_HEADING;
-import static rvme.PropertyType.NAME_LABEL;
 import static rvme.PropertyType.RAC_ICON;
 import static rvme.PropertyType.RAC_LABEL;
 import static rvme.PropertyType.RAC_TOOLTIP;
@@ -135,7 +137,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     VBox dataView;
     Label dataLabel;
-    TableView<SubRegion> dataTable;
+    TableView<SubRegion> mapTable;
     TableColumn nameColumn;
     TableColumn capitalColumn;
     TableColumn leaderColumn;
@@ -171,7 +173,7 @@ public class Workspace extends AppWorkspaceComponent {
     private void initFileControls(){
         fileController = new AppFileController(app);
         newBtn.setOnAction(e -> {
-            newMapDialog.show();
+            rvmeController.newMap();
         });
         loadBtn.setOnAction(e -> {
             fileController.handleLoadRequest();
@@ -220,6 +222,18 @@ public class Workspace extends AppWorkspaceComponent {
         });    
     }
     
+    private void initMapControls(){
+        for(Node node: region.getChildren()){
+            if (node instanceof Polygon){
+                node.setOnMouseClicked(e->{
+                    if(e.getClickCount()==2){
+                        rvmeController.editSubRegion(e);
+                    }
+                });
+            }
+        }
+    }
+    
     private void initTitle(){
         titleBar = new StackPane();
         titleBar.setMinWidth(app.getGUI().getWindow().getWidth());
@@ -262,7 +276,6 @@ public class Workspace extends AppWorkspaceComponent {
 
         initMapBG();
         initRegionView();
-        
         mapView.setContent(mapStack);
     }
     
@@ -276,7 +289,13 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initRegionView(){
         region = data.mapTo(mapBG);
+        if (region.getChildren().size()>0){
+            btSlider.setMax(region.getLayoutBounds().getWidth()/10);
+            zoomSlider.setMax(mapWidth.divide(region.getLayoutBounds().getWidth()/32).get());
+        }
+        initMapControls();
         mapStack.getChildren().add(region);
+        
     }
     
     private void initDataView(){
@@ -288,8 +307,8 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initTableView(){
-        dataTable = new TableView<>();
-        dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        mapTable = new TableView<>();
+        mapTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         nameColumn = new TableColumn(props.getProperty(NAME_COLUMN_HEADING));
         capitalColumn = new TableColumn(props.getProperty(CAPITAL_COLUMN_HEADING));
@@ -300,17 +319,27 @@ public class Workspace extends AppWorkspaceComponent {
         capitalColumn.setCellValueFactory(new PropertyValueFactory<String, String>("capital"));
         leaderColumn.setCellValueFactory(new PropertyValueFactory<String, String>("leader"));
         
-        dataTable.getColumns().add(nameColumn);
-        dataTable.getColumns().add(capitalColumn);
-        dataTable.getColumns().add(leaderColumn);
-        dataTable.itemsProperty().bind(data.tableItemsProperty());
-        dataTable.setMinHeight(mapHeight.get()*0.85);
-        dataView.getChildren().add(dataTable);
+        mapTable.getColumns().add(nameColumn);
+        mapTable.getColumns().add(capitalColumn);
+        mapTable.getColumns().add(leaderColumn);
+        mapTable.setMinHeight(mapHeight.get()*0.85);
+        dataView.getChildren().add(mapTable);
+    }
+    
+    private void updateMapTable(){
+        mapTable.setItems(data.getTableItems());
+        initTableControls();
     }
     
     private void initTableControls(){
-        dataTable.itemsProperty().addListener(e->{
-            rvmeController.updateTableData();
+        mapTable.setRowFactory(e->{
+            TableRow<SubRegion> itemRow = new TableRow<>();
+            itemRow.setOnMouseClicked(r->{
+                if (r.getClickCount() == 2 && (! itemRow.isEmpty())){
+                    rvmeController.editSubRegion(r);
+                }
+            });
+            return itemRow;
         });
     }
     
@@ -369,7 +398,7 @@ public class Workspace extends AppWorkspaceComponent {
         btLabel = new Label(props.getProperty(BT_LABEL));
         btBox = new VBox();
         btBox.setAlignment(Pos.CENTER);
-        btSlider = new Slider(0,0.05,0);
+        btSlider = new Slider(0,1,0);
         btValue = new Label(String.format("%.2f",btSlider.getValue()));
         btBox.getChildren().add(btSlider);
         btBox.getChildren().add(btValue);
@@ -518,7 +547,7 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     public ObservableList<SubRegion> getMapData(){
-        return dataTable.getItems();
+        return mapTable.getItems();
     }
     
     public Button getPlayButton(){
@@ -537,17 +566,30 @@ public class Workspace extends AppWorkspaceComponent {
         selection = imageView;
     }
     
+    public TableView<SubRegion> getMapTable(){
+        return mapTable;
+    }
+    
+    public NewMapDialogSingleton getNewMapDialog(){
+        return newMapDialog;
+    }
+    
+    public SubRegionDialogSingleton getSubRegionDialog(){
+        return subRegionDialog;
+    }
+    
     @Override
     public void reloadWorkspace() {
         bgcPicker.setValue(data.getBackgroundColor());
         bcPicker.setValue(data.getBorderColor());
-        mapStack.getChildren().remove(region);
-        initRegionView();
         mapWidth.set(data.getMapWidth());
         mapHeight.set(data.getMapHeight());
+        mapStack.getChildren().remove(region);
+        initRegionView();
         btSlider.setValue(data.getBorderThickness());
         zoomSlider.setValue(data.getZoom());
         updateEditControls();
+        updateMapTable();
         dimensionsDialog.reset();
     }
 

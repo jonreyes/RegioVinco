@@ -6,17 +6,22 @@
 package rvme.gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
@@ -31,6 +36,8 @@ import static rvme.PropertyType.OK_LABEL;
 import static rvme.PropertyType.PREV_ICON;
 import static rvme.PropertyType.PREV_TOOLTIP;
 import static rvme.PropertyType.SRDIALOG_TITLE;
+import rvme.data.DataManager;
+import rvme.data.SubRegion;
 import saf.AppTemplate;
 import static saf.components.AppStyleArbiter.CLASS_BORDERED_PANE;
 import static saf.components.AppStyleArbiter.CLASS_GRID_PANE;
@@ -49,6 +56,7 @@ import saf.ui.AppGUI;
 public class SubRegionDialogSingleton extends Stage{
     static SubRegionDialogSingleton singleton = null;
     
+    DataManager data;
     PropertiesManager props;
     
     AppTemplate app;
@@ -66,7 +74,7 @@ public class SubRegionDialogSingleton extends Stage{
     TextField capitalTextField;
     Label flagLabel;
     ImageView flagImageView;
-    Label leaderNameLabel;
+    Label leaderLabel;
     TextField leaderTextField;
     Label leaderImageLabel;
     ImageView leaderImageView;
@@ -102,6 +110,7 @@ public class SubRegionDialogSingleton extends Stage{
     public void init(AppTemplate initApp){
         app = initApp;
         gui = app.getGUI();
+        data = (DataManager) app.getDataComponent();
         props = PropertiesManager.getPropertiesManager();
         initModality(Modality.WINDOW_MODAL);
         initOwner(gui.getWindow());
@@ -114,11 +123,9 @@ public class SubRegionDialogSingleton extends Stage{
     private void initGUI(){
         nameLabel = new Label(props.getProperty(NAME_LABEL));
         nameTextField = new TextField();
-        nameTextField.setText("North Korea");
         
         capitalLabel = new Label(props.getProperty(CAPITAL_LABEL));
         capitalTextField = new TextField();
-        capitalTextField.setText("Pyongyang");
         
         flagLabel = new Label(props.getProperty(FLAG_LABEL));
         Image dummyFlag = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkflag.png");
@@ -126,9 +133,8 @@ public class SubRegionDialogSingleton extends Stage{
         flagImageView.setFitWidth(200);
         flagImageView.setFitHeight(100);
         
-        leaderNameLabel = new Label(props.getProperty(LEADER_NAME_LABEL));
+        leaderLabel = new Label(props.getProperty(LEADER_NAME_LABEL));
         leaderTextField = new TextField();
-        leaderTextField.setText("Kim Jong Un");
         
         leaderImageLabel = new Label(props.getProperty(LEADER_IMAGE_LABEL));
         Image dummyLeader = new Image(FILE_PROTOCOL+PATH_IMAGES+"nkleader.png");
@@ -147,7 +153,7 @@ public class SubRegionDialogSingleton extends Stage{
         srGrid.add(capitalTextField, 1, 1);
         srGrid.add(flagLabel, 0, 2);
         srGrid.add(flagImageView, 1, 2);
-        srGrid.add(leaderNameLabel, 0, 3);
+        srGrid.add(leaderLabel, 0, 3);
         srGrid.add(leaderTextField, 1, 3);
         srGrid.add(leaderImageLabel, 0, 4);
         srGrid.add(leaderImageView, 1, 4);
@@ -203,7 +209,9 @@ public class SubRegionDialogSingleton extends Stage{
     }
     
     private void initHandlers(){
-        okBtn.setOnAction(e->this.hide());
+        okBtn.setOnAction(e->{
+            submitEditSubRegion();
+        });
     }
     
     private void initStyleSheet(){
@@ -222,8 +230,45 @@ public class SubRegionDialogSingleton extends Stage{
         nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         capitalLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         flagLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        leaderNameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        leaderLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         leaderImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
     }
     
+    private void submitEditSubRegion(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        SubRegion selected = workspace.getMapTable().getSelectionModel().getSelectedItem();
+        String newName = nameTextField.getText();
+        String newCapital = capitalTextField.getText();
+        String newLeader = leaderTextField.getText();
+        selected.setName(newName);
+        selected.setCapital(newCapital);
+        selected.setLeader(newLeader);
+        this.hide();
+    }
+    
+    public void update(MouseEvent e){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        SubRegion selected = new SubRegion();
+        Object source = e.getSource();
+        
+        if(source instanceof Polygon){
+            ArrayList<Polygon> geometry = data.getGeometry();
+            ObservableList<SubRegion> tableItems = data.getTableItems();
+            
+            // GET SUBREGION CLICKED
+            Polygon subregion = (Polygon) e.getSource();
+            selected = tableItems.get(Integer.valueOf(subregion.getId()));
+            
+            // UPDATE TABLE W/ SELECTED SUBREGION
+            workspace.getMapTable().getSelectionModel().select(selected);
+        }
+        else if (source instanceof TableRow){
+            selected = workspace.getMapTable().getSelectionModel().getSelectedItem();
+        }
+        
+        // UPDATE DIALOG W/ SELECTED SUBREGION
+        nameTextField.setText(selected.getName());
+        capitalTextField.setText(selected.getCapital());
+        leaderTextField.setText(selected.getLeader());
+    }
 }
