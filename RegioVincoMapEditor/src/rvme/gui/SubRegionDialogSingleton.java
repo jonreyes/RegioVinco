@@ -209,29 +209,40 @@ public class SubRegionDialogSingleton extends Stage{
     }
     
     private void initHandlers(){
+        prevBtn.setOnAction(e->{
+            previousSubRegion();
+        });
+        nextBtn.setOnAction(e->{
+            nextSubRegion();
+        });
         okBtn.setOnAction(e->{
             submitEditSubRegion();
         });
     }
     
-    private void initStyleSheet(){
-         // LOADING CSS
-	String stylesheet = props.getProperty(APP_PATH_CSS);
-	stylesheet += props.getProperty(APP_CSS);
-	URL stylesheetURL = app.getClass().getResource(stylesheet);
-	String stylesheetPath = stylesheetURL.toExternalForm();
-        messageScene.getStylesheets().add(stylesheetPath);
+    private void previousSubRegion(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        ObservableList<SubRegion> subregions = data.getTableItems();
+        int previous = workspace.getMapTable().getSelectionModel().getSelectedIndex()-1;
+        if(previous >=0) selectSubRegion(subregions.get(previous));
     }
     
-    private void initStyle(){
-        messagePane.getStyleClass().add(CLASS_BORDERED_PANE);
-        srGrid.getStyleClass().add(CLASS_GRID_PANE);
-        messageLabel.getStyleClass().add(CLASS_SUBHEADING_LABEL);
-        nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        capitalLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        flagLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        leaderLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
-        leaderImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+    private void nextSubRegion(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        ObservableList<SubRegion> subregions = data.getTableItems();
+        int next = workspace.getMapTable().getSelectionModel().getSelectedIndex()+1;
+        if(next < subregions.size()) selectSubRegion(subregions.get(next));
+    }
+    
+    private void selectSubRegion(SubRegion selected){
+        // UPDATE DIALOG W/ SELECTED SUBREGION
+        nameTextField.setText(selected.getName());
+        capitalTextField.setText(selected.getCapital());
+        leaderTextField.setText(selected.getLeader());
+        
+        // UPDATE TABLE W/ SELECTED SUBREGION
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getMapTable().getSelectionModel().select(selected);
     }
     
     private void submitEditSubRegion(){
@@ -258,17 +269,33 @@ public class SubRegionDialogSingleton extends Stage{
             // GET SUBREGION CLICKED
             Polygon subregion = (Polygon) e.getSource();
             selected = tableItems.get(Integer.valueOf(subregion.getId()));
-            
-            // UPDATE TABLE W/ SELECTED SUBREGION
-            workspace.getMapTable().getSelectionModel().select(selected);
+
         }
         else if (source instanceof TableRow){
             selected = workspace.getMapTable().getSelectionModel().getSelectedItem();
         }
         
         // UPDATE DIALOG W/ SELECTED SUBREGION
-        nameTextField.setText(selected.getName());
-        capitalTextField.setText(selected.getCapital());
-        leaderTextField.setText(selected.getLeader());
+        selectSubRegion(selected);
+    }
+    
+    private void initStyleSheet(){
+         // LOADING CSS
+	String stylesheet = props.getProperty(APP_PATH_CSS);
+	stylesheet += props.getProperty(APP_CSS);
+	URL stylesheetURL = app.getClass().getResource(stylesheet);
+	String stylesheetPath = stylesheetURL.toExternalForm();
+        messageScene.getStylesheets().add(stylesheetPath);
+    }
+    
+    private void initStyle(){
+        messagePane.getStyleClass().add(CLASS_BORDERED_PANE);
+        srGrid.getStyleClass().add(CLASS_GRID_PANE);
+        messageLabel.getStyleClass().add(CLASS_SUBHEADING_LABEL);
+        nameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        capitalLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        flagLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        leaderLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        leaderImageLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
     }
 }
