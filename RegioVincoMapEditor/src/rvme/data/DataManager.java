@@ -2,8 +2,6 @@ package rvme.data;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
 import java.util.Random;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -41,6 +39,8 @@ public class DataManager implements AppDataComponent {
     
     DoubleProperty borderThickness;
     DoubleProperty zoom;
+    
+    String anthem;
     
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
@@ -178,6 +178,14 @@ public class DataManager implements AppDataComponent {
         this.zoom.set(zoom);
     }
     
+    public String getAnthem(){
+        return anthem;
+    }
+    
+    public void setAnthem(String anthem){
+        this.anthem = anthem;
+    }
+    
     public DoubleProperty mapWidthProperty(){
         return mapWidth;
     }
@@ -270,23 +278,27 @@ public class DataManager implements AppDataComponent {
     
     
     
-    @Override
+    /*@Override
     public boolean equals(Object obj) {
         DataManager data = (DataManager) obj;
     
         return(
-            data.hasCapitals() == this.hasCapitals &&
-            data.hasFlags() == this.hasFlags &&
-            data.hasLeaders() == this.hasLeaders &&
-            
+                
             data.getBackgroundColor().equals(this.backgroundColor) &&
             data.getBorderColor().equals(this.borderColor) &&
             data.getBorderThickness() == this.getBorderThickness() &&
             data.getZoom() == this.getZoom() &&
             
+            data.hasCapitals() == this.hasCapitals &&
+            data.hasFlags() == this.hasFlags &&
+            data.hasLeaders() == this.hasLeaders &&
+            
+            data.getAnthem().equals(this.anthem) &&
+            
+            data.getTableItems().equals(this.getTableItems()) &&
             data.getMapColors().equals(this.mapColors) &&
-            data.getGeometry().equals(this.getGeometry()) &&
-            data.getTableItems().equals(this.getTableItems())
+            for(Polygon p : )
+            data.getGeometry().equals(this.getGeometry()) 
         );
     }
 
@@ -306,5 +318,5 @@ public class DataManager implements AppDataComponent {
         hash = 89 * hash + Objects.hashCode(this.tableItems);
         hash = 89 * hash + Objects.hashCode(this.geometry);
         return hash;
-    }
+    }*/
 }

@@ -47,6 +47,7 @@ public class FileManager implements AppFileComponent {
     static final String JSON_BORDER_COLOR = "border_color";
     static final String JSON_BORDER_THICKNESS = "border_thickness";
     static final String JSON_ZOOM = "zoom";
+    
     static final String JSON_WIDTH = "width";
     static final String JSON_HEIGHT = "height";
     
@@ -63,6 +64,8 @@ public class FileManager implements AppFileComponent {
     static final String JSON_HAS_FLAGS = "subregions_have_flags";
     static final String JSON_HAS_LEADERS = "subregions_have_leaders";
     
+    static final String JSON_ANTHEM = "anthem";
+
     static final String JSON_CAPITAL = "capital";
     static final String JSON_LEADER = "leader";
     static final String JSON_LEADER_IMAGE = "leader_image";
@@ -111,6 +114,9 @@ public class FileManager implements AppFileComponent {
         boolean hasLeaders = json.getBoolean(JSON_HAS_FLAGS);
         dataManager.hasLeaders(hasLeaders);
         
+        String anthem = json.getString(JSON_ANTHEM);
+        dataManager.setAnthem(anthem);
+        
         // AND NOW LOAD ALL THE SUBREGIONS
         boolean tableEmpty = dataManager.getTableItems().isEmpty();
 	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS);
@@ -126,10 +132,10 @@ public class FileManager implements AppFileComponent {
             subregion.setCapital(capital);
             String leader = jsonSubRegion.getString(JSON_LEADER);
             subregion.setLeader(leader);
-            String leaderPath = jsonSubRegion.getString(JSON_LEADER_IMAGE);
-            subregion.setLeaderPath(leaderPath);
-            String flagPath = jsonSubRegion.getString(JSON_FLAG);
-            subregion.setFlagPath(flagPath);
+            String leaderImage = jsonSubRegion.getString(JSON_LEADER_IMAGE);
+            subregion.setLeaderImage(leaderImage);
+            String flag = jsonSubRegion.getString(JSON_FLAG);
+            subregion.setFlag(flag);
             
             if(tableEmpty){
                 dataManager.getTableItems().add(subregion);
@@ -240,6 +246,8 @@ public class FileManager implements AppFileComponent {
         boolean hasFlags = dataManager.hasFlags();
         boolean hasLeaders = dataManager.hasLeaders();
         
+        String anthem = dataManager.getAnthem();
+        
 	// NOW BUILD THE JSON ARRAY FOR THE SUBREGIONS
 	ArrayList<Polygon> geometry = dataManager.getGeometry();
         ObservableList<SubRegion> tableData = dataManager.getTableItems();
@@ -267,11 +275,12 @@ public class FileManager implements AppFileComponent {
                 // SAVE SUBREGION TABLE DATA
                 subregion = tableData.get(i);
             }
+            
             String name = subregion.getName();
             String capital = subregion.getCapital();
             String leader = subregion.getLeader();
-            String leaderImagePath = subregion.getLeaderPath();
-            String flagPath = subregion.getFlagPath();
+            String leaderImagePath = subregion.getLeaderImage();
+            String flagPath = subregion.getFlag();
                 
             String mapColor = (!mapColors.isEmpty())?mapColors.get(i).toString():"";
             i++;
@@ -302,6 +311,7 @@ public class FileManager implements AppFileComponent {
                 .add(JSON_HAS_CAPITALS, hasCapitals)
                 .add(JSON_HAS_FLAGS, hasFlags)
                 .add(JSON_HAS_LEADERS, hasLeaders)
+                .add(JSON_ANTHEM, anthem)
                 .add(JSON_SUBREGIONS, subRegionsArray)
 		.build();
 	

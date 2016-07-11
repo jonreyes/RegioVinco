@@ -10,8 +10,10 @@ import java.io.File;
 import java.io.FileReader;
 import org.junit.Test;
 import static rvme.RVMEConstants.PATH_ANDORRA;
+import static rvme.RVMEConstants.PATH_EUROPE;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;
 import rvme.data.DataManager;
+import rvme.data.SubRegion;
 import rvme.file.FileManager;
 import static saf.settings.AppStartupConstants.PATH_WORK;
 
@@ -32,37 +34,55 @@ public class TestSave {
         FileManager instance = new FileManager();
         DataManager data = new DataManager();
 
-        // NAME THE FILE
-        String fileName = "Andorra";
+        // SPECIFY SUBREGION
+        String subRegionName = "Andorra";
         
         // HARD CODE DATA VALUES
         System.out.println("SETTING UP HARD CODE VALUES...");
         
         // IMPORT AVAILABLE VALUES FROM EXPORT FILE
-        data.setName(fileName);
-        String andorraRVM = "Andorra.rvm";
-        String andorraPath = PATH_ANDORRA+andorraRVM;
-        File andorraFile = new File(andorraPath);
-        assert(andorraFile.exists());
+        data.setName(subRegionName);
+        String subRegionRVM = subRegionName+".rvm";
+        String subRegionFolder = PATH_EUROPE+subRegionName+"/";
+        String subRegionPath = subRegionFolder+subRegionRVM;
+        File subRegionFile = new File(subRegionPath);
+        assert(subRegionFile.exists());
         
         System.out.println("EXPORT FILE IMPORTED!");
-        instance.importData(data, andorraPath);
-
+        instance.importData(data, subRegionPath);
+        
+        // SET LEADER IMAGES AND FLAGS
+        int i = 0;
+        for(SubRegion s: data.getTableItems()){
+            String leaderImage = s.getLeader()+".png";
+            String leaderImagePath = subRegionFolder+leaderImage;
+            data.getTableItems().get(i).setLeaderImage(leaderImagePath);
+            String flag = s.getName()+" Flag.png";
+            String flagPath = subRegionFolder+flag;
+            data.getTableItems().get(i).setFlag(flagPath);
+            i++;
+        }
+        
         // LOAD GEOMETRY FILE
-        String geoFileName = "Andorra.json";
+        String geoFileName = subRegionName+".json";
         String geoPath = PATH_RAW_MAP_DATA+geoFileName;
         File geoFile = new File(geoPath);
         assert(geoFile.exists());
         
         System.out.println("GEOMETRY FILE LOADED!");
         instance.loadGeometry(data, geoPath);
-
+        
         // SET COLORS
         data.setMapColors(data.randomColors());
         
+        // SET ANTHEM
+        String subRegionAnthem = subRegionName + " National Anthem.mid";
+        String anthemPath = subRegionFolder+subRegionAnthem;
+        data.setAnthem(anthemPath);
+        
         // COMPLETE SAVE DATA
         System.out.println("SAVING DATA...");
-        String savePath = PATH_WORK+fileName+".json";
+        String savePath = PATH_WORK+subRegionName+".json";
         File savedFile = new File(savePath);
         instance.saveData(data, savePath);
         
