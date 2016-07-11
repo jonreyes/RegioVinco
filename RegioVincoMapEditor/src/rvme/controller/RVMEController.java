@@ -16,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -33,6 +34,8 @@ import static rvme.PropertyType.PNG_EXT;
 import static rvme.RVMEConstants.PATH_EXPORT;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
+import rvme.gui.NewMapDialogSingleton;
+import rvme.gui.SubRegionDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
 import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
@@ -62,6 +65,14 @@ public class RVMEController {
         props = PropertiesManager.getPropertiesManager();
     }
     
+    public void newMap(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        NewMapDialogSingleton newMapDialog = workspace.getNewMapDialog();
+        
+        newMapDialog.reset();
+        newMapDialog.show();
+    }
+    
     public void saveMap() {
         try {
 	    // MAYBE WE ALREADY KNOW THE FILE
@@ -73,7 +84,7 @@ public class RVMEController {
 		// PROMPT THE USER FOR A FILE NAME
 		FileChooser fc = new FileChooser();
                 DataManager dataManager = (DataManager) app.getDataComponent();
-		fc.setInitialFileName(dataManager.getFileName());
+		fc.setInitialFileName(dataManager.getName());
                 fc.setInitialDirectory(dataManager.getParent());
 		fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
 		fc.getExtensionFilters().addAll(
@@ -168,6 +179,14 @@ public class RVMEController {
         }
         
         workspace.updateFileControls(false);
+    }
+    
+    public void editSubRegion(MouseEvent e){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        SubRegionDialogSingleton subRegionDialog = workspace.getSubRegionDialog();
+        
+        subRegionDialog.update(e);
+        subRegionDialog.show();
     }
     
     public void updateTableData(){
