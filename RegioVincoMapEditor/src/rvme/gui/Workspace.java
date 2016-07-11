@@ -179,7 +179,7 @@ public class Workspace extends AppWorkspaceComponent {
             fileController.newMap();
         });
         loadBtn.setOnAction(e -> {
-            afc.handleLoadRequest();
+            fileController.loadMap();
         });
         saveBtn.setOnAction(e -> {
             fileController.saveMap();
@@ -591,7 +591,6 @@ public class Workspace extends AppWorkspaceComponent {
         initRegionView();
         btSlider.setValue(data.getBorderThickness());
         zoomSlider.setValue(data.getZoom());
-        updateEditControls();
         updateMapTable();
         dimensionsDialog.reset();
     }

@@ -23,6 +23,10 @@ import rvme.gui.NewMapDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
 import saf.components.AppDataComponent;
+import saf.components.AppFileComponent;
+import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
+import static saf.settings.AppPropertyType.LOAD_ERROR_TITLE;
+import static saf.settings.AppPropertyType.LOAD_WORK_TITLE;
 import static saf.settings.AppPropertyType.SAVE_COMPLETED_MESSAGE;
 import static saf.settings.AppPropertyType.SAVE_COMPLETED_TITLE;
 import static saf.settings.AppPropertyType.SAVE_ERROR_MESSAGE;
@@ -48,6 +52,7 @@ public class FileController {
     File currentWorkFile;
     
      public FileController(AppTemplate initApp){
+        saved = true;
         app = initApp;
         props = PropertiesManager.getPropertiesManager();
     }
@@ -172,6 +177,63 @@ public class FileController {
         return true;
     }
     
+    public void loadMap() {
+        try {
+            // WE MAY HAVE TO SAVE CURRENT WORK
+            boolean continueToOpen = true;
+            if (!saved) {
+                // THE USER CAN OPT OUT HERE WITH A CANCEL
+                continueToOpen = promptToSave();
+            }
+
+            // IF THE USER REALLY WANTS TO OPEN A Course
+            if (continueToOpen) {
+                // GO AHEAD AND PROCEED LOADING A Course
+                promptToOpen();
+            }
+        } catch (IOException ioe) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(props.getProperty(SAVE_ERROR_TITLE));
+            alert.setContentText(props.getProperty(SAVE_ERROR_MESSAGE));
+            alert.showAndWait();
+        }
+    }
+    
+    /**
+     * This helper method asks the user for a file to open. The user-selected
+     * file is then loaded and the GUI updated. Note that if the user cancels
+     * the open process, nothing is done. If an error occurs loading the file, a
+     * message is displayed, but nothing changes.
+     */
+    private void promptToOpen() {
+	// WE'LL NEED TO GET CUSTOMIZED STUFF WITH THIS
+	PropertiesManager props = PropertiesManager.getPropertiesManager();
+	
+        // AND NOW ASK THE USER FOR THE FILE TO OPEN
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
+        File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
+
+        // ONLY OPEN A NEW FILE IF THE USER SAYS OK
+        if (selectedFile != null) {
+            try {
+                AppDataComponent dataManager = app.getDataComponent();
+		AppFileComponent fileManager = app.getFileComponent();
+                fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
+                app.getWorkspaceComponent().reloadWorkspace();
+
+		// MAKE SURE THE WORKSPACE IS ACTIVATED
+		app.getWorkspaceComponent().activateWorkspace(app.getGUI().getAppPane());
+                saved = true;
+                app.getGUI().updateToolbarControls(saved);
+            } catch (Exception e) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        }
+    }
+    
     public void exportMap(){
         try{
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
@@ -199,11 +261,11 @@ public class FileController {
     private void export(File exportFile) throws IOException {
         // EXPORT IT TO A FILE
 	app.getFileComponent().exportData(app.getDataComponent(), exportFile.getPath());
-	
+        
 	// MARK IT AS EXPORTED
 	exported = true;
 	
-	// TELL THE USER THE FILE HAS BEEN SAVED
+	// TELL THE USER THE FILE HAS BEEN EXPORTED
 	AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
 	PropertiesManager props = PropertiesManager.getPropertiesManager();
         dialog.show(props.getProperty(EXPORT_COMPLETED_TITLE),props.getProperty(EXPORT_COMPLETED_MESSAGE));
