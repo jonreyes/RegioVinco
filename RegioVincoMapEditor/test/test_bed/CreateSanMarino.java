@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.junit.Test;
-import static rvme.RVMEConstants.PATH_ANDORRA;
 import static rvme.RVMEConstants.PATH_EUROPE;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;
 import rvme.data.DataManager;
@@ -21,7 +20,7 @@ import static saf.settings.AppStartupConstants.PATH_WORK;
  *
  * @author xion
  */
-public class TestSave {
+public class CreateSanMarino {
     
     /**
      * Test of saveData method, of class FileManager.
@@ -35,7 +34,7 @@ public class TestSave {
         DataManager data = new DataManager();
 
         // SPECIFY SUBREGION
-        String subRegionName = "Andorra";
+        String subRegionName = "San Marino";
         
         // HARD CODE DATA VALUES
         System.out.println("SETTING UP HARD CODE VALUES...");
