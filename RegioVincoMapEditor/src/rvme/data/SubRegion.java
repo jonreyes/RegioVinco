@@ -100,8 +100,8 @@ public class SubRegion {
                 "\n name=" + this.getName() + 
                 "\n capital=" + this.getCapital() + 
                 "\n leader=" + this.getLeader() + 
-                "\n flagPath=" + this.getFlag() + 
-                "\n leaderPath=" + this.getFlag() + 
+                "\n flag=" + this.getFlag() + 
+                "\n leaderImage=" + this.getLeaderImage() + 
                 '}';
     }
     
