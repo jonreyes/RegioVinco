@@ -21,7 +21,7 @@ import static saf.settings.AppStartupConstants.PATH_WORK;
  *
  * @author xion
  */
-public class TestSave {
+public class CreateAndorra {
     
     /**
      * Test of saveData method, of class FileManager.
