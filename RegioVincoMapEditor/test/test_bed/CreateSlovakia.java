@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.junit.Test;
-import static rvme.RVMEConstants.PATH_ANDORRA;
 import static rvme.RVMEConstants.PATH_EUROPE;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;
 import rvme.data.DataManager;
@@ -21,7 +20,7 @@ import static saf.settings.AppStartupConstants.PATH_WORK;
  *
  * @author xion
  */
-public class TestSave {
+public class CreateSlovakia {
     
     /**
      * Test of saveData method, of class FileManager.
@@ -35,7 +34,7 @@ public class TestSave {
         DataManager data = new DataManager();
 
         // SPECIFY SUBREGION
-        String subRegionName = "Andorra";
+        String subRegionName = "Slovakia";
         
         // HARD CODE DATA VALUES
         System.out.println("SETTING UP HARD CODE VALUES...");
@@ -56,10 +55,22 @@ public class TestSave {
         for(SubRegion s: data.getTableItems()){
             String leaderImage = s.getLeader()+".png";
             String leaderImagePath = subRegionFolder+leaderImage;
-            data.getTableItems().get(i).setLeaderImage(leaderImagePath);
+            File leaderImageFile = new File(leaderImagePath);
+            if(leaderImageFile.exists()){
+                data.getTableItems().get(i).setLeaderImage(leaderImagePath);
+            }
+            else{
+                data.getTableItems().get(i).setLeaderImage("");
+            }
             String flag = s.getName()+" Flag.png";
             String flagPath = subRegionFolder+flag;
-            data.getTableItems().get(i).setFlag(flagPath);
+            File flagFile = new File(flagPath);
+            if(flagFile.exists()){
+                data.getTableItems().get(i).setFlag(flagPath);
+            }
+            else{
+                data.getTableItems().get(i).setFlag("");
+            }
             i++;
         }
         
@@ -84,6 +95,7 @@ public class TestSave {
         System.out.println("SAVING DATA...");
         String savePath = PATH_WORK+subRegionName+".json";
         File savedFile = new File(savePath);
+        System.out.println(data);
         instance.saveData(data, savePath);
         
         // CHECK SAVE DATA EXISTS

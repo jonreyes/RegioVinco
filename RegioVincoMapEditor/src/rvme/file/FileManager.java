@@ -272,7 +272,7 @@ public class FileManager implements AppFileComponent {
             JsonArray array = arrayBuilder.build();
             
             SubRegion subregion = new SubRegion();
-            if (!tableEmpty){
+            if (!tableEmpty && i < tableData.size()){
                 // SAVE SUBREGION TABLE DATA
                 subregion = tableData.get(i);
             }
@@ -440,10 +440,10 @@ public class FileManager implements AppFileComponent {
             String name = jsonSubRegion.getString(JSON_NAME);
             subRegion.setName(name);
             // CAPITAL
-            String capital = (hasCapitals)?jsonSubRegion.getString(JSON_CAPITAL):subRegion.getCapital();
+            String capital = (hasCapitals)?jsonSubRegion.getString(JSON_CAPITAL):"N/A";
             subRegion.setCapital(capital);
             // LEADER
-            String leader = (hasLeaders)?jsonSubRegion.getString(JSON_LEADER):subRegion.getLeader();
+            String leader = (hasLeaders)?jsonSubRegion.getString(JSON_LEADER):"N/A";
             subRegion.setLeader(leader);
             
             if(tableEmpty){
