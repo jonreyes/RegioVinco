@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.junit.Test;
-import static rvme.RVMEConstants.PATH_ANDORRA;
 import static rvme.RVMEConstants.PATH_EUROPE;
 import static rvme.RVMEConstants.PATH_RAW_MAP_DATA;
 import rvme.data.DataManager;
