@@ -45,6 +45,7 @@ public class DataManager implements AppDataComponent {
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
     
+    ArrayList<String> images;
     ArrayList<Color> mapColors;
     ObjectProperty<ObservableList<SubRegion>> tableItems;
     ArrayList<Polygon> geometry;
@@ -210,6 +211,14 @@ public class DataManager implements AppDataComponent {
         this.mapHeight.set(mapHeight);
     }
     
+    public ArrayList<String> getImages(){
+        return images;
+    }
+    
+    public void setImages(ArrayList<String> images){
+        this.images = images;
+    }
+    
     public ObjectProperty<ObservableList<SubRegion>> tableItemsProperty(){
         return tableItems;
     }
@@ -249,6 +258,7 @@ public class DataManager implements AppDataComponent {
         zoom = new SimpleDoubleProperty(1);
         mapWidth = new SimpleDoubleProperty(802);
         mapHeight = new SimpleDoubleProperty(536);
+        images = new ArrayList<>();
         tableItems = new SimpleObjectProperty(FXCollections.observableArrayList());
         geometry = new ArrayList<>(); 
         mapColors = new ArrayList<>();
@@ -269,6 +279,7 @@ public class DataManager implements AppDataComponent {
                 "\n zoom=" + zoom + 
                 "\n mapWidth=" + mapWidth + 
                 "\n mapHeight=" + mapHeight + 
+                "\n images=" + images +
                 "\n mapColors=" + mapColors + 
                 "\n tableItems=" + tableItems + 
                 "\n tableSize=" + tableItems.get().size()+
