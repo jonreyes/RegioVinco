@@ -140,8 +140,8 @@ public class RVMEController {
         ImageView addImageView = new ImageView(image);
         addImageView.setPreserveRatio(true);
         addImageView.setFitWidth(200);
-        selectImage(addImageView);
-        dragImage(addImageView);
+        makeSelectable(addImageView);
+        makeDraggable(addImageView);
                 
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
@@ -161,7 +161,7 @@ public class RVMEController {
         workspace.updateEditControls();
     }
     
-    private void selectImage(Node node){
+    private void makeSelectable(Node node){
         node.addEventFilter(
             MouseEvent.ANY,
             e->{
@@ -174,7 +174,7 @@ public class RVMEController {
         );
     }
     
-    private void dragImage(final Node node) {
+    private void makeDraggable(final Node node) {
         final DragContext dragContext = new DragContext();
         
         node.addEventFilter(
