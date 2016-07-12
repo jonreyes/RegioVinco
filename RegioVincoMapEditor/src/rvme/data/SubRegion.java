@@ -21,8 +21,8 @@ public class SubRegion {
     
     public SubRegion(){
         name = new SimpleStringProperty("");
-        capital = new SimpleStringProperty("N/A");
-        leader = new SimpleStringProperty("N/A");
+        capital = new SimpleStringProperty("");
+        leader = new SimpleStringProperty("");
         leaderImage = new SimpleStringProperty("");
         flag = new SimpleStringProperty("");
     }
