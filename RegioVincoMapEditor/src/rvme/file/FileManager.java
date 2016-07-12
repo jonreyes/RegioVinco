@@ -255,6 +255,7 @@ public class FileManager implements AppFileComponent {
         JsonArrayBuilder subregionsArrayBuilder = Json.createArrayBuilder();
 	
         int i = 0;
+        boolean tableEmpty = tableData.isEmpty();
         for (Polygon polygon : geometry) {
             JsonArrayBuilder polygonArrayBuilder = Json.createArrayBuilder();
             for(int j = 0; j < polygon.getPoints().size(); j+=2){
@@ -271,7 +272,7 @@ public class FileManager implements AppFileComponent {
             JsonArray array = arrayBuilder.build();
             
             SubRegion subregion = new SubRegion();
-            if (!tableData.isEmpty()){
+            if (!tableEmpty){
                 // SAVE SUBREGION TABLE DATA
                 subregion = tableData.get(i);
             }
@@ -405,7 +406,6 @@ public class FileManager implements AppFileComponent {
         // LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
         
-        ObservableList<SubRegion> newSubRegions = FXCollections.observableArrayList();
         ArrayList<Color> newMapColors = new ArrayList<>();
         
         // IMPORT 
@@ -427,6 +427,7 @@ public class FileManager implements AppFileComponent {
         dataManager.hasLeaders(hasLeaders);
         
         // AND NOW LOAD ALL THE SUBREGIONS
+        boolean tableEmpty = dataManager.getTableItems().isEmpty();
 	JsonArray jsonSubRegionArray = json.getJsonArray(JSON_SUBREGIONS.toLowerCase());
 	for (int i = 0; i < jsonSubRegionArray.size(); i++) {
             // LOAD SUBREGION
@@ -434,15 +435,23 @@ public class FileManager implements AppFileComponent {
             
             // LOAD SUBREGION TABLE DATA
             
+            SubRegion subRegion = new SubRegion();
             // NAME
             String name = jsonSubRegion.getString(JSON_NAME);
+            subRegion.setName(name);
             // CAPITAL
-            String capital = jsonSubRegion.getString(JSON_CAPITAL);
+            String capital = (hasCapitals)?jsonSubRegion.getString(JSON_CAPITAL):subRegion.getCapital();
+            subRegion.setCapital(capital);
             // LEADER
-            String leader = jsonSubRegion.getString(JSON_LEADER);
+            String leader = (hasLeaders)?jsonSubRegion.getString(JSON_LEADER):subRegion.getLeader();
+            subRegion.setLeader(leader);
             
-            SubRegion newSubRegion = new SubRegion(name,capital,leader);
-            newSubRegions.add(newSubRegion);
+            if(tableEmpty){
+                dataManager.getTableItems().add(subRegion);
+            }
+            else{
+                dataManager.getTableItems().set(i, subRegion);
+            }
             
             // RED
             int red = jsonSubRegion.getInt(JSON_RED);
@@ -456,7 +465,6 @@ public class FileManager implements AppFileComponent {
             newMapColors.add(newColor);
         }
         
-        dataManager.setTableItems(newSubRegions);
         dataManager.setMapColors(newMapColors);
     }
 }
