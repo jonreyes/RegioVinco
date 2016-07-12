@@ -7,7 +7,10 @@ package rvme.controller;
 
 import audio_manager.AudioManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -24,6 +27,8 @@ import properties_manager.PropertiesManager;
 import static rvme.PropertyType.ADD_ERROR_MESSAGE;
 import static rvme.PropertyType.ADD_ERROR_TITLE;
 import static rvme.PropertyType.ADD_TITLE;
+import static rvme.PropertyType.ANTHEM_ERROR_MESSAGE;
+import static rvme.PropertyType.ANTHEM_ERROR_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
 import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
@@ -32,6 +37,8 @@ import rvme.data.SubRegion;
 import rvme.gui.SubRegionDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
+import static saf.settings.AppPropertyType.SAVE_ERROR_MESSAGE;
+import static saf.settings.AppPropertyType.SAVE_ERROR_TITLE;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
 
@@ -134,7 +141,7 @@ public class RVMEController {
         }
     }
     
-    public void add(File selectedImage){
+    public void add(File selectedImage)throws IOException{
         String imagePath = FILE_PROTOCOL + selectedImage.getPath();
         Image image = new Image(imagePath);
         ImageView addImageView = new ImageView(image);
@@ -145,7 +152,9 @@ public class RVMEController {
                 
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
-                
+        
+        dataManager.getImages().add(selectedImage.getCanonicalPath());
+        
         StackPane mapStack = workspace.getMapStack();
         mapStack.getChildren().add(addImageView);
         workspace.updateFileControls(false,false);
@@ -206,17 +215,22 @@ public class RVMEController {
     }
     
     public void playAnthem(){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.getPlayButton().setVisible(false);
-        workspace.getPauseButton().setVisible(true);
-        
-        DataManager data = (DataManager) app.getDataComponent();
-        anthem = new AudioManager();
         try {
+            DataManager data = (DataManager) app.getDataComponent();
+            anthem = new AudioManager();
             anthem.loadAudio(data.getName(), data.getAnthem());
+            anthem.play(data.getName(), true);
+            
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.getPlayButton().setVisible(false);
+            workspace.getPauseButton().setVisible(true);
+
         } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(props.getProperty(ANTHEM_ERROR_TITLE));
+            alert.setContentText(props.getProperty(ANTHEM_ERROR_MESSAGE));
+            alert.showAndWait();
         }
-        anthem.play(data.getName(), true);
     }
     
     public void pauseAnthem(){

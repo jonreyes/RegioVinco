@@ -81,6 +81,8 @@
         <property name="EXPORT_COMPLETED_MESSAGE"           value="Exporting Completed"></property>
         <property name="ADD_ERROR_TITLE"                    value="Load Image Error"></property>
         <property name="ADD_ERROR_MESSAGE"                  value="An error occurred loading the image."></property>
+        <property name="ANTHEM_ERROR_TITLE"                 value="Anthem Error"></property>
+        <property name="ANTHEM_ERROR_MESSAGE"               value="An error occured reading the anthem audio"></property>
         <property name="DIMENSIONS_ERROR_TITLE"             value="Change Dimensions Error"></property>
         <property name="DIMENSIONS_ERROR_MESSAGE"           value="Map Dimensions require valid numeric input."></property>
         <property name="MAP_EXT_DESC"                       value="RVM Images (*.png)"></property>
