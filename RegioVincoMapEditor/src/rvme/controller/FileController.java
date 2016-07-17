@@ -8,7 +8,6 @@ package rvme.controller;
 import java.io.File;
 import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.image.WritableImage;
@@ -20,6 +19,7 @@ import static rvme.PropertyType.EXPORT_ERROR_TITLE;
 import static rvme.PropertyType.EXPORT_EXT;
 import static rvme.PropertyType.EXPORT_EXT_DESC;
 import static rvme.PropertyType.EXPORT_TITLE;
+import static rvme.PropertyType.JSON_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import static rvme.RVMEConstants.PATH_EXPORT;
 import rvme.data.DataManager;
@@ -58,7 +58,14 @@ public class FileController {
         app = initApp;
         props = PropertiesManager.getPropertiesManager();
     }
-     
+    
+    public void renameMap()throws IOException{
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        File renamedFile = new File(currentWorkFile.getParent()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+        app.getFileComponent().saveData(app.getDataComponent(), currentWorkFile.getPath());
+        currentWorkFile.renameTo(renamedFile);
+    }
+    
     public void newMap(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         NewMapDialogSingleton newMapDialog = workspace.getNewMapDialog();
@@ -205,6 +212,7 @@ public class FileController {
             fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
             workspace.getProgressDialog().update(1);
             saved = true;
+            currentWorkFile = selectedFile;
         } catch (Exception e) {
             workspace.getProgressDialog().hide();
             Alert alert = new Alert(Alert.AlertType.ERROR);

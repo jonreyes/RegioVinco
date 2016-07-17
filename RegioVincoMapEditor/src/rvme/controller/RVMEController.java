@@ -269,6 +269,12 @@ public class RVMEController {
         workspace.updateFileControls(false,false);
     }
     
+    public void renameMap(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getRenameMapDialog().reset();
+        workspace.getRenameMapDialog().show();
+    }
+    
     private static final class DragContext {
         public double mouseAnchorX;
         public double mouseAnchorY;

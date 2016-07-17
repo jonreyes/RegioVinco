@@ -1,6 +1,5 @@
 package rvme.gui;
 
-import java.io.File;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -152,6 +151,7 @@ public class Workspace extends AppWorkspaceComponent {
     
     ProgressDialogSingleton progressDialog;
     NewMapDialogSingleton newMapDialog;
+    RenameMapDialogSingleton renameMapDialog;
     SubRegionDialogSingleton subRegionDialog;
     DimensionsDialogSingleton dimensionsDialog;
     
@@ -230,6 +230,9 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsBtn.setOnMouseClicked(e->{
             dimensionsDialog.show();
         });    
+        renameBtn.setOnMouseClicked(e->{
+            rvmeController.renameMap();
+        });
     }
     
     private void initMapControls(){
@@ -285,7 +288,6 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
         mapStack.setPrefSize(mapWidth.get(), mapHeight.get());
         mapStack.setMaxSize(mapWidth.get(), mapHeight.get());
-        mapStack.setClip(new Rectangle(mapWidth.get(),mapHeight.get()));
         initMapBG();
         initRegionView();
         mapView.setContent(mapStack);
@@ -499,6 +501,8 @@ public class Workspace extends AppWorkspaceComponent {
         progressDialog.init(app);
         newMapDialog = NewMapDialogSingleton.getSingleton();
         newMapDialog.init(app);
+        renameMapDialog = RenameMapDialogSingleton.getSingleton();
+        renameMapDialog.init(app);
         subRegionDialog = SubRegionDialogSingleton.getSingleton();
         subRegionDialog.init(app);
         dimensionsDialog = DimensionsDialogSingleton.getSingleton();
@@ -614,6 +618,10 @@ public class Workspace extends AppWorkspaceComponent {
     
     public NewMapDialogSingleton getNewMapDialog(){
         return newMapDialog;
+    }
+    
+    public RenameMapDialogSingleton getRenameMapDialog(){
+        return renameMapDialog;
     }
     
     public SubRegionDialogSingleton getSubRegionDialog(){
