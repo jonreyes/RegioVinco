@@ -1,5 +1,6 @@
 package rvme.gui;
 
+import java.io.File;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -73,6 +74,9 @@ import rvme.data.DataManager;
 import rvme.data.SubRegion;
 import static rvme.PropertyType.PLAY_ICON;
 import static rvme.PropertyType.PLAY_TOOLTIP;
+import static rvme.PropertyType.RENAME_ICON;
+import static rvme.PropertyType.RENAME_LABEL;
+import static rvme.PropertyType.RENAME_TOOLTIP;
 import rvme.controller.FileController;
 
 /**
@@ -127,6 +131,8 @@ public class Workspace extends AppWorkspaceComponent {
     Button pauseBtn;
     Label dimensionsLabel;
     Button dimensionsBtn;
+    Label renameLabel;
+    Button renameBtn;
     
     SplitPane editView;
     ScrollPane mapView;
@@ -277,7 +283,9 @@ public class Workspace extends AppWorkspaceComponent {
     private void initMapLayers(){
         mapStack = new StackPane();
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
-
+        mapStack.setPrefSize(mapWidth.get(), mapHeight.get());
+        mapStack.setMaxSize(mapWidth.get(), mapHeight.get());
+        mapStack.setClip(new Rectangle(mapWidth.get(),mapHeight.get()));
         initMapBG();
         initRegionView();
         mapView.setContent(mapStack);
@@ -285,8 +293,8 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapBG(){
         mapBG = new Rectangle();
-        mapBG.widthProperty().bind(mapWidth.subtract(mapBG.strokeWidthProperty()));
-        mapBG.heightProperty().bind(mapHeight.subtract(mapBG.strokeWidthProperty()));
+        mapBG.widthProperty().bind(mapWidth);
+        mapBG.heightProperty().bind(mapHeight);
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
     }
@@ -317,6 +325,10 @@ public class Workspace extends AppWorkspaceComponent {
         nameColumn = new TableColumn(props.getProperty(NAME_COLUMN_HEADING));
         capitalColumn = new TableColumn(props.getProperty(CAPITAL_COLUMN_HEADING));
         leaderColumn = new TableColumn(props.getProperty(LEADER_COLUMN_HEADING));
+        
+        nameColumn.setSortable(false);
+        capitalColumn.setSortable(false);
+        leaderColumn.setSortable(false);
         
         // AND LINK THE COLUMNS TO THE DATA
         nameColumn.setCellValueFactory(new PropertyValueFactory<String, String>("name"));
@@ -448,6 +460,9 @@ public class Workspace extends AppWorkspaceComponent {
         dimensionsLabel = new Label(props.getProperty(DIMENSIONS_LABEL));
         dimensionsBtn = initChildButton(DIMENSIONS_ICON.toString(), DIMENSIONS_TOOLTIP.toString(), false);
         
+        renameLabel = new Label(props.getProperty(RENAME_LABEL));
+        renameBtn = initChildButton(RENAME_ICON.toString(), RENAME_TOOLTIP.toString(), false);
+        
         editGrid = new GridPane();
         editGrid.add(bgcLabel, 0, 0);
         editGrid.add(bgcPicker, 0, 1);
@@ -466,9 +481,10 @@ public class Workspace extends AppWorkspaceComponent {
         editGrid.add(pauseBtn, 6, 1);
         editGrid.add(racLabel, 7, 0);
         editGrid.add(racBtn, 7, 1);
-
         editGrid.add(dimensionsLabel, 8, 0);
         editGrid.add(dimensionsBtn, 8, 1);
+        editGrid.add(renameLabel, 9, 0);
+        editGrid.add(renameBtn, 9, 1);
         
         for(Node node : editGrid.getChildren()){
             GridPane.setHalignment(node, HPos.CENTER);
@@ -634,6 +650,7 @@ public class Workspace extends AppWorkspaceComponent {
         racLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         anthemLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         dimensionsLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
+        renameLabel.getStyleClass().add(CLASS_PROMPT_LABEL);
         dataView.getStyleClass().add(CLASS_BORDERED_PANE);
         dataLabel.getStyleClass().add(CLASS_HEADING_LABEL);
     }
