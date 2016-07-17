@@ -22,8 +22,8 @@ import static rvme.PropertyType.EXPORT_TITLE;
 import static rvme.PropertyType.JSON_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import static rvme.RVMEConstants.PATH_EXPORT;
+import static rvme.RVMEConstants.PATH_WORLD;
 import rvme.data.DataManager;
-import rvme.gui.NewMapDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
 import saf.components.AppDataComponent;
@@ -61,17 +61,20 @@ public class FileController {
     
     public void renameMap()throws IOException{
         DataManager dataManager = (DataManager) app.getDataComponent();
-        File renamedFile = new File(currentWorkFile.getParent()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
         app.getFileComponent().saveData(app.getDataComponent(), currentWorkFile.getPath());
+        File renamedFile = new File(currentWorkFile.getParent()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
         currentWorkFile.renameTo(renamedFile);
     }
     
-    public void newMap(){
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        NewMapDialogSingleton newMapDialog = workspace.getNewMapDialog();
-        
-        newMapDialog.reset();
-        newMapDialog.show();
+    public void newMap() throws IOException{
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        File parentDirectory = new File(PATH_WORLD+"/"+dataManager.getParent());
+        if (!parentDirectory.exists()){
+            parentDirectory.mkdir();
+        }
+        File newFile = new File(parentDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+        app.getFileComponent().saveData(app.getDataComponent(),newFile.getPath());
+        currentWorkFile = newFile;
     }
     
     public void saveMap() {
@@ -85,8 +88,8 @@ public class FileController {
 		// PROMPT THE USER FOR A FILE NAME
 		FileChooser fc = new FileChooser();
                 DataManager dataManager = (DataManager) app.getDataComponent();
-		fc.setInitialFileName(dataManager.getName());
-                fc.setInitialDirectory(dataManager.getParent());
+		fc.setInitialFileName(dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+                fc.setInitialDirectory(new File(PATH_WORK));
 		fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
 		fc.getExtensionFilters().addAll(
 		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
@@ -197,8 +200,8 @@ public class FileController {
             }
         } catch (IOException ioe) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(props.getProperty(SAVE_ERROR_TITLE));
-            alert.setContentText(props.getProperty(SAVE_ERROR_MESSAGE));
+            alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
+            alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
             alert.showAndWait();
         }
     }

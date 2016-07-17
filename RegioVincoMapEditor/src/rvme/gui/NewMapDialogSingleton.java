@@ -75,7 +75,6 @@ public class NewMapDialogSingleton extends Stage{
     Label parentLabel;
     HBox parentSelect;
     TextField parentTextField;
-    Button parentBtn;
     
     Label geoLabel;
     HBox geoSelect;
@@ -85,7 +84,7 @@ public class NewMapDialogSingleton extends Stage{
     Button okBtn;
     
     String name;
-    File parent;
+    String parent;
     File geometry;
     
     final double SPACE = 10;
@@ -130,14 +129,7 @@ public class NewMapDialogSingleton extends Stage{
         
         parentLabel = new Label(props.getProperty(PARENT_LABEL));
         parentTextField = new TextField();
-        parentTextField.setEditable(false);
-        parentBtn = new Button(props.getProperty(SELECT_LABEL));
         
-        parentSelect = new HBox();
-        parentSelect.setSpacing(SPACE);
-        parentSelect.getChildren().add(parentTextField);
-        parentSelect.getChildren().add(parentBtn);
-    
         geoLabel = new Label(props.getProperty(GEO_LABEL));
         geoTextField = new TextField();
         geoTextField.setEditable(false);
@@ -154,7 +146,7 @@ public class NewMapDialogSingleton extends Stage{
         nmGrid.add(nameLabel, 0, 0);
         nmGrid.add(nameTextField, 1, 0);
         nmGrid.add(parentLabel, 0, 1);
-        nmGrid.add(parentSelect, 1, 1);
+        nmGrid.add(parentTextField, 1, 1);
         nmGrid.add(geoLabel, 0, 2);
         nmGrid.add(geoSelect, 1, 2);
         
@@ -170,9 +162,6 @@ public class NewMapDialogSingleton extends Stage{
     }
     
     private void initHandlers(){
-        parentBtn.setOnAction(e->{
-            selectParent();
-        });
         geoBtn.setOnAction(e->{
             selectGeometry();
         });
@@ -183,16 +172,20 @@ public class NewMapDialogSingleton extends Stage{
     
     private void submitNewMap(){
         name = nameTextField.getText();
+        parent = parentTextField.getText();
         try{
-            if(name.isEmpty() || parent==null){ throw new Exception();}
+            if(name.isEmpty() || parent.isEmpty()){throw new Exception();}
             data.reset();
             data.setName(name);
             data.setParent(parent);
-            this.hide();
             setGeometry();
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.fileController.newMap();
+            this.hide();
             this.reset();
         }
         catch(Exception e){
+            e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText(props.getProperty(NEW_ERROR_TITLE));
             alert.setContentText(props.getProperty(NEW_ERROR_MESSAGE));
@@ -200,14 +193,6 @@ public class NewMapDialogSingleton extends Stage{
             alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
             alert.showAndWait();
         }
-    }
-    
-    private void selectParent(){
-        DirectoryChooser dc = new DirectoryChooser();
-        dc.setInitialDirectory(new File(PATH_WORK));
-        dc.setTitle(props.getProperty(PARENT_TITLE));
-        parent = dc.showDialog(app.getGUI().getWindow());            
-        if (parent != null) parentTextField.setText(parent.getPath());
     }
     
     private void selectGeometry(){
@@ -222,7 +207,6 @@ public class NewMapDialogSingleton extends Stage{
     
     private void setGeometry(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        if (geometry != null) {
             try {
                 AppDataComponent dataManager = app.getDataComponent();
                 FileManager fileManager = (FileManager) app.getFileComponent();
@@ -239,11 +223,6 @@ public class NewMapDialogSingleton extends Stage{
                 alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
                 alert.showAndWait();
             }
-        }
-        else{
-            workspace.afc.handleNewRequest();
-            workspace.updateFileControls(false,false);
-        }
     }
     
     public void reset(){

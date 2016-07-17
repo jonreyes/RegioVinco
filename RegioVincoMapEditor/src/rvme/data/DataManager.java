@@ -1,6 +1,5 @@
 package rvme.data;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.beans.property.DoubleProperty;
@@ -29,7 +28,7 @@ public class DataManager implements AppDataComponent {
     AppTemplate app;
     
     String name;
-    File parent;
+    String parent;
     
     boolean hasCapitals;
     boolean hasFlags;
@@ -116,11 +115,11 @@ public class DataManager implements AppDataComponent {
         this.name = name;
     }
 
-    public File getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(File parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
     
@@ -264,6 +263,7 @@ public class DataManager implements AppDataComponent {
         zoom = new SimpleDoubleProperty(1);
         mapWidth = new SimpleDoubleProperty(802);
         mapHeight = new SimpleDoubleProperty(536);
+        anthem = "";
         images = new ArrayList<>();
         tableItems = new SimpleObjectProperty(FXCollections.observableArrayList());
         geometry = new ArrayList<>(); 

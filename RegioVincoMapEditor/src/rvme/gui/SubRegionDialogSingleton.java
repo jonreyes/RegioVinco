@@ -293,6 +293,7 @@ public class SubRegionDialogSingleton extends Stage{
         selected.setName(newName);
         selected.setCapital(newCapital);
         selected.setLeader(newLeader);
+        restoreColor();
         this.hide();
     }
     

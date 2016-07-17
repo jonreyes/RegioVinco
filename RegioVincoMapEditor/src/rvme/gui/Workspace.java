@@ -184,7 +184,7 @@ public class Workspace extends AppWorkspaceComponent {
         fileController = new FileController(app);
         afc = new AppFileController(app);
         newBtn.setOnAction(e -> {
-            fileController.newMap();
+            rvmeController.newMap();
         });
         loadBtn.setOnAction(e -> {
             fileController.loadMap();

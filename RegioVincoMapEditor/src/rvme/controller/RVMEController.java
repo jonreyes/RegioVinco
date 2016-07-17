@@ -32,6 +32,8 @@ import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
+import rvme.gui.NewMapDialogSingleton;
+import rvme.gui.RenameMapDialogSingleton;
 import rvme.gui.SubRegionDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
@@ -104,7 +106,7 @@ public class RVMEController {
     public void editSubRegion(MouseEvent e){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         SubRegionDialogSingleton subRegionDialog = workspace.getSubRegionDialog();
-        
+       
         subRegionDialog.update(e);
         subRegionDialog.show();
     }
@@ -269,10 +271,20 @@ public class RVMEController {
         workspace.updateFileControls(false,false);
     }
     
+    public void newMap(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        NewMapDialogSingleton newMapDialog = workspace.getNewMapDialog();
+        
+        newMapDialog.reset();
+        newMapDialog.show();
+    }
+    
     public void renameMap(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        workspace.getRenameMapDialog().reset();
-        workspace.getRenameMapDialog().show();
+        RenameMapDialogSingleton renameMapDialog = workspace.getRenameMapDialog();
+
+        renameMapDialog.reset();
+        renameMapDialog.show();
     }
     
     private static final class DragContext {
