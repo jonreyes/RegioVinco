@@ -9,8 +9,6 @@ import audio_manager.AudioManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -37,8 +35,6 @@ import rvme.data.SubRegion;
 import rvme.gui.SubRegionDialogSingleton;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
-import static saf.settings.AppPropertyType.SAVE_ERROR_MESSAGE;
-import static saf.settings.AppPropertyType.SAVE_ERROR_TITLE;
 import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static saf.settings.AppStartupConstants.PATH_IMAGES;
 
@@ -96,7 +92,7 @@ public class RVMEController {
         
         StackPane mapStack = workspace.getMapStack();
         for(Node n: mapStack.getChildren()){
-            if(n instanceof Group || n instanceof ImageView){
+            if(n instanceof Group){
                 n.setScaleX(zoom);
                 n.setScaleY(zoom);
             }
@@ -141,36 +137,48 @@ public class RVMEController {
         }
     }
     
-    public void add(File selectedImage)throws IOException{
-        String imagePath = FILE_PROTOCOL + selectedImage.getPath();
+    public void add(File addImage)throws IOException{
+        // CREATE IMAGE VIEW
+        String imagePath = FILE_PROTOCOL + addImage.getPath();
         Image image = new Image(imagePath);
         ImageView addImageView = new ImageView(image);
         addImageView.setPreserveRatio(true);
         addImageView.setFitWidth(200);
         makeSelectable(addImageView);
         makeDraggable(addImageView);
-                
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        
+        // ADD IMAGE TO DATA
         DataManager dataManager = (DataManager) app.getDataComponent();
+        addImageView.setId(addImage.getCanonicalPath()+"~"+dataManager.getImages().size());
+        dataManager.getImages().add(addImageView);
         
-        dataManager.getImages().add(selectedImage.getCanonicalPath());
-        
+        // ADD IMAGE TO WORKSPACE
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         StackPane mapStack = workspace.getMapStack();
         mapStack.getChildren().add(addImageView);
+        
+        // UPDATE
         workspace.updateFileControls(false,false);
-        //workspace.reloadWorkspace();
     }
     
     public void removeImage(){
+        // REMOVE IMAGE IN WORKSPACE
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         StackPane mapStack = workspace.getMapStack();
         mapStack.getChildren().remove(workspace.getSelection());
+        
+        
+        // REMOVE IMAGE IN DATA
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        dataManager.getImages().remove(workspace.getSelection());
+        
+        // UPDATE
         workspace.setSelection(null);
         workspace.updateFileControls(false,false);
         workspace.updateEditControls();
     }
     
-    private void makeSelectable(Node node){
+    public void makeSelectable(ImageView node){
         node.addEventFilter(
             MouseEvent.ANY,
             e->{
@@ -183,7 +191,7 @@ public class RVMEController {
         );
     }
     
-    private void makeDraggable(final Node node) {
+    public void makeDraggable(ImageView node) {
         final DragContext dragContext = new DragContext();
         
         node.addEventFilter(
@@ -210,6 +218,8 @@ public class RVMEController {
                                     dragContext.initialTranslateY
                                         + e.getY()
                                         - dragContext.mouseAnchorY);
+                            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+                            workspace.updateFileControls(false, false);
                 });
                 
     }
@@ -258,8 +268,6 @@ public class RVMEController {
         
         workspace.updateFileControls(false,false);
     }
-    
-    
     
     private static final class DragContext {
         public double mouseAnchorX;

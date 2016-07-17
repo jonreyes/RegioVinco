@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -45,7 +46,7 @@ public class DataManager implements AppDataComponent {
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
     
-    ArrayList<String> images;
+    ArrayList<ImageView> images;
     ArrayList<Color> mapColors;
     ObjectProperty<ObservableList<SubRegion>> tableItems;
     ArrayList<Polygon> geometry;
@@ -211,12 +212,17 @@ public class DataManager implements AppDataComponent {
         this.mapHeight.set(mapHeight);
     }
     
-    public ArrayList<String> getImages(){
-        return images;
+    public ArrayList<Double[]> getPoints(){
+        ArrayList<Double[]> points = new ArrayList<>();
+        for(ImageView view: images){
+            Double[] newPoint = new Double[]{view.getTranslateX(),view.getTranslateY()};
+            points.add(newPoint);
+        }
+        return points;
     }
     
-    public void setImages(ArrayList<String> images){
-        this.images = images;
+    public ArrayList<ImageView> getImages(){
+        return images;
     }
     
     public ObjectProperty<ObservableList<SubRegion>> tableItemsProperty(){
@@ -252,6 +258,7 @@ public class DataManager implements AppDataComponent {
         hasCapitals = false;
         hasFlags = false;
         hasLeaders = false;
+        anthem = "";
         backgroundColor = new SimpleObjectProperty(Color.WHITE);
         borderColor = new SimpleObjectProperty(Color.BLACK);
         borderThickness = new SimpleDoubleProperty(0);
@@ -279,55 +286,10 @@ public class DataManager implements AppDataComponent {
                 "\n zoom=" + zoom + 
                 "\n mapWidth=" + mapWidth + 
                 "\n mapHeight=" + mapHeight + 
-                "\n images=" + images +
                 "\n mapColors=" + mapColors + 
                 "\n tableItems=" + tableItems + 
                 "\n tableSize=" + tableItems.get().size()+
                 "\n geometry=" + geometry + 
                 "\n}";
     }
-    
-    
-    
-    /*@Override
-    public boolean equals(Object obj) {
-        DataManager data = (DataManager) obj;
-    
-        return(
-                
-            data.getBackgroundColor().equals(this.backgroundColor) &&
-            data.getBorderColor().equals(this.borderColor) &&
-            data.getBorderThickness() == this.getBorderThickness() &&
-            data.getZoom() == this.getZoom() &&
-            
-            data.hasCapitals() == this.hasCapitals &&
-            data.hasFlags() == this.hasFlags &&
-            data.hasLeaders() == this.hasLeaders &&
-            
-            data.getAnthem().equals(this.anthem) &&
-            
-            data.getTableItems().equals(this.getTableItems()) &&
-            data.getMapColors().equals(this.mapColors) &&
-            for(Polygon p : )
-            data.getGeometry().equals(this.getGeometry()) 
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + (this.hasCapitals ? 1 : 0);
-        hash = 89 * hash + (this.hasFlags ? 1 : 0);
-        hash = 89 * hash + (this.hasLeaders ? 1 : 0);
-        hash = 89 * hash + Objects.hashCode(this.backgroundColor);
-        hash = 89 * hash + Objects.hashCode(this.borderColor);
-        hash = 89 * hash + Objects.hashCode(this.borderThickness);
-        hash = 89 * hash + Objects.hashCode(this.zoom);
-        hash = 89 * hash + Objects.hashCode(this.mapWidth);
-        hash = 89 * hash + Objects.hashCode(this.mapHeight);
-        hash = 89 * hash + Objects.hashCode(this.mapColors);
-        hash = 89 * hash + Objects.hashCode(this.tableItems);
-        hash = 89 * hash + Objects.hashCode(this.geometry);
-        return hash;
-    }*/
 }

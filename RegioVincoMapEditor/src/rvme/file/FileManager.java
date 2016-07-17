@@ -1,6 +1,5 @@
 package rvme.file;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,16 +7,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -33,6 +29,7 @@ import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
+import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 
 /**
  * This class serves as the file management component for this application,
@@ -66,6 +63,9 @@ public class FileManager implements AppFileComponent {
     
     static final String JSON_ANTHEM = "anthem";
 
+    static final String JSON_IMAGES = "images";
+    static final String JSON_IMAGE = "image";
+    
     static final String JSON_CAPITAL = "capital";
     static final String JSON_LEADER = "leader";
     static final String JSON_LEADER_IMAGE = "leader_image";
@@ -116,6 +116,25 @@ public class FileManager implements AppFileComponent {
         
         String anthem = json.getString(JSON_ANTHEM);
         dataManager.setAnthem(anthem);
+        
+        JsonArray jsonImageArray = json.getJsonArray(JSON_IMAGES);
+        
+        boolean noImages = dataManager.getImages().isEmpty();
+        for(int i = 0; i < jsonImageArray.size(); i++){
+            JsonObject jsonImage = jsonImageArray.getJsonObject(i);
+            String image = jsonImage.getString(JSON_IMAGE);
+            Double[] point = loadPoint(jsonImage);
+            ImageView view = new ImageView();
+            view.setId(image+"~"+i);
+            view.setTranslateX(point[0]);
+            view.setTranslateY(point[1]);
+            if(noImages){
+                dataManager.getImages().add(view);
+            }
+            else{
+                dataManager.getImages().set(i, view);
+            }
+        }
         
         // AND NOW LOAD ALL THE SUBREGIONS
         boolean tableEmpty = dataManager.getTableItems().isEmpty();
@@ -248,13 +267,27 @@ public class FileManager implements AppFileComponent {
         
         String anthem = dataManager.getAnthem();
         
+        ArrayList<ImageView> images = dataManager.getImages();
+        JsonArrayBuilder imageArrayBuilder = Json.createArrayBuilder();
+        int i = 0;
+        for(ImageView image: images){
+            int marker = image.getId().lastIndexOf("~");
+            String path = image.getId().substring(0,marker);
+            JsonObject imageJson = Json.createObjectBuilder()
+                    .add(JSON_IMAGE, path)
+                    .add(JSON_X, image.getTranslateX())
+                    .add(JSON_Y, image.getTranslateY()).build();
+            imageArrayBuilder.add(imageJson);
+        }
+        JsonArray imageArray = imageArrayBuilder.build();
+        
 	// NOW BUILD THE JSON ARRAY FOR THE SUBREGIONS
 	ArrayList<Polygon> geometry = dataManager.getGeometry();
         ObservableList<SubRegion> tableData = dataManager.getTableItems();
         ArrayList<Color> mapColors = dataManager.getMapColors();
         JsonArrayBuilder subregionsArrayBuilder = Json.createArrayBuilder();
 	
-        int i = 0;
+        i = 0;
         boolean tableEmpty = tableData.isEmpty();
         for (Polygon polygon : geometry) {
             JsonArrayBuilder polygonArrayBuilder = Json.createArrayBuilder();
@@ -313,6 +346,7 @@ public class FileManager implements AppFileComponent {
                 .add(JSON_HAS_FLAGS, hasFlags)
                 .add(JSON_HAS_LEADERS, hasLeaders)
                 .add(JSON_ANTHEM, anthem)
+                .add(JSON_IMAGES, imageArray)
                 .add(JSON_SUBREGIONS, subRegionsArray)
 		.build();
 	

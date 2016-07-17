@@ -1,7 +1,6 @@
 package rvme.gui;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -26,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import properties_manager.PropertiesManager;
@@ -135,7 +135,7 @@ public class Workspace extends AppWorkspaceComponent {
     Group region;
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
-    Node selection;
+    ImageView selection;
     
     VBox dataView;
     Label dataLabel;
@@ -331,6 +331,11 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void updateMapTable(){
+        if(data.getTableItems().isEmpty()){
+            for(Color c: data.getMapColors()){
+                data.getTableItems().add(new SubRegion());
+            }
+        }
         mapTable.setItems(data.getTableItems());
         initTableControls();
     }
@@ -381,6 +386,22 @@ public class Workspace extends AppWorkspaceComponent {
         }
         else{
             rmBtn.setDisable(false);
+        }
+    }
+    
+    private void loadImages(){
+        int i = 0;
+        for(ImageView newImage: data.getImages()){
+            int marker = newImage.getId().lastIndexOf("~");
+            String path = newImage.getId().substring(0,marker);
+            String imagePath = FILE_PROTOCOL+path;
+            newImage.setImage(new Image(imagePath));
+            newImage.setPreserveRatio(true);
+            newImage.setFitWidth(200);
+            rvmeController.makeSelectable(newImage);
+            rvmeController.makeDraggable(newImage);
+            mapStack.getChildren().add(newImage);
+            i++;
         }
     }
     
@@ -559,12 +580,12 @@ public class Workspace extends AppWorkspaceComponent {
         return pauseBtn;
     }
     
-    public Node getSelection(){
+    public ImageView getSelection(){
         return selection;
     }
     
-    public void setSelection(Node node){
-        selection = (node instanceof ImageView)?node:null;
+    public void setSelection(ImageView selected){
+        selection = selected;
     }
     
     public TableView<SubRegion> getMapTable(){
@@ -594,6 +615,7 @@ public class Workspace extends AppWorkspaceComponent {
         btSlider.setValue(data.getBorderThickness());
         zoomSlider.setValue(data.getZoom());
         updateMapTable();
+        loadImages();
         dimensionsDialog.reset();
     }
 
