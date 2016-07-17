@@ -45,6 +45,7 @@
 	<!--DIALOG LABELS-->
         <property name="EXPORT_TITLE"               value="Export Map"></property>
         <property name="NMDIALOG_TITLE"             value="Create a New Map"></property>
+        <property name="RMDIALOG_TITLE"             value="Rename Map"></property>
         <property name="PARENT_LABEL"               value="Parent Directory:"></property>
         <property name="SELECT_LABEL"               value="Select..."></property>
         <property name="GEO_LABEL"                  value="Geometry File:"></property>
@@ -77,7 +78,9 @@
         <property name="LOAD_PROGRESS_TITLE"                value="Loading"></property>
         <property name="EXPORT_PROGRESS_TITLE"              value="Exporting"></property>
         <property name="NEW_ERROR_TITLE"                    value="New Map Error"></property>
-        <property name="NEW_ERROR_MESSAGE"                  value="A name and valid parent directory must be specified when creating a new map."></property>
+        <property name="NEW_ERROR_MESSAGE"                  value="A name and valid parent directory must be specified to create a new map."></property>
+        <property name="RENAME_ERROR_TITLE"                 value="Rename Map Error"></property>
+        <property name="RENAME_ERROR_MESSAGE"               value="A valid name must be specified to rename the map."></property>
         <property name="EXPORT_ERROR_TITLE"                 value="Export Map Error"></property>
         <property name="EXPORT_ERROR_MESSAGE"               value="An error occured exporting the map."></property>
         <property name="EXPORT_COMPLETED_TITLE"             value="File Exporting Completed"></property>
