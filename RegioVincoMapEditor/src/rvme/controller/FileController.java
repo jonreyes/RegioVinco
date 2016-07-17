@@ -7,14 +7,20 @@ package rvme.controller;
 
 import java.io.File;
 import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
+import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 import properties_manager.PropertiesManager;
 import static rvme.PropertyType.EXPORT_ERROR_MESSAGE;
 import static rvme.PropertyType.EXPORT_ERROR_TITLE;
 import static rvme.PropertyType.EXPORT_EXT;
 import static rvme.PropertyType.EXPORT_EXT_DESC;
 import static rvme.PropertyType.EXPORT_TITLE;
+import static rvme.PropertyType.PNG_EXT;
 import static rvme.RVMEConstants.PATH_EXPORT;
 import rvme.data.DataManager;
 import rvme.gui.NewMapDialogSingleton;
@@ -259,6 +265,13 @@ public class FileController {
         workspace.getProgressDialog().show();
         app.getFileComponent().exportData(app.getDataComponent(), exportFile.getPath());
         workspace.getProgressDialog().update(2);
+        
+        // EXPORT PNG
+        DataManager dataManager = (DataManager) app.getDataComponent();
+        SnapshotParameters params = new SnapshotParameters();   
+        WritableImage image = workspace.getMapStack().snapshot(params, null);
+        File file = new File(PATH_WORK+dataManager.getName()+props.getProperty(PNG_EXT).substring(1));
+        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         
 	// MARK IT AS EXPORTED
 	exported = true;
