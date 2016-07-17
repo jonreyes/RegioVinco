@@ -17,4 +17,5 @@ public class RVMEConstants {
     public static final String PATH_WORLD = PATH_EXPORT+"The World/";
     public static final String PATH_EUROPE = PATH_WORLD+"Europe/";
     public static final String PATH_ANDORRA = PATH_EUROPE+"Andorra/";
+    public static final String NA = "N/A";
 }
