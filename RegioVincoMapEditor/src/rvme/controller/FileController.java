@@ -10,8 +10,6 @@ import java.io.IOException;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import properties_manager.PropertiesManager;
-import static rvme.PropertyType.EXPORT_COMPLETED_MESSAGE;
-import static rvme.PropertyType.EXPORT_COMPLETED_TITLE;
 import static rvme.PropertyType.EXPORT_ERROR_MESSAGE;
 import static rvme.PropertyType.EXPORT_ERROR_TITLE;
 import static rvme.PropertyType.EXPORT_EXT;
@@ -27,8 +25,6 @@ import saf.components.AppFileComponent;
 import static saf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
 import static saf.settings.AppPropertyType.LOAD_ERROR_TITLE;
 import static saf.settings.AppPropertyType.LOAD_WORK_TITLE;
-import static saf.settings.AppPropertyType.SAVE_COMPLETED_MESSAGE;
-import static saf.settings.AppPropertyType.SAVE_COMPLETED_TITLE;
 import static saf.settings.AppPropertyType.SAVE_ERROR_MESSAGE;
 import static saf.settings.AppPropertyType.SAVE_ERROR_TITLE;
 import static saf.settings.AppPropertyType.SAVE_UNSAVED_WORK_MESSAGE;
@@ -195,15 +191,16 @@ public class FileController {
     }
     
     private void load(File selectedFile){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         try {
             AppDataComponent dataManager = app.getDataComponent();	
             AppFileComponent fileManager = app.getFileComponent();
-            Workspace workspace = (Workspace) app.getWorkspaceComponent();
             workspace.getProgressDialog().show();
             fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
             workspace.getProgressDialog().update(1);
             saved = true;
         } catch (Exception e) {
+            workspace.getProgressDialog().hide();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(props.getProperty(LOAD_ERROR_TITLE));
             alert.setContentText(props.getProperty(LOAD_ERROR_MESSAGE));
