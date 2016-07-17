@@ -258,7 +258,6 @@ public class DataManager implements AppDataComponent {
         hasCapitals = false;
         hasFlags = false;
         hasLeaders = false;
-        anthem = "";
         backgroundColor = new SimpleObjectProperty(Color.WHITE);
         borderColor = new SimpleObjectProperty(Color.BLACK);
         borderThickness = new SimpleDoubleProperty(0);

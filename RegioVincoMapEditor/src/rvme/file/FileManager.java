@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -25,11 +24,11 @@ import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import static rvme.RVMEConstants.NA;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
-import static saf.settings.AppStartupConstants.FILE_PROTOCOL;
 
 /**
  * This class serves as the file management component for this application,
@@ -474,10 +473,10 @@ public class FileManager implements AppFileComponent {
             String name = jsonSubRegion.getString(JSON_NAME);
             subRegion.setName(name);
             // CAPITAL
-            String capital = (hasCapitals)?jsonSubRegion.getString(JSON_CAPITAL):"N/A";
+            String capital = (hasCapitals)?jsonSubRegion.getString(JSON_CAPITAL):NA;
             subRegion.setCapital(capital);
             // LEADER
-            String leader = (hasLeaders)?jsonSubRegion.getString(JSON_LEADER):"N/A";
+            String leader = (hasLeaders)?jsonSubRegion.getString(JSON_LEADER):NA;
             subRegion.setLeader(leader);
             
             if(tableEmpty){
