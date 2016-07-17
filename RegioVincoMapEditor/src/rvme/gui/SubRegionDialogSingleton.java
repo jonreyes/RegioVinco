@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -268,6 +270,18 @@ public class SubRegionDialogSingleton extends Stage{
         // UPDATE TABLE W/ SELECTED SUBREGION
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         workspace.getMapTable().getSelectionModel().select(selected);
+        for(Node node: workspace.getRegion().getChildren()){
+            int i = 0;
+            if(node instanceof Polygon){
+                int index = Integer.valueOf(node.getId());
+                if(((Polygon) node).getFill().equals(Color.GREENYELLOW)){
+                    ((Polygon) node).setFill(data.getMapColors().get(index));
+                }
+                if(index==data.getTableItems().indexOf(selected)){
+                    ((Polygon) node).setFill(Color.GREENYELLOW);
+                }
+            }
+        }
     }
     
     private void submitEditSubRegion(){
@@ -280,6 +294,19 @@ public class SubRegionDialogSingleton extends Stage{
         selected.setCapital(newCapital);
         selected.setLeader(newLeader);
         this.hide();
+    }
+    
+    public void restoreColor(){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        for(Node node: workspace.getRegion().getChildren()){
+            int i = 0;
+            if(node instanceof Polygon){
+                int index = Integer.valueOf(node.getId());
+                if(((Polygon) node).getFill().equals(Color.GREENYELLOW)){
+                    ((Polygon) node).setFill(data.getMapColors().get(index));
+                }
+            }
+        }
     }
     
     public void update(MouseEvent e){
@@ -302,6 +329,10 @@ public class SubRegionDialogSingleton extends Stage{
         
         // UPDATE DIALOG W/ SELECTED SUBREGION
         selectSubRegion(selected);
+        
+        this.setOnCloseRequest(c->{
+            restoreColor();
+        });
     }
     
     private void initStyleSheet(){
