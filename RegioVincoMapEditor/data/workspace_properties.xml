@@ -13,6 +13,7 @@
         <property name="PLAY_ICON"              value="play.png"></property>
         <property name="PAUSE_ICON"             value="pause.png"></property>
         <property name="DIMENSIONS_ICON"        value="resize.png"></property>
+        <property name="RENAME_ICON"            value="rename.png"></property>
         <property name="NEXT_ICON"              value="next.png"></property>
         <property name="PREV_ICON"              value="prev.png"></property>
         <property name="NO_IMAGE"               value="noimage.png"></property>
@@ -24,6 +25,7 @@
         <property name="PLAY_TOOLTIP"               value="Play the Region Anthem"></property>
         <property name="PAUSE_TOOLTIP"              value="Pause the Region Anthem"></property>
         <property name="DIMENSIONS_TOOLTIP"         value="Change Map Dimensions"></property>
+        <property name="RENAME_TOOLTIP"             value="Rename Map"></property>
         <property name="NEXT_TOOLTIP"               value="Next SubRegion"></property>
         <property name="PREV_TOOLTIP"               value="Previous SubRegion"></property>
         
@@ -55,6 +57,7 @@
         <property name="HEIGHT_LABEL"               value="Height:"></property>
         <property name="DDIALOG_TITLE"              value="Change Dimensions"></property>
         <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>
+        <property name="RENAME_LABEL"               value="Rename Map:"></property>
         <property name="OK_LABEL"                   value="OK"></property>
         <property name="ADD_TITLE"                  value="Add Image"></property>
         <property name="PARENT_TITLE"               value="Select Parent Directory"></property>

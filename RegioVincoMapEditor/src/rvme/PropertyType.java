@@ -27,6 +27,7 @@ public enum PropertyType {
     RAC_LABEL,
     ANTHEM_LABEL,
     DIMENSIONS_LABEL,
+    RENAME_LABEL,
     OK_LABEL,
     
     DATA_LABEL,
@@ -56,6 +57,8 @@ public enum PropertyType {
     PREV_TOOLTIP,
     DIMENSIONS_ICON,
     DIMENSIONS_TOOLTIP,
+    RENAME_ICON,
+    RENAME_TOOLTIP,
     
     EXPORT_TITLE,
     NMDIALOG_TITLE,
