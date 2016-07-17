@@ -136,6 +136,7 @@ public class Workspace extends AppWorkspaceComponent {
     SplitPane editView;
     ScrollPane mapView;
     StackPane mapStack;
+    Rectangle mapClip;
     Rectangle mapBG;
     Group region;
     DoubleProperty mapWidth;
@@ -288,6 +289,7 @@ public class Workspace extends AppWorkspaceComponent {
         mapStack.setMinSize(mapWidth.get(), mapHeight.get());
         mapStack.setPrefSize(mapWidth.get(), mapHeight.get());
         mapStack.setMaxSize(mapWidth.get(), mapHeight.get());
+        initMapClip();
         initMapBG();
         initRegionView();
         mapView.setContent(mapStack);
@@ -299,6 +301,13 @@ public class Workspace extends AppWorkspaceComponent {
         mapBG.heightProperty().bind(mapHeight);
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
+    }
+    
+    private void initMapClip(){
+        mapClip = new Rectangle();
+        mapClip.widthProperty().bind(mapWidth);
+        mapClip.heightProperty().bind(mapHeight);
+        mapStack.setClip(mapClip);
     }
     
     private void initRegionView(){
