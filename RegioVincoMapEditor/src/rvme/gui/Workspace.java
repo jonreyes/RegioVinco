@@ -1,5 +1,6 @@
 package rvme.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
@@ -416,6 +417,12 @@ public class Workspace extends AppWorkspaceComponent {
         }
     }
     
+    public void updateAnthem(){
+        File anthem = new File(data.getAnthem());
+        if(!anthem.exists()){ playBtn.setDisable(true); pauseBtn.setDisable(true);}
+        else{playBtn.setDisable(false); pauseBtn.setDisable(false);}
+    }
+    
     private void loadImages(){
         int i = 0;
         if (images == null) images = new ArrayList<>();
@@ -658,6 +665,7 @@ public class Workspace extends AppWorkspaceComponent {
         zoomSlider.setValue(data.getZoom());
         updateMapTable();
         loadImages();
+        updateAnthem();
         dimensionsDialog.reset();
     }
 
