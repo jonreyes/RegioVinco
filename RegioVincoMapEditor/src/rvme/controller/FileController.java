@@ -55,6 +55,7 @@ public class FileController {
     
      public FileController(AppTemplate initApp){
         saved = true;
+        exported = true;
         app = initApp;
         props = PropertiesManager.getPropertiesManager();
     }
@@ -64,15 +65,19 @@ public class FileController {
         app.getFileComponent().saveData(app.getDataComponent(), currentWorkFile.getPath());
         File renamedFile = new File(currentWorkFile.getParent()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
         currentWorkFile.renameTo(renamedFile);
+        File renameDirectory = new File(currentWorkFile.getParentFile().getParent()+"/"+dataManager.getName());
+        currentWorkFile.getParentFile().renameTo(renameDirectory);
+        
     }
     
     public void newMap() throws IOException{
         DataManager dataManager = (DataManager) app.getDataComponent();
         File parentDirectory = new File(PATH_WORLD+"/"+dataManager.getParent());
-        if (!parentDirectory.exists()){
-            parentDirectory.mkdir();
-        }
-        File newFile = new File(parentDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+        if (!parentDirectory.exists()) parentDirectory.mkdir();
+        File regionDirectory = new File(parentDirectory.getPath()+"/"+dataManager.getName());
+        if (!regionDirectory.exists()) regionDirectory.mkdir();
+        File newFile = new File(regionDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+        if (!newFile.exists()) newFile.createNewFile();
         app.getFileComponent().saveData(app.getDataComponent(),newFile.getPath());
         currentWorkFile = newFile;
     }
@@ -83,23 +88,9 @@ public class FileController {
 	    if (currentWorkFile != null) {
 		save(currentWorkFile);
 	    }
-	    // OTHERWISE WE NEED TO PROMPT THE USER
-	    else {
-		// PROMPT THE USER FOR A FILE NAME
-		FileChooser fc = new FileChooser();
-                DataManager dataManager = (DataManager) app.getDataComponent();
-		fc.setInitialFileName(dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
-                fc.setInitialDirectory(new File(PATH_WORK));
-		fc.setTitle(props.getProperty(SAVE_WORK_TITLE));
-		fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
-
-		File selectedFile = fc.showSaveDialog(app.getGUI().getWindow());
-		if (selectedFile != null) {
-		    save(selectedFile);
-		}
-	    }
         } catch (IOException ioe) {
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.getProgressDialog().show();
 	    Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(props.getProperty(SAVE_ERROR_TITLE));
             alert.setContentText(props.getProperty(SAVE_ERROR_MESSAGE));
@@ -215,6 +206,7 @@ public class FileController {
             fileManager.loadData(dataManager, selectedFile.getAbsolutePath());
             workspace.getProgressDialog().update(1);
             saved = true;
+            exported = true;
             currentWorkFile = selectedFile;
         } catch (Exception e) {
             workspace.getProgressDialog().hide();
@@ -248,20 +240,15 @@ public class FileController {
     
     public void exportMap(){
         try{
-            Workspace workspace = (Workspace) app.getWorkspaceComponent();
-            DataManager dataManager = (DataManager) app.getDataComponent();
-                
-            FileChooser fc = new FileChooser();
-            fc.setInitialFileName(dataManager.getName());                
-            fc.setInitialDirectory(new File(PATH_EXPORT));
-            fc.setTitle(props.getProperty(EXPORT_TITLE));
-            fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(props.getProperty(EXPORT_EXT_DESC), props.getProperty(EXPORT_EXT)));
-            File exportFile = fc.showSaveDialog(app.getGUI().getWindow());
-            if(exportFile != null){
+            if(currentWorkFile != null){
+                DataManager dataManager = (DataManager) app.getDataComponent();
+                File exportDirectory = new File(PATH_WORLD+"/"+dataManager.getParent()+"/"+dataManager.getName());
+                File exportFile = new File(exportDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(EXPORT_EXT).substring(1));
                 export(exportFile);
             }
         } catch (Exception e){
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.getProgressDialog().hide();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(props.getProperty(EXPORT_ERROR_TITLE));
             alert.setContentText(props.getProperty(EXPORT_ERROR_MESSAGE));
@@ -281,7 +268,8 @@ public class FileController {
         DataManager dataManager = (DataManager) app.getDataComponent();
         SnapshotParameters params = new SnapshotParameters();   
         WritableImage image = workspace.getMapStack().snapshot(params, null);
-        File file = new File(PATH_WORK+dataManager.getName()+props.getProperty(PNG_EXT).substring(1));
+        File file = new File(exportFile.getParent()+"/"+dataManager.getName()+props.getProperty(PNG_EXT).substring(1));
+        System.out.println(file.getPath());
         ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         
 	// MARK IT AS EXPORTED
@@ -320,5 +308,13 @@ public class FileController {
     
     public boolean isExported(){
         return exported;
+    }
+    
+    public void markSaved(boolean saved){
+        this.saved = saved;
+    }
+    
+    public void markExported(boolean exported){
+        this.exported = exported;
     }
 }
