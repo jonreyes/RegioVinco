@@ -254,9 +254,9 @@ public class DataManager implements AppDataComponent {
     
     @Override
     public void reset() {
-        hasCapitals = false;
-        hasFlags = false;
-        hasLeaders = false;
+        hasCapitals = true;
+        hasFlags = true;
+        hasLeaders = true;
         backgroundColor = new SimpleObjectProperty(Color.WHITE);
         borderColor = new SimpleObjectProperty(Color.BLACK);
         borderThickness = new SimpleDoubleProperty(0);

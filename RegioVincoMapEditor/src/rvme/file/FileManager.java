@@ -1,10 +1,12 @@
 package rvme.file;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -55,6 +57,7 @@ public class FileManager implements AppFileComponent {
     static final String JSON_SUBREGION_POLYGONS = "SUBREGION_POLYGONS";
     
     static final String JSON_NAME = "name";
+    static final String JSON_PARENT = "parent";
     
     static final String JSON_HAS_CAPITALS = "subregions_have_capitals";
     static final String JSON_HAS_FLAGS = "subregions_have_flags";
@@ -104,14 +107,8 @@ public class FileManager implements AppFileComponent {
         String fileName = json.getString(JSON_NAME);
         dataManager.setName(fileName);
         
-        boolean hasCapitals = json.getBoolean(JSON_HAS_CAPITALS);
-        dataManager.hasCapitals(hasCapitals);
-        
-        boolean hasFlags = json.getBoolean(JSON_HAS_FLAGS);
-        dataManager.hasFlags(hasFlags);
-        
-        boolean hasLeaders = json.getBoolean(JSON_HAS_FLAGS);
-        dataManager.hasLeaders(hasLeaders);
+        String parent = json.getString(JSON_PARENT);
+        dataManager.setParent(parent);
         
         String anthem = json.getString(JSON_ANTHEM);
         dataManager.setAnthem(anthem);
@@ -260,9 +257,7 @@ public class FileManager implements AppFileComponent {
         double mapHeight = dataManager.getMapHeight();
         
         String fileName = dataManager.getName();
-        boolean hasCapitals = dataManager.hasCapitals();
-        boolean hasFlags = dataManager.hasFlags();
-        boolean hasLeaders = dataManager.hasLeaders();
+        String parent = dataManager.getParent();
         
         String anthem = dataManager.getAnthem();
         
@@ -341,9 +336,7 @@ public class FileManager implements AppFileComponent {
                 .add(JSON_WIDTH, mapWidth)
                 .add(JSON_HEIGHT, mapHeight)
                 .add(JSON_NAME, fileName)
-                .add(JSON_HAS_CAPITALS, hasCapitals)
-                .add(JSON_HAS_FLAGS, hasFlags)
-                .add(JSON_HAS_LEADERS, hasLeaders)
+                .add(JSON_PARENT, parent)
                 .add(JSON_ANTHEM, anthem)
                 .add(JSON_IMAGES, imageArray)
                 .add(JSON_SUBREGIONS, subRegionsArray)
@@ -373,9 +366,6 @@ public class FileManager implements AppFileComponent {
         DataManager dataManager = (DataManager)data;
         
         String fileName = dataManager.getName();
-        boolean hasCapitals = dataManager.hasCapitals();
-        boolean hasFlags = dataManager.hasFlags();
-        boolean hasLeaders = dataManager.hasLeaders();
         
         ArrayList<Color> mapColors = dataManager.getMapColors();
         ObservableList<SubRegion> tableData = dataManager.getTableItems();
@@ -385,6 +375,11 @@ public class FileManager implements AppFileComponent {
             String name = subregion.getName();
             String capital = subregion.getCapital();
             String leader = subregion.getLeader();
+            File leaderImage = new File(subregion.getLeaderImage());
+            File flag = new File(subregion.getFlag());
+            if(capital.isEmpty()) dataManager.hasCapitals(false);
+            if(leader.isEmpty()||!leaderImage.exists()) dataManager.hasLeaders(false);
+            if(!flag.exists()) dataManager.hasFlags(false);
             Color mapColor = (!mapColors.isEmpty())?mapColors.get(i):Color.BLACK;
             int red = (int) (mapColor.getRed() * 255);
             int green = (int) (mapColor.getGreen() * 255);
@@ -403,6 +398,10 @@ public class FileManager implements AppFileComponent {
         // SAVE SUBREGION
 	JsonArray subRegionsArray = subregionsArrayBuilder.build();
 	
+        boolean hasCapitals = dataManager.hasCapitals();
+        boolean hasFlags = dataManager.hasFlags();
+        boolean hasLeaders = dataManager.hasLeaders();
+        
 	// THEN PUT IT ALL TOGETHER IN A JsonObject
 	JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_NAME, fileName)
