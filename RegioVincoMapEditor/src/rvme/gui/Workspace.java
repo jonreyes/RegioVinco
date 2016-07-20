@@ -1,5 +1,6 @@
 package rvme.gui;
 
+import java.util.ArrayList;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -141,6 +142,7 @@ public class Workspace extends AppWorkspaceComponent {
     Group region;
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
+    ArrayList<ImageView> images;
     ImageView selection;
     
     VBox dataView;
@@ -401,6 +403,8 @@ public class Workspace extends AppWorkspaceComponent {
         loadBtn.setDisable(false);
 	exportBtn.setDisable(exported);
         exitBtn.setDisable(false);
+        fileController.markSaved(saved);
+        fileController.markExported(exported);
     }
     
     public void updateEditControls(){
@@ -414,6 +418,10 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void loadImages(){
         int i = 0;
+        if (images == null) images = new ArrayList<>();
+        for(ImageView image : images){
+            mapStack.getChildren().remove(image);
+        }
         for(ImageView newImage: data.getImages()){
             int marker = newImage.getId().lastIndexOf("~");
             String path = newImage.getId().substring(0,marker);
@@ -423,6 +431,7 @@ public class Workspace extends AppWorkspaceComponent {
             newImage.setFitWidth(200);
             rvmeController.makeSelectable(newImage);
             rvmeController.makeDraggable(newImage);
+            images.add(newImage);
             mapStack.getChildren().add(newImage);
             i++;
         }
