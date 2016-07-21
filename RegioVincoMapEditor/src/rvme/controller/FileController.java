@@ -19,7 +19,6 @@ import static rvme.PropertyType.EXPORT_ERROR_TITLE;
 import static rvme.PropertyType.EXPORT_EXT;
 import static rvme.PropertyType.JSON_EXT;
 import static rvme.PropertyType.PNG_EXT;
-import static rvme.RVMEConstants.PATH_WORLD;
 import rvme.data.DataManager;
 import rvme.gui.Workspace;
 import saf.AppTemplate;
@@ -61,20 +60,26 @@ public class FileController {
         DataManager dataManager = (DataManager) app.getDataComponent();
         app.getFileComponent().saveData(app.getDataComponent(), currentWorkFile.getPath());
         File renamedFile = new File(currentWorkFile.getParent()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
+        System.out.println("CURRENT WORK FILE:\n"+currentWorkFile.getPath());
         currentWorkFile.renameTo(renamedFile);
         File renameDirectory = new File(currentWorkFile.getParentFile().getParent()+"/"+dataManager.getName());
         currentWorkFile.getParentFile().renameTo(renameDirectory);
-        
+        System.out.println("SUCCESSFULLY RENAMED TO:\n"+currentWorkFile.getPath());
     }
     
     public void newMap() throws IOException{
         DataManager dataManager = (DataManager) app.getDataComponent();
-        File parentDirectory = new File(PATH_WORLD+"/"+dataManager.getParent());
-        if (!parentDirectory.exists()) parentDirectory.mkdir();
+        File parentDirectory = new File(dataManager.getParent());
         File regionDirectory = new File(parentDirectory.getPath()+"/"+dataManager.getName());
-        if (!regionDirectory.exists()) regionDirectory.mkdir();
+        if (!regionDirectory.exists()){ 
+            regionDirectory.mkdir();
+            System.out.println("NEW REGION DIRECTORY CREATED @:\n"+regionDirectory.getPath());
+        } 
         File newFile = new File(regionDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(JSON_EXT).substring(1));
-        if (!newFile.exists()) newFile.createNewFile();
+        if (!newFile.exists()){ 
+            newFile.createNewFile();
+            System.out.println("NEW MAP FILE CREATED @:\n"+newFile.getPath());
+        }
         app.getFileComponent().saveData(app.getDataComponent(),newFile.getPath());
         currentWorkFile = newFile;
     }
@@ -102,7 +107,7 @@ public class FileController {
         workspace.getProgressDialog().show();
         app.getFileComponent().saveData(app.getDataComponent(), selectedFile.getPath());
         workspace.getProgressDialog().update(0);
-
+        System.out.println("CURRENT WORK FILE SUCCESSFULLY SAVED @:\n"+selectedFile.getPath());
         
 	// MARK IT AS SAVED
 	currentWorkFile = selectedFile;
@@ -239,8 +244,7 @@ public class FileController {
         try{
             if(currentWorkFile != null){
                 DataManager dataManager = (DataManager) app.getDataComponent();
-                File exportDirectory = new File(PATH_WORLD+"/"+dataManager.getParent()+"/"+dataManager.getName());
-                File exportFile = new File(exportDirectory.getPath()+"/"+dataManager.getName()+props.getProperty(EXPORT_EXT).substring(1));
+                File exportFile = new File(dataManager.getParent()+"/"+dataManager.getName()+"/"+dataManager.getName()+props.getProperty(EXPORT_EXT).substring(1));
                 export(exportFile);
             }
         } catch (Exception e){
@@ -260,13 +264,14 @@ public class FileController {
         workspace.getProgressDialog().show();
         app.getFileComponent().exportData(app.getDataComponent(), exportFile.getPath());
         workspace.getProgressDialog().update(2);
-        
+        System.out.println("CURRENT WORK FILE EXPORTED TO:\n"+exportFile.getPath());
+
         // EXPORT PNG
         DataManager dataManager = (DataManager) app.getDataComponent();
         SnapshotParameters params = new SnapshotParameters();   
         WritableImage image = workspace.getMapStack().snapshot(params, null);
         File file = new File(exportFile.getParent()+"/"+dataManager.getName()+props.getProperty(PNG_EXT).substring(1));
-        System.out.println(file.getPath());
+        System.out.println("IMAGE EXPORTED TO:\n"+file.getPath());
         ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         
 	// MARK IT AS EXPORTED
