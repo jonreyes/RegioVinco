@@ -130,7 +130,6 @@ public class NewMapDialogSingleton extends Stage{
         
         parentLabel = new Label(props.getProperty(PARENT_LABEL));
         parentTextField = new TextField();
-        parentTextField.setEditable(false);
         parentBtn = new Button(props.getProperty(SELECT_LABEL));
         
         parentSelect = new HBox();
@@ -140,7 +139,6 @@ public class NewMapDialogSingleton extends Stage{
         
         geoLabel = new Label(props.getProperty(GEO_LABEL));
         geoTextField = new TextField();
-        geoTextField.setEditable(false);
         geoBtn = new Button(props.getProperty(SELECT_LABEL));
         
         geoSelect = new HBox();
