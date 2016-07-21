@@ -233,8 +233,10 @@ public class FileController {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(PATH_WORK));
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
+        fc.getExtensionFilters().addAll(
+		new FileChooser.ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
-        // ONLY OPEN A NEW FILE IF THE USER SAYS OK
+         // ONLY OPEN A NEW FILE IF THE USER SAYS OK
         if (selectedFile != null) {
             load(selectedFile);
         }

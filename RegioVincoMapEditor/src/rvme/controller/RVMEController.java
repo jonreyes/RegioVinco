@@ -126,7 +126,7 @@ public class RVMEController {
             fc.setInitialDirectory(new File(PATH_IMAGES));
             fc.setTitle(props.getProperty(ADD_TITLE));
             fc.getExtensionFilters().addAll(
-		new FileChooser.ExtensionFilter(props.getProperty(IMAGE_EXT_DESC), props.getProperty(PNG_EXT), props.getProperty(JPG_EXT)));
+		new FileChooser.ExtensionFilter(props.getProperty(IMAGE_EXT_DESC), props.getProperty(PNG_EXT)));
             File selectedImage = fc.showOpenDialog(app.getGUI().getWindow());
             if (selectedImage != null) {
                 add(selectedImage);
