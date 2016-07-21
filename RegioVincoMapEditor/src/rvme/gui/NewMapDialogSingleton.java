@@ -75,6 +75,7 @@ public class NewMapDialogSingleton extends Stage{
     Label parentLabel;
     HBox parentSelect;
     TextField parentTextField;
+    Button parentBtn;
     
     Label geoLabel;
     HBox geoSelect;
@@ -129,6 +130,13 @@ public class NewMapDialogSingleton extends Stage{
         
         parentLabel = new Label(props.getProperty(PARENT_LABEL));
         parentTextField = new TextField();
+        parentTextField.setEditable(false);
+        parentBtn = new Button(props.getProperty(SELECT_LABEL));
+        
+        parentSelect = new HBox();
+        parentSelect.setSpacing(SPACE);
+        parentSelect.getChildren().add(parentTextField);
+        parentSelect.getChildren().add(parentBtn);
         
         geoLabel = new Label(props.getProperty(GEO_LABEL));
         geoTextField = new TextField();
@@ -146,7 +154,7 @@ public class NewMapDialogSingleton extends Stage{
         nmGrid.add(nameLabel, 0, 0);
         nmGrid.add(nameTextField, 1, 0);
         nmGrid.add(parentLabel, 0, 1);
-        nmGrid.add(parentTextField, 1, 1);
+        nmGrid.add(parentSelect, 1, 1);
         nmGrid.add(geoLabel, 0, 2);
         nmGrid.add(geoSelect, 1, 2);
         
@@ -162,6 +170,9 @@ public class NewMapDialogSingleton extends Stage{
     }
     
     private void initHandlers(){
+        parentBtn.setOnAction(e->{
+            selectParent();
+        });
         geoBtn.setOnAction(e->{
             selectGeometry();
         });
@@ -193,6 +204,14 @@ public class NewMapDialogSingleton extends Stage{
             alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
             alert.showAndWait();
         }
+    }
+    
+    private void selectParent(){
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(PATH_WORK));
+        dc.setTitle(props.getProperty(PARENT_TITLE));
+        parent = dc.showDialog(app.getGUI().getWindow()).getPath();
+        if(!parent.isEmpty()) parentTextField.setText(parent);
     }
     
     private void selectGeometry(){
