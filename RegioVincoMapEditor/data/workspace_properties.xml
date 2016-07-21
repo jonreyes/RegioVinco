@@ -24,7 +24,7 @@
 	<property name="RAC_TOOLTIP"                value="Randomize the Colors of the Map"></property>
         <property name="PLAY_TOOLTIP"               value="Play the Region Anthem"></property>
         <property name="PAUSE_TOOLTIP"              value="Pause the Region Anthem"></property>
-        <property name="DIMENSIONS_TOOLTIP"         value="Change Map Dimensions"></property>
+        <property name="DIMENSIONS_TOOLTIP"         value="Resize Map"></property>
         <property name="RENAME_TOOLTIP"             value="Rename Map"></property>
         <property name="NEXT_TOOLTIP"               value="Next SubRegion"></property>
         <property name="PREV_TOOLTIP"               value="Previous SubRegion"></property>
@@ -57,7 +57,7 @@
         <property name="WIDTH_LABEL"                value="Width:"></property>
         <property name="HEIGHT_LABEL"               value="Height:"></property>
         <property name="DDIALOG_TITLE"              value="Change Dimensions"></property>
-        <property name="DIMENSIONS_LABEL"           value="Change Dimensions:"></property>
+        <property name="DIMENSIONS_LABEL"           value="Resize Map"></property>
         <property name="RENAME_LABEL"               value="Rename Map:"></property>
         <property name="OK_LABEL"                   value="OK"></property>
         <property name="ADD_TITLE"                  value="Add Image"></property>
@@ -91,10 +91,9 @@
         <property name="ANTHEM_ERROR_MESSAGE"               value="An error occured reading the anthem audio"></property>
         <property name="DIMENSIONS_ERROR_TITLE"             value="Change Dimensions Error"></property>
         <property name="DIMENSIONS_ERROR_MESSAGE"           value="Map Dimensions require valid numeric input."></property>
-        <property name="MAP_EXT_DESC"                       value="RVM Images (*.png)"></property>
-        <property name="IMAGE_EXT_DESC"                     value="Images (*.png, *.jpg)"></property>
+        <property name="MAP_EXT_DESC"                       value="RVM Images (*.rvm)"></property>
+        <property name="IMAGE_EXT_DESC"                     value="Images (*.png)"></property>
         <property name="PNG_EXT"                            value="*.png"></property>
-        <property name="JPG_EXT"                            value="*.jpg"></property>
         <property name="JSON_EXT_DESC"                      value="Map Data (*.json)"></property>
         <property name="JSON_EXT"                           value="*.json"></property>
         <property name="EXPORT_EXT_DESC"                    value="Regio Vinco Map (*.rvm)"></property>

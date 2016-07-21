@@ -57,7 +57,7 @@
 	<property name="SAVE_WORK_TITLE"		value="Save Map"></property>
 	<property name="LOAD_WORK_TITLE"		value="Load Map"></property>
 	<property name="WORK_FILE_EXT"			value="*.json"></property>
-	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map JSON"></property>
+	<property name="WORK_FILE_EXT_DESC"		value="Regio Vinco Map (*.json)"></property>
     </property_list>
     <property_options_list>
     </property_options_list>
