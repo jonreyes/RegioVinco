@@ -131,11 +131,11 @@ public class DimensionsDialogSingleton extends Stage {
    
     private void initHandlers(){
         okBtn.setOnAction(e->{
-            changeMapDimensions();
+            resizeMap();
         });
     }
     
-    private void changeMapDimensions(){
+    private void resizeMap(){
         try{
             double newWidth = Double.valueOf(widthTextField.getText());
             double newHeight = Double.valueOf(heightTextField.getText());
@@ -143,6 +143,10 @@ public class DimensionsDialogSingleton extends Stage {
             data.mapWidthProperty().set(newWidth);
             mapWidth.set(newWidth);
             mapHeight.set(newHeight);
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            workspace.reloadWorkspace();
+            workspace.zoomSlider.setValue(data.getZoom()+10);
+            workspace.zoomSlider.setValue(data.getZoom()-10);
             this.hide();
         }
         catch(Exception e){

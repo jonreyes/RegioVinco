@@ -2,9 +2,13 @@ package rvme.gui;
 
 import java.io.File;
 import java.util.ArrayList;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -22,6 +26,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -300,10 +307,15 @@ public class Workspace extends AppWorkspaceComponent {
     
     private void initMapBG(){
         mapBG = new Rectangle();
-        mapBG.widthProperty().bind(mapWidth);
-        mapBG.heightProperty().bind(mapHeight);
+        mapBG.widthProperty().bind(mapWidth.multiply(2));
+        mapBG.heightProperty().bind(mapHeight.multiply(2));
         mapBG.fillProperty().bind(bgcPicker.valueProperty());
         mapStack.getChildren().add(mapBG);
+        mapStack.backgroundProperty().bind(
+            Bindings.createObjectBinding(() -> {
+                BackgroundFill fill = new BackgroundFill(bgcPicker.getValue(), CornerRadii.EMPTY, Insets.EMPTY);
+                return new Background(fill);}, 
+            bgcPicker.valueProperty()));
     }
     
     private void initMapClip(){
@@ -314,14 +326,13 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     private void initRegionView(){
-        region = data.mapTo(mapBG);
+        region = data.map();
         if (region.getChildren().size()>0){
             btSlider.setMax(region.getLayoutBounds().getWidth()/10);
             zoomSlider.setMax(mapWidth.divide(region.getLayoutBounds().getWidth()/32).get());
         }
         initMapControls();
         mapStack.getChildren().add(region);
-        
     }
     
     private void initDataView(){
@@ -577,10 +588,6 @@ public class Workspace extends AppWorkspaceComponent {
         return button;
     }
     
-    public Rectangle getMapBG(){
-        return mapBG;
-    }
-    
     public ColorPicker getBGCPicker(){
         return bgcPicker;
     }
@@ -661,12 +668,19 @@ public class Workspace extends AppWorkspaceComponent {
         mapHeight.set(data.getMapHeight());
         mapStack.getChildren().remove(region);
         initRegionView();
+        editView.setDividerPositions(mapWidth.get()/app.getGUI().getWindow().getWidth()+0.005);
         btSlider.setValue(data.getBorderThickness());
         zoomSlider.setValue(data.getZoom());
         updateMapTable();
         loadImages();
         updateAnthem();
         dimensionsDialog.reset();
+        if(mapWidth.get()>802){
+        double translate = mapWidth.get()/2-802/2;
+            for(Node node:mapStack.getChildren()){
+                node.setTranslateX(((node instanceof ImageView)?node.getTranslateX()-translate:0)+translate);
+            }
+        }
     }
 
     @Override

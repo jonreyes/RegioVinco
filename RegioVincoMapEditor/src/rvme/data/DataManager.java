@@ -64,7 +64,8 @@ public class DataManager implements AppDataComponent {
         this.reset();
     }
 
-    public Group mapTo(Rectangle bounds){
+    public Group map(){
+        Rectangle bounds = new Rectangle(802,536);
         Group map = new Group();  
         if (!geometry.isEmpty()){
             if(mapColors.isEmpty()) mapColors = randomColors();
