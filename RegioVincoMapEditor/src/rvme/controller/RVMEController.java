@@ -28,7 +28,6 @@ import static rvme.PropertyType.ADD_TITLE;
 import static rvme.PropertyType.ANTHEM_ERROR_MESSAGE;
 import static rvme.PropertyType.ANTHEM_ERROR_TITLE;
 import static rvme.PropertyType.IMAGE_EXT_DESC;
-import static rvme.PropertyType.JPG_EXT;
 import static rvme.PropertyType.PNG_EXT;
 import rvme.data.DataManager;
 import rvme.data.SubRegion;
@@ -111,6 +110,12 @@ public class RVMEController {
         subRegionDialog.show();
     }
     
+    public void selectSubRegion(MouseEvent e){
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        workspace.getSubRegionDialog().update(e);
+        workspace.deselectImage();
+    }
+    
     public void updateTableData(){
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         DataManager dataManager = (DataManager) app.getDataComponent();
@@ -181,13 +186,13 @@ public class RVMEController {
     }
     
     public void makeSelectable(ImageView node){
-        node.addEventFilter(
-            MouseEvent.ANY,
+        node.setOnMouseClicked(
             e->{
                 // disable mouse events for all children
                 // e.consume();
                 Workspace workspace = (Workspace) app.getWorkspaceComponent();
                 workspace.setSelection(node);
+                workspace.deselectRegion();
                 workspace.updateEditControls();
             }
         );

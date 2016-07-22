@@ -1,12 +1,11 @@
 package rvme.gui;
 
+import com.sun.glass.events.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -87,6 +86,7 @@ import static rvme.PropertyType.RENAME_LABEL;
 import static rvme.PropertyType.RENAME_TOOLTIP;
 import rvme.controller.FileController;
 
+
 /**
  * This class serves as the workspace component for this application, providing
  * the user interface controls for editing work.
@@ -151,6 +151,7 @@ public class Workspace extends AppWorkspaceComponent {
     DoubleProperty mapWidth;
     DoubleProperty mapHeight;
     ArrayList<ImageView> images;
+    Rectangle highlight;
     ImageView selection;
     
     VBox dataView;
@@ -177,7 +178,7 @@ public class Workspace extends AppWorkspaceComponent {
         reloadWorkspace();
         initControls();
     }
-    
+        
     private void initGUI(){
         initWorkspace();
         initFileToolbar();
@@ -188,6 +189,7 @@ public class Workspace extends AppWorkspaceComponent {
         rvmeController =  new RVMEController(app);
         initFileControls();
         initEditControls();
+        initDeselectControls();
     }
     
     private void initFileControls(){
@@ -250,6 +252,9 @@ public class Workspace extends AppWorkspaceComponent {
         for(Node node: region.getChildren()){
             if (node instanceof Polygon){
                 node.setOnMouseClicked(e->{
+                    if(e.getClickCount()==1){
+                        rvmeController.selectSubRegion(e);
+                    }
                     if(e.getClickCount()==2){
                         rvmeController.editSubRegion(e);
                     }
@@ -381,6 +386,9 @@ public class Workspace extends AppWorkspaceComponent {
         mapTable.setRowFactory(e->{
             TableRow<SubRegion> itemRow = new TableRow<>();
             itemRow.setOnMouseClicked(r->{
+                if (r.getClickCount() == 1 && (! itemRow.isEmpty())){
+                    rvmeController.selectSubRegion(r);
+                }
                 if (r.getClickCount() == 2 && (! itemRow.isEmpty())){
                     rvmeController.editSubRegion(r);
                 }
@@ -637,7 +645,30 @@ public class Workspace extends AppWorkspaceComponent {
     }
     
     public void setSelection(ImageView selected){
+        if(selection != null) selection.setOpacity(1);
         selection = selected;
+        if(selection != null) selection.setOpacity(0.5);
+    }
+    
+    private void initDeselectControls(){
+        fileToolBar.setOnMouseClicked(e->{deselectAll();});
+        editToolBar.setOnMouseClicked(e->{deselectAll();});
+        dataView.setOnMouseClicked(e->{deselectAll();});
+    }
+    
+    private void deselectAll(){
+        deselectImage();
+        deselectRegion();
+    }
+    
+    public void deselectImage(){
+        setSelection(null);
+        updateEditControls();
+    }
+    
+    public void deselectRegion(){
+        mapTable.getSelectionModel().clearSelection();
+        subRegionDialog.restoreColor();
     }
     
     public TableView<SubRegion> getMapTable(){
